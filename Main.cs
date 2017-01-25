@@ -60,7 +60,7 @@ namespace IBMiCmd
         #region " Menu functions "
         internal static void myMenuFunction()
         {
-            MessageBox.Show("N/A");
+            MessageBox.Show("IBMiCmds, created by WorksOfBarry.");
         }
 
         internal static void commandDialog()

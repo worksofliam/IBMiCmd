@@ -75,6 +75,7 @@
             this.treeView1.Size = new System.Drawing.Size(284, 236);
             this.treeView1.TabIndex = 1;
             this.treeView1.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseDoubleClick);
+            this.treeView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeView1_KeyDown);
             // 
             // cmdBindings
             // 

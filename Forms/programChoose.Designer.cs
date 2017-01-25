@@ -49,9 +49,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(12, 39);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(46, 13);
+            this.label2.Size = new System.Drawing.Size(38, 13);
             this.label2.TabIndex = 1;
-            this.label2.Text = "Program";
+            this.label2.Text = "Object";
             // 
             // textBox1
             // 
@@ -99,7 +99,7 @@
             this.MinimumSize = new System.Drawing.Size(212, 144);
             this.Name = "programChoose";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Select Program";
+            this.Text = "Select Object";
             this.ResumeLayout(false);
             this.PerformLayout();
 

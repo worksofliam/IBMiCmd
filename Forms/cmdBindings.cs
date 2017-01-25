@@ -128,5 +128,26 @@ namespace IBMiCmd.Forms
                 }
             }
         }
+
+        private void treeView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                if (treeView1.SelectedNode != null)
+                {
+                    var confirmResult = MessageBox.Show("Are you sure to delete this binding?",
+                                     "Delete binding",
+                                     MessageBoxButtons.YesNo);
+
+                    if (confirmResult == DialogResult.Yes)
+                    {
+                        bindings.Remove(treeView1.SelectedNode.Text);
+                        IBMi.setConfig("binds", string.Join("|", bindings.ToArray()));
+                        IBMi.remConfig(treeView1.SelectedNode.Text);
+                        treeView1.Nodes.Remove(treeView1.SelectedNode);
+                    }
+                }
+            }
+        }
     }
 }

@@ -64,7 +64,6 @@ namespace IBMiCmd
                 {
                     case "EXPANSION":
                         pieces = err.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                        MessageBox.Show(pieces[6] + " - " + pieces[7]);
                         exps.Add(new expRange(int.Parse(pieces[6]), int.Parse(pieces[7])));
 
                         break;
@@ -75,7 +74,6 @@ namespace IBMiCmd
 
                         if (sev >= 10)
                         {
-                            MessageBox.Show("exps: " + exps.Count);
                             foreach (expRange range in exps)
                             {
                                 if (range.inRange(linenum))
@@ -87,7 +85,6 @@ namespace IBMiCmd
 
                         if (sqldiff > 0)
                         {
-                            MessageBox.Show(linenum + " - " + sqldiff);
                             linenum -= sqldiff;
                         }
 
@@ -112,7 +109,6 @@ namespace IBMiCmd
         {
             _low = low;
             _high = high;
-            MessageBox.Show(getVal().ToString());
         }
 
         public bool inRange(int num)
