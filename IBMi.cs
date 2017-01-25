@@ -100,6 +100,11 @@ namespace IBMiCmd
             return result;
         }
 
+        public static void flushOutput()
+        {
+            _output.Clear();
+        }
+
         public static void runCommands(string[] list)
         {
             string tempfile = Path.GetTempFileName() + ".ftp";

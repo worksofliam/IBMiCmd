@@ -19,6 +19,7 @@ namespace IBMiCmd
         {
             if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.Control)
             {
+                IBMi.flushOutput();
                 string[] commands = textBox1.Lines;
                 textBox1.Clear();
 
