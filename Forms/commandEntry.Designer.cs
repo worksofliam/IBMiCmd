@@ -51,9 +51,9 @@
             this.richTextBox1.ReadOnly = true;
             this.richTextBox1.Size = new System.Drawing.Size(291, 196);
             this.richTextBox1.TabIndex = 1;
-            this.richTextBox1.Text = "Supply multiple commands at once on new lines, this is nessacerry to have them ru" +
-    "n in the same job.\nTo submit the command, use CTRL+ENTER.\n\nFor example:\n> CHGLIB" +
-    "\n> CRTPGM\n";
+            this.richTextBox1.Text = "Supply multiple commands at once on new lines, this is necessary to have them run" +
+    " in the same job.\nTo submit the command, use CTRL+ENTER.\n\nFor example:\n> CHGLIB\n" +
+    "> CRTPGM\n";
             // 
             // commandEntry
             // 
