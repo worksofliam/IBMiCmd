@@ -34,34 +34,37 @@ namespace IBMiCmd.Forms
 
         public void publishErrors()
         {
-            if (master == null)
+            Invoke((MethodInvoker)delegate
             {
-                master = treeView1.Nodes.Add(ErrorHandle.doName());
-            }
-            else
-            {
-                master.Text = ErrorHandle.doName();
-                master.Nodes.Clear();
-            }
-
-            TreeNode curNode;
-            int realErrors = 0;
-            foreach (lineError error in ErrorHandle.getErrors())
-            {
-                if (error.getSev() > 0)
+                if (master == null)
                 {
-                    realErrors += 1;
-                    curNode = master.Nodes.Add(error.getData().Trim() + " (" + error.getLine().Trim() + ")");
-                    curNode.Tag = error.getLine().Trim();
+                    master = treeView1.Nodes.Add(ErrorHandle.doName());
                 }
-            }
+                else
+                {
+                    master.Text = ErrorHandle.doName();
+                    master.Nodes.Clear();
+                }
 
-            if (realErrors == 0)
-            {
-                master.Nodes.Add("No errors found.");
-            }
+                TreeNode curNode;
+                int realErrors = 0;
+                foreach (lineError error in ErrorHandle.getErrors())
+                {
+                    if (error.getSev() > 0)
+                    {
+                        realErrors += 1;
+                        curNode = master.Nodes.Add(error.getData().Trim() + " (" + error.getLine().Trim() + ")");
+                        curNode.Tag = error.getLine().Trim();
+                    }
+                }
 
-            master.Expand();
+                if (realErrors == 0)
+                {
+                    master.Nodes.Add("No errors found.");
+                }
+
+                master.Expand();
+            });
         }
     }
 }

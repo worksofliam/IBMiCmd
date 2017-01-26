@@ -1,5 +1,6 @@
 ﻿using NppPluginNET;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace IBMiCmd.Forms
@@ -65,17 +66,23 @@ namespace IBMiCmd.Forms
                     }
                 }
 
-                IBMi.runCommands(cmds);
-                if (Main.commandWindow != null) Main.commandWindow.loadNewCommands();
+                Thread gothread = new Thread((ThreadStart)delegate { runCommands(cmds, errDsp); });
+                gothread.Start();
+            }
+        }
 
-                if (errDsp != null)
+        public void runCommands(string[] commands, string[] errDsp)
+        {
+            IBMi.runCommands(commands);
+            if (Main.commandWindow != null) Main.commandWindow.loadNewCommands();
+
+            if (errDsp != null)
+            {
+                ErrorHandle.getErrors(errDsp[0], errDsp[1]);
+                if (Main.errorWindow != null)
                 {
-                    ErrorHandle.getErrors(errDsp[0], errDsp[1]);
-                    if (Main.errorWindow != null)
-                    {
-                        Main.errorWindow.publishErrors();
-                        Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, Main.errorWindow.Handle);
-                    }
+                    Main.errorWindow.publishErrors();
+                    Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, Main.errorWindow.Handle);
                 }
             }
         }

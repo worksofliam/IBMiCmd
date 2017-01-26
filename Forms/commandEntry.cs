@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace IBMiCmd
@@ -34,18 +35,29 @@ namespace IBMiCmd
                     commands[i] = "QUOTE RCMD " + commands[i];
                 }
 
-                IBMi.runCommands(commands);
-                loadNewCommands();
+                Thread gothread = new Thread((ThreadStart)delegate { runCommands(commands); });
+                gothread.Start();
             }
+        }
+
+        public void runCommands(string[] commands)
+        {
+            IBMi.runCommands(commands);
+            loadNewCommands();
         }
 
         public void loadNewCommands()
         {
-            richTextBox1.AppendText(Environment.NewLine);
-            foreach (string line in IBMi.getOutput())
+            Invoke((MethodInvoker)delegate
             {
-                richTextBox1.AppendText(Environment.NewLine + "> " + line);
-            }
+                richTextBox1.AppendText(Environment.NewLine);
+                foreach (string line in IBMi.getOutput())
+                {
+                    richTextBox1.AppendText(Environment.NewLine + "> " + line);
+                }
+            });
         }
+
+
     }
 }
