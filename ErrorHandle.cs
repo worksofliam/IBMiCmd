@@ -73,7 +73,7 @@ namespace IBMiCmd
                         linenum = int.Parse(err.Substring(37, 6));
                         sqldiff = 0;
 
-                        if (sev >= 10)
+                        if (sev >= 20)
                         {
                             foreach (expRange range in exps)
                             {

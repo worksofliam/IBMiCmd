@@ -1,5 +1,6 @@
 ﻿using NppPluginNET;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -48,7 +49,7 @@ namespace IBMiCmd.Forms
 
                 for(int i = 0; i < cmds.Length; i++)
                 {
-                    cmds[i] = cmds[i].Trim();
+                    cmds[i] = replaceVars(cmds[i].Trim());
                     data = cmds[i].Split(' ');
 
                     switch (data[0].ToUpper())
@@ -85,6 +86,28 @@ namespace IBMiCmd.Forms
                     Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, Main.errorWindow.Handle);
                 }
             }
+        }
+        
+        private static string replaceVars(string cmd)
+        {
+            StringBuilder path = new StringBuilder(Win32.MAX_PATH);
+            Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFILENAME, 0, path);
+            string[] name;
+            if (path.ToString().Contains("."))
+            {
+                name = path.ToString().Split('.');
+            }
+            else
+            {
+                name = new string[2];
+                name[0] = path.ToString();
+                name[1] = "";
+            }
+
+            cmd = cmd.Replace("%file%", name[0]);
+            cmd = cmd.Replace("%ext%", name[1]);
+
+            return cmd;
         }
 
         private void wrkwithBind(object sender, System.EventArgs e)

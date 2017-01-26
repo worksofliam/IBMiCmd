@@ -5,6 +5,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Threading;
+using NppPluginNET;
 
 namespace IBMiCmd
 {
@@ -108,6 +109,7 @@ namespace IBMiCmd
 
         public static void runCommands(string[] list)
         {
+            flushOutput();
             string tempfile = Path.GetTempFileName() + ".ftp";
             List<string> lines = new List<string>();
 
