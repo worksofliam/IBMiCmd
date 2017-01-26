@@ -10,6 +10,7 @@ namespace IBMiCmd
 {
     class IBMi
     {
+        private static Boolean _notConnected = false;
         private static Dictionary<string, string> _config = new Dictionary<string, string>();
         private static List<string> _output = new List<string>();
         private static string _ConfigFile;
@@ -121,11 +122,11 @@ namespace IBMiCmd
 
             File.WriteAllLines(tempfile, lines.ToArray());
             runFTP(tempfile);
-            File.Delete(tempfile);
         }
 
         private static void runFTP(string FileLoc)
         {
+            _notConnected = false;
             Process process = new Process();
             process.StartInfo.FileName = "cmd.exe";
             process.StartInfo.Arguments = "/c FTP -n -s:\"" + FileLoc + "\" " + _config["system"];
@@ -151,12 +152,20 @@ namespace IBMiCmd
             {
                 if (outLine.Data.Length >= 5)
                 {
-                    switch (outLine.Data.Substring(0, 3))
+                    if (outLine.Data.Trim() == "Not connected.")
                     {
-                        case "250":
-                        case "550":
-                            _output.Add(outLine.Data.Substring(4));
-                            break;
+                        if (!_notConnected) _output.Add("Not connected to " + _config["system"]);
+                        _notConnected = true;
+                    }
+                    else
+                    {
+                        switch (outLine.Data.Substring(0, 3))
+                        {
+                            case "250":
+                            case "550":
+                                _output.Add(outLine.Data.Substring(4));
+                                break;
+                        }
                     }
                 }
             }

@@ -23,7 +23,8 @@ namespace IBMiCmd
 
             commands.Add("ASCII");
             commands.Add("cd /QSYS.lib");
-            commands.Add("recv " + lib + ".lib/EVFEVENT.file/" + obj + ".mbr " + filetemp);
+            commands.Add("recv " + lib + ".lib/EVFEVENT.file/" + obj + ".mbr \"" + filetemp + "\"");
+
             IBMi.runCommands(commands.ToArray());
 
             ErrorHandle.doName(lib + '/' + obj);
