@@ -89,7 +89,7 @@ namespace IBMiCmd
                             linenum -= sqldiff;
                         }
 
-                        _Errors.Add(new lineError(sev, linenum.ToString(), err.Substring(65)));
+                        _Errors.Add(new lineError(sev, linenum, err.Substring(65), err.Substring(48, 7)));
                         break;
                 }
             }

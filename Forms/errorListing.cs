@@ -53,8 +53,8 @@ namespace IBMiCmd.Forms
                     if (error.getSev() > 0)
                     {
                         realErrors += 1;
-                        curNode = master.Nodes.Add(error.getData().Trim() + " (" + error.getLine().Trim() + ")");
-                        curNode.Tag = error.getLine().Trim();
+                        curNode = master.Nodes.Add(error.getCode() + ": " + error.getData().Trim() + " (" + error.getLine().ToString() + ")");
+                        curNode.Tag = error.getLine().ToString();
                     }
                 }
 
