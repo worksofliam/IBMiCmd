@@ -26,9 +26,10 @@ namespace IBMiCmd
                 _config.Add("username", "myuser");
                 _config.Add("password", "mypass");
 
-                _config.Add("binds", "RELIC|BUILD");
-                _config.Add("RELIC", "CRTBNDRPG OBJ(#LALLAN/RELIC) SRCSTMF('RelicPackageManager/QSOURCE/RELIC.SQLRPGLE') OPTION(*EVENTF) REPLACE(*YES) COMMIT(*NONE)");
-                _config.Add("BUILD", "CD '/home/LALLAN'|CRTBNDRPG PGM(#LALLAN/BUILD) SRCSTMF('RelicPackageManager/QSOURCE/BUILD.SQLRPGLE') OPTION(*EVENTF) REPLACE(*YES)|ERRORS #LALLAN BUILD");
+                _config.Add("binds", "COMPILE|RELIC|BUILD");
+                _config.Add("COMPILE", "CD '/home/MYUSER'|CRTSQLRPGI OBJ(#MYUSER/%file%) SRCSTMF('%file%.%ext%') OPTION(*EVENTF) REPLACE(*YES) COMMIT(*NONE)|ERRORS #MYUSER %file%");
+                _config.Add("RELIC", "CRTBNDRPG OBJ(#MYUSER/RELIC) SRCSTMF('RelicPackageManager/QSOURCE/RELIC.SQLRPGLE') OPTION(*EVENTF) REPLACE(*YES) COMMIT(*NONE)");
+                _config.Add("BUILD", "CD '/home/MYUSER'|CRTBNDRPG PGM(#MYUSER/BUILD) SRCSTMF('RelicPackageManager/QSOURCE/BUILD.SQLRPGLE') OPTION(*EVENTF) REPLACE(*YES)|ERRORS #MYUSER BUILD");
 
                 printConfig();
 
