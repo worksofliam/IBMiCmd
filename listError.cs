@@ -4,13 +4,15 @@
     {
         private int _sev;
         private int _line;
+        private int _col;
         private string _data = "";
         private string _errcode;
 
-        public lineError(int sev, int line, string data, string errcode)
+        public lineError(int sev, int line, int col, string data, string errcode)
         {
             _sev = sev;
             _line = line;
+            _col = col;
             _data = data;
             _errcode = errcode;
         }
@@ -23,6 +25,11 @@
         public int getLine()
         {
             return _line;
+        }
+
+        public int getColumn()
+        {
+            return _col;
         }
 
         public string getData()

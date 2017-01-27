@@ -50,7 +50,7 @@ namespace IBMiCmd
 
             string err;
             int sev;
-            int linenum, sqldiff;
+            int linenum, column, sqldiff;
 
             List<expRange> exps = new List<expRange>();
             string[] pieces;
@@ -71,6 +71,7 @@ namespace IBMiCmd
                     case "ERROR":
                         sev = int.Parse(err.Substring(58, 2));
                         linenum = int.Parse(err.Substring(37, 6));
+                        column = int.Parse(err.Substring(33, 3));
                         sqldiff = 0;
 
                         if (sev >= 20)
@@ -89,7 +90,7 @@ namespace IBMiCmd
                             linenum -= sqldiff;
                         }
 
-                        _Errors.Add(new lineError(sev, linenum, err.Substring(65), err.Substring(48, 7)));
+                        _Errors.Add(new lineError(sev, linenum, column, err.Substring(65), err.Substring(48, 7)));
                         break;
                 }
             }

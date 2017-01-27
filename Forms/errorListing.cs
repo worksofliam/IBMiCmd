@@ -23,11 +23,17 @@ namespace IBMiCmd.Forms
             }
             else
             {
-                int line;
-                if (!int.TryParse(e.Node.Tag.ToString(), out line)) return;
+                string[] data = e.Node.Tag.ToString().Split(',');
+                int line, col, pos;
+
+                line = int.Parse(data[0]) - 1;
+                col = int.Parse(data[1]) - 1;
+
                 IntPtr curScintilla = PluginBase.GetCurrentScintilla();
-                Win32.SendMessage(curScintilla, SciMsg.SCI_ENSUREVISIBLE, line - 1, 0);
-                Win32.SendMessage(curScintilla, SciMsg.SCI_GOTOLINE, line - 1, 0);
+                Win32.SendMessage(curScintilla, SciMsg.SCI_ENSUREVISIBLE, line, 0);
+                pos = (int)Win32.SendMessage(curScintilla, SciMsg.SCI_POSITIONFROMLINE, line, 0);
+                pos += col;
+                Win32.SendMessage(curScintilla, SciMsg.SCI_GOTOPOS, pos, 0);
                 Win32.SendMessage(curScintilla, SciMsg.SCI_GRABFOCUS, 0, 0);
             }
         }
@@ -54,7 +60,7 @@ namespace IBMiCmd.Forms
                     {
                         realErrors += 1;
                         curNode = master.Nodes.Add(error.getCode() + ": " + error.getData().Trim() + " (" + error.getLine().ToString() + ")");
-                        curNode.Tag = error.getLine().ToString();
+                        curNode.Tag = error.getLine().ToString() + ',' + error.getColumn().ToString();
                     }
                 }
 
