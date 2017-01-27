@@ -31,10 +31,13 @@ namespace IBMiCmd.Forms
 
                 IntPtr curScintilla = PluginBase.GetCurrentScintilla();
                 Win32.SendMessage(curScintilla, SciMsg.SCI_ENSUREVISIBLE, line, 0);
-                pos = (int)Win32.SendMessage(curScintilla, SciMsg.SCI_POSITIONFROMLINE, line, 0);
-                pos += col;
-                Win32.SendMessage(curScintilla, SciMsg.SCI_GOTOPOS, pos, 0);
-                Win32.SendMessage(curScintilla, SciMsg.SCI_GRABFOCUS, 0, 0);
+                if (line >= 0)
+                {
+                    pos = (int)Win32.SendMessage(curScintilla, SciMsg.SCI_POSITIONFROMLINE, line, 0);
+                    pos += col;
+                    Win32.SendMessage(curScintilla, SciMsg.SCI_GOTOPOS, pos, 0);
+                    Win32.SendMessage(curScintilla, SciMsg.SCI_GRABFOCUS, 0, 0);
+                }
             }
         }
 

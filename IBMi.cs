@@ -34,6 +34,7 @@ namespace IBMiCmd
                 printConfig();
 
                 MessageBox.Show("A new IBM i config has been created. Please edit your config and restart Notepad++.");
+                Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DOOPEN, 0, FileLoc);
             }
 
             foreach (string Line in File.ReadAllLines(FileLoc))
