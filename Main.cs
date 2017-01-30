@@ -15,7 +15,6 @@ namespace IBMiCmd
         #region " Fields "
         internal const string PluginName = "IBMiCmd";
         static string iniFilePath = null;
-        static bool someSetting = false;
         public static commandEntry commandWindow = null;
         public static errorListing errorWindow = null;
         public static cmdBindings bindsWindow = null;
@@ -34,9 +33,7 @@ namespace IBMiCmd
             if (!Directory.Exists(iniFilePath)) Directory.CreateDirectory(iniFilePath);
 
             IBMi.loadConfig(iniFilePath + PluginName + ".cfg");
-            iniFilePath = Path.Combine(iniFilePath, PluginName + ".ini");
-            someSetting = (Win32.GetPrivateProfileInt("SomeSection", "SomeKey", 0, iniFilePath) != 0);
-
+            
             PluginBase.SetCommand(0, "About IBMiCmd", myMenuFunction, new ShortcutKey(false, false, false, Keys.None));
             PluginBase.SetCommand(1, "IBM i Command Entry", commandDialog); idMyDlg = 1;
             PluginBase.SetCommand(2, "IBM i Error Listing", errorDialog);
@@ -44,16 +41,11 @@ namespace IBMiCmd
         }
         internal static void SetToolBarIcon()
         {
-            toolbarIcons tbIcons = new toolbarIcons();
-            tbIcons.hToolbarBmp = tbBmp.GetHbitmap();
-            IntPtr pTbIcons = Marshal.AllocHGlobal(Marshal.SizeOf(tbIcons));
-            Marshal.StructureToPtr(tbIcons, pTbIcons, false);
-            Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_ADDTOOLBARICON, PluginBase._funcItems.Items[idMyDlg]._cmdID, pTbIcons);
-            Marshal.FreeHGlobal(pTbIcons);
+            
         }
         internal static void PluginCleanUp()
         {
-            Win32.WritePrivateProfileString("SomeSection", "SomeKey", someSetting ? "1" : "0", iniFilePath);
+            
         }
         #endregion
 
