@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
-using System.Windows.Forms;
+using System.Linq;
 
 namespace IBMiCmd
 {
@@ -10,7 +9,10 @@ namespace IBMiCmd
     {
         private static string _name = "";
         private static string[] _Lines;
-        private static List<lineError> _Errors;
+
+        private static int _FileID;
+        private static Dictionary<int, string> _FileIDs;
+        private static Dictionary<int, List<lineError>> _Errors;
 
         public static void getErrors(string lib, string obj)
         {
@@ -46,13 +48,14 @@ namespace IBMiCmd
 
         public static void wrkErrors()
         {
-            _Errors = new List<lineError>();
+            _FileIDs = new Dictionary<int, string>();
+            _Errors = new Dictionary<int, List<lineError>>();
 
             string err;
             int sev;
             int linenum, column, sqldiff;
 
-            List<expRange> exps = new List<expRange>();
+            List<expRange> exps = null;
             string[] pieces;
             string curtype;
 
@@ -60,14 +63,28 @@ namespace IBMiCmd
             {
                 if (line == null) continue;
                 err = line.PadRight(150);
+                pieces = err.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 curtype = err.Substring(0, 10).TrimEnd();
                 switch(curtype)
                 {
-                    case "EXPANSION":
-                        pieces = err.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                        exps.Add(new expRange(int.Parse(pieces[6]), int.Parse(pieces[7])));
-
+                    case "FILEID":
+                        exps = new List<expRange>();
+                        _FileID = int.Parse(pieces[2]);
+                        if (_FileIDs.ContainsKey(_FileID))
+                        {
+                            _FileIDs[_FileID] = pieces[5];
+                        }
+                        else
+                        {
+                            _FileIDs.Add(_FileID, pieces[5]);
+                            _Errors.Add(_FileID, new List<lineError>());
+                        }
                         break;
+
+                    case "EXPANSION":
+                        exps.Add(new expRange(int.Parse(pieces[6]), int.Parse(pieces[7])));
+                        break;
+
                     case "ERROR":
                         sev = int.Parse(err.Substring(58, 2));
                         linenum = int.Parse(err.Substring(37, 6));
@@ -90,15 +107,25 @@ namespace IBMiCmd
                             linenum -= sqldiff;
                         }
 
-                        _Errors.Add(new lineError(sev, linenum, column, err.Substring(65), err.Substring(48, 7)));
+                        _Errors[_FileID].Add(new lineError(sev, linenum, column, err.Substring(65), err.Substring(48, 7)));
                         break;
                 }
             }
         }
 
-        public static lineError[] getErrors()
+        public static int[] getFileIDs()
         {
-            return _Errors.ToArray();
+            return _FileIDs.Keys.ToArray();
+        }
+
+        public static string getFilePath(int fileid)
+        {
+            return _FileIDs[fileid];
+        }
+
+        public static lineError[] getErrors(int fileid)
+        {
+            return _Errors[fileid].ToArray();
         }
     }
 

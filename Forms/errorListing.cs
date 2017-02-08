@@ -6,8 +6,6 @@ namespace IBMiCmd.Forms
 {
     public partial class errorListing : Form
     {
-        private TreeNode master;
-
         public errorListing()
         {
             InitializeComponent();
@@ -45,34 +43,39 @@ namespace IBMiCmd.Forms
         {
             Invoke((MethodInvoker)delegate
             {
-                if (master == null)
-                {
-                    master = treeView1.Nodes.Add(ErrorHandle.doName());
-                }
-                else
-                {
-                    master.Text = ErrorHandle.doName();
-                    master.Nodes.Clear();
-                }
-
+                int totalErrors = 0;
                 TreeNode curNode;
-                int realErrors = 0;
-                foreach (lineError error in ErrorHandle.getErrors())
+
+                treeView1.Nodes.Clear(); //Clear out the nodes
+
+                //Add the node that allows object change
+                curNode = new TreeNode("Double click to change object");
+                curNode.Tag = "CHG";
+                treeView1.Nodes.Add(curNode);
+
+                //Add the errors
+                TreeNode curErr;
+                foreach (int fileid in ErrorHandle.getFileIDs())
                 {
-                    if (error.getSev() > 0)
+                    curNode = new TreeNode(ErrorHandle.getFilePath(fileid));
+                    foreach (lineError error in ErrorHandle.getErrors(fileid))
                     {
-                        realErrors += 1;
-                        curNode = master.Nodes.Add(error.getCode() + ": " + error.getData().Trim() + " (" + error.getLine().ToString() + ")");
-                        curNode.Tag = error.getLine().ToString() + ',' + error.getColumn().ToString();
+                        if (error.getSev() >= 20)
+                        {
+                            totalErrors += 1;
+                            curErr = curNode.Nodes.Add(error.getCode() + ": " + error.getData().Trim() + " (" + error.getLine().ToString() + ")");
+                            curErr.Tag = error.getLine().ToString() + ',' + error.getColumn().ToString();
+                        }
+                    }
+
+                    //Only add a node if there is something to display
+                    if (curNode.Nodes.Count > 0)
+                    {
+                        treeView1.Nodes.Add(curNode);
                     }
                 }
 
-                if (realErrors == 0)
-                {
-                    master.Nodes.Add("No errors found.");
-                }
-
-                master.Expand();
+                treeView1.Nodes.Add(new TreeNode("Total errors: " + totalErrors.ToString()));
             });
         }
     }
