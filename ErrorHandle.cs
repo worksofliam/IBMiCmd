@@ -72,7 +72,7 @@ namespace IBMiCmd
                     case "FILEID":
                         if (_FileIDs.ContainsKey(_FileID))
                         {
-                            _FileIDs[_FileID] = pieces[5];
+                            //_FileIDs[_FileID] = pieces[5];
                         }
                         else
                         {
