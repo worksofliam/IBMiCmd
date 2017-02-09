@@ -35,9 +35,10 @@ namespace IBMiCmd
             IBMi.loadConfig(iniFilePath + PluginName + ".cfg");
             
             PluginBase.SetCommand(0, "About IBMiCmd", myMenuFunction, new ShortcutKey(false, false, false, Keys.None));
-            PluginBase.SetCommand(1, "IBM i Command Entry", commandDialog); idMyDlg = 1;
-            PluginBase.SetCommand(2, "IBM i Error Listing", errorDialog);
-            PluginBase.SetCommand(3, "IBM i Command Bindings", bindsDialog);
+            PluginBase.SetCommand(1, "IBM i Remote System Setup", remoteSetup);
+            PluginBase.SetCommand(2, "IBM i Command Entry", commandDialog);
+            PluginBase.SetCommand(3, "IBM i Error Listing", errorDialog);
+            PluginBase.SetCommand(4, "IBM i Command Bindings", bindsDialog);
         }
         internal static void SetToolBarIcon()
         {
@@ -53,6 +54,11 @@ namespace IBMiCmd
         internal static void myMenuFunction()
         {
             MessageBox.Show("IBMiCmds, created by WorksOfBarry.");
+        }
+
+        internal static void remoteSetup()
+        {
+            new userSettings().ShowDialog();
         }
 
         internal static void commandDialog()

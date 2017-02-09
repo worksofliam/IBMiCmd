@@ -33,8 +33,8 @@ namespace IBMiCmd
 
                 printConfig();
 
-                MessageBox.Show("A new IBM i config has been created. Please edit your config and restart Notepad++.");
-                Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DOOPEN, 0, FileLoc);
+                MessageBox.Show("Thanks for using IBMiCmds. You will now be prompted to enter in a Remote System.");
+                Main.remoteSetup();
             }
 
             foreach (string Line in File.ReadAllLines(FileLoc))

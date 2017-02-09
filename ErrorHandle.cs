@@ -13,6 +13,7 @@ namespace IBMiCmd
         private static int _FileID;
         private static Dictionary<int, string> _FileIDs;
         private static Dictionary<int, List<lineError>> _Errors;
+        private static Dictionary<int, List<expRange>> _Expansions;
 
         public static void getErrors(string lib, string obj)
         {
@@ -50,12 +51,12 @@ namespace IBMiCmd
         {
             _FileIDs = new Dictionary<int, string>();
             _Errors = new Dictionary<int, List<lineError>>();
+            _Expansions = new Dictionary<int, List<expRange>>();
 
             string err;
             int sev;
             int linenum, column, sqldiff;
-
-            List<expRange> exps = null;
+            
             string[] pieces;
             string curtype;
 
@@ -65,11 +66,10 @@ namespace IBMiCmd
                 err = line.PadRight(150);
                 pieces = err.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 curtype = err.Substring(0, 10).TrimEnd();
-                switch(curtype)
+                _FileID = int.Parse(line.Substring(13, 3));
+                switch (curtype)
                 {
                     case "FILEID":
-                        exps = new List<expRange>();
-                        _FileID = int.Parse(pieces[2]);
                         if (_FileIDs.ContainsKey(_FileID))
                         {
                             _FileIDs[_FileID] = pieces[5];
@@ -78,11 +78,12 @@ namespace IBMiCmd
                         {
                             _FileIDs.Add(_FileID, pieces[5]);
                             _Errors.Add(_FileID, new List<lineError>());
+                            _Expansions.Add(_FileID, new List<expRange>());
                         }
                         break;
 
                     case "EXPANSION":
-                        exps.Add(new expRange(int.Parse(pieces[6]), int.Parse(pieces[7])));
+                        _Expansions[_FileID].Add(new expRange(int.Parse(pieces[6]), int.Parse(pieces[7])));
                         break;
 
                     case "ERROR":
@@ -93,7 +94,7 @@ namespace IBMiCmd
 
                         if (sev >= 20)
                         {
-                            foreach (expRange range in exps)
+                            foreach (expRange range in _Expansions[_FileID])
                             {
                                 if (range.inRange(linenum))
                                 {

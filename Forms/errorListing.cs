@@ -51,6 +51,8 @@ namespace IBMiCmd.Forms
                 //Add the node that allows object change
                 curNode = new TreeNode("Double click to change object");
                 curNode.Tag = "CHG";
+                curNode.ImageIndex = 0;
+                curNode.SelectedImageIndex = 0;
                 treeView1.Nodes.Add(curNode);
 
                 //Add the errors
@@ -65,17 +67,24 @@ namespace IBMiCmd.Forms
                             totalErrors += 1;
                             curErr = curNode.Nodes.Add(error.getCode() + ": " + error.getData().Trim() + " (" + error.getLine().ToString() + ")");
                             curErr.Tag = error.getLine().ToString() + ',' + error.getColumn().ToString();
+                            curErr.ImageIndex = 2;
+                            curErr.SelectedImageIndex = 2;
                         }
                     }
 
                     //Only add a node if there is something to display
                     if (curNode.Nodes.Count > 0)
                     {
+                        curNode.ImageIndex = 1;
+                        curNode.SelectedImageIndex = 1;
                         treeView1.Nodes.Add(curNode);
                     }
                 }
 
-                treeView1.Nodes.Add(new TreeNode("Total errors: " + totalErrors.ToString()));
+                curNode = new TreeNode("Total errors: " + totalErrors.ToString());
+                curNode.ImageIndex = 3;
+                curNode.SelectedImageIndex = 3;
+                treeView1.Nodes.Add(curNode);
             });
         }
     }

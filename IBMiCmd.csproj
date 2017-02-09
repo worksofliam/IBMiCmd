@@ -125,6 +125,12 @@
     <Compile Include="Forms\programChoose.Designer.cs">
       <DependentUpon>programChoose.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\userSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\userSettings.Designer.cs">
+      <DependentUpon>userSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\wrkBind.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -156,6 +162,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\programChoose.resx">
       <DependentUpon>programChoose.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\userSettings.resx">
+      <DependentUpon>userSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\wrkBind.resx">
       <DependentUpon>wrkBind.cs</DependentUpon>
