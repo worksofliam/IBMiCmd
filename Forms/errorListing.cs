@@ -83,6 +83,7 @@ namespace IBMiCmd.Forms
 
                 toolStripStatusLabel1.Text = "Total errors: " + totalErrors.ToString();
                 toolStripStatusLabel2.Text = ErrorHandle.doName();
+                toolStripStatusLabel3.Text = DateTime.Now.ToString("h:mm:ss tt");
             });
         }
     }
