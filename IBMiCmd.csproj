@@ -143,6 +143,12 @@
     <Compile Include="Forms\prompts\listPrompt.Designer.cs">
       <DependentUpon>listPrompt.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\rpgForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\rpgForm.Designer.cs">
+      <DependentUpon>rpgForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\userSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -189,6 +195,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\prompts\listPrompt.resx">
       <DependentUpon>listPrompt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\rpgForm.resx">
+      <DependentUpon>rpgForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\userSettings.resx">
       <DependentUpon>userSettings.cs</DependentUpon>
