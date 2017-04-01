@@ -39,6 +39,7 @@ namespace IBMiCmd
             PluginBase.SetCommand(2, "IBM i Command Entry", commandDialog);
             PluginBase.SetCommand(3, "IBM i Error Listing", errorDialog);
             PluginBase.SetCommand(4, "IBM i Command Bindings", bindsDialog);
+            PluginBase.SetCommand(5, "IBM i Compile Bind Creator", launchPrompter);
         }
         internal static void SetToolBarIcon()
         {
@@ -54,6 +55,11 @@ namespace IBMiCmd
         internal static void myMenuFunction()
         {
             MessageBox.Show("IBMiCmds, created by WorksOfBarry.");
+        }
+
+        internal static void launchPrompter()
+        {
+            new Forms.prompts.listPrompt().Show();
         }
 
         internal static void remoteSetup()

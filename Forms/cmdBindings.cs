@@ -29,7 +29,8 @@ namespace IBMiCmd.Forms
             {
                 bindings.Add(bind.Trim());
             }
-            foreach(string bind in bindings)
+            treeView1.Nodes.Clear();
+            foreach (string bind in bindings)
             {
                 curNode = treeView1.Nodes.Add(bind);
                 curNode.Tag = IBMi.getConfig(bind);
