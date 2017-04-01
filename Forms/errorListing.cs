@@ -81,10 +81,8 @@ namespace IBMiCmd.Forms
                     }
                 }
 
-                curNode = new TreeNode("Total errors: " + totalErrors.ToString());
-                curNode.ImageIndex = 3;
-                curNode.SelectedImageIndex = 3;
-                treeView1.Nodes.Add(curNode);
+                toolStripStatusLabel1.Text = "Total errors: " + totalErrors.ToString();
+                toolStripStatusLabel2.Text = ErrorHandle.doName();
             });
         }
     }

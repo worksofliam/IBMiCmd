@@ -30,7 +30,7 @@ namespace IBMiCmd
 
             IBMi.runCommands(commands.ToArray());
 
-            ErrorHandle.doName(lib + '/' + obj);
+            ErrorHandle.doName(lib.ToUpper() + '/' + obj.ToUpper());
             ErrorHandle.setLines(File.ReadAllLines(filetemp));
         }
 
