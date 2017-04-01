@@ -65,13 +65,12 @@ namespace IBMiCmd.Forms.prompts
             list.Add("CRTSRCPF FILE(QTEMP/IBMICMDSRC) RCDLEN(112)");
             list.Add("CPYFRMSTMF FROMSTMF('" + textBox2.Text + "') TOMBR('/QSYS.lib/QTEMP.lib/IBMICMDSRC.file/THECL.mbr') MBROPT(*ADD)");
             list.Add("CRTBNDCL PGM(" + textBox1.Text.ToUpper() + ") SRCFILE(QTEMP/IBMICMDSRC) SRCMBR(THECL) " + textBox4.Text);
+            list.Add("DLTOBJ OBJ(QTEMP/IBMICMDSRC) OBJTYPE(*FILE)");
 
             if (checkBox1.Checked)
             {
                 list.Add("ERRORS " + textBox1.Text.Replace('/', ' '));
             }
-
-            list.Add("DLTOBJ OBJ(QTEMP/IBMICMDSRC) OBJTYPE(*FILE)");
 
             return list.ToArray();
         }
