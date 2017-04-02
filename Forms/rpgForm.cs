@@ -33,6 +33,8 @@ namespace IBMiCmd.Forms
             string output = "";
             string field = "";
 
+            string field1 = "", field2 = "", result = "", opcode = "";
+
             switch(Char.ToUpper(chars[6]))
             {
                 case 'D':
@@ -150,6 +152,35 @@ namespace IBMiCmd.Forms
                             break;
                         case 'E':
                             output = "End-Proc;";
+                            break;
+                    }
+                    break;
+
+                case 'C':
+                    int spaces = 0;
+                    field1 = input.Substring(12, 14).Trim();
+                    opcode = input.Substring(26, 10).Trim().ToUpper();
+                    field2 = input.Substring(36, 14).Trim();
+                    result = input.Substring(50, 14).Trim();
+
+                    switch (opcode)
+                    {
+                        case "ADD":
+                            output = result + " = " + field1 + " + " + field2 + ";";
+                            break;
+                        case "BEGSR":
+                            output = opcode + " " + field1 + ";";
+                            break;
+                        case "CAT":
+                            if (field2.Contains(":"))
+                            {
+                                spaces = int.Parse(field2.Split(':')[1]);
+                                field2 = field2.Split(':')[0].Trim();
+                            }
+                            output = result + " = " + field1 + "+ '" + "".PadLeft(spaces) + "' + " + field2 + ";";
+                            break;
+                        case "CHAIN":
+                            output = opcode + " " + field1 + " " + field2 + " " + result + ";";
                             break;
                     }
                     break;
