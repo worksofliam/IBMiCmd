@@ -33,7 +33,8 @@ namespace IBMiCmd.Forms
             string output = "";
             string field = "";
 
-            string field1 = "", field2 = "", result = "", opcode = "";
+            string factor1 = "", factor2 = "", result = "", opcode = "", extended = "";
+            string ind1, ind2, ind3;
 
             switch(Char.ToUpper(chars[6]))
             {
@@ -158,36 +159,200 @@ namespace IBMiCmd.Forms
 
                 case 'C':
                     int spaces = 0;
-                    field1 = input.Substring(12, 14).Trim();
+                    string sep = "";
+                    factor1 = input.Substring(12, 14).Trim();
                     opcode = input.Substring(26, 10).Trim().ToUpper();
-                    field2 = input.Substring(36, 14).Trim();
+                    factor2 = input.Substring(36, 14).Trim();
+                    extended = input.Substring(36).Trim();
                     result = input.Substring(50, 14).Trim();
+
+                    ind1 = input.Substring(71, 2);
+                    ind2 = input.Substring(73, 2);
+                    ind3 = input.Substring(75, 2);
 
                     switch (opcode)
                     {
                         case "ADD":
-                            output = result + " = " + field1 + " + " + field2 + ";";
+                            output = result + " = " + factor1 + " + " + factor2 + ";";
                             break;
                         case "BEGSR":
-                            output = opcode + " " + field1 + ";";
+                            output = opcode + " " + factor1 + ";";
                             break;
                         case "CAT":
-                            if (field2.Contains(":"))
+                            if (factor2.Contains(":"))
                             {
-                                spaces = int.Parse(field2.Split(':')[1]);
-                                field2 = field2.Split(':')[0].Trim();
+                                spaces = int.Parse(factor2.Split(':')[1]);
+                                factor2 = factor2.Split(':')[0].Trim();
                             }
-                            output = result + " = " + field1 + "+ '" + "".PadLeft(spaces) + "' + " + field2 + ";";
+                            output = result + " = " + factor1 + "+ '" + "".PadLeft(spaces) + "' + " + factor2 + ";";
                             break;
                         case "CHAIN":
-                            output = opcode + " " + field1 + " " + field2 + " " + result + ";";
+                            output = opcode + " " + factor1 + " " + factor2 + " " + result + ";";
                             break;
+                        case "CHECK":
+                            output = result + " = %Check(" + factor1 + ":" + factor2 + ");";
+                            break;
+                        case "CHECKR":
+                            output = result + " = %CheckR(" + factor1 + ":" + factor2 + ");";
+                            break;
+                        case "CLEAR":
+                            output = opcode + " " + factor1 + " " + factor2 + " " + result + ";";
+                            break;
+                        case "CLOSE":
+                            output = opcode + " " + factor2 + ";";
+                            break;
+                        case "DELETE":
+                            output = opcode + " " + factor2 + ";";
+                            break;
+                        case "DIV":
+                            output = result + " = " + factor1 + " / " + factor2 + ";";
+                            break;
+                        case "DO":
+                            output = "For " + result + " = " + factor1 + " to " + factor2 + ";";
+                            break;
+                        case "DOU":
+                        case "DOW":
+                            output = opcode + " " + extended + ";";
+                            break;
+                        case "DSPLY":
+                            output = opcode + " (" + factor1 + ") " + factor2 + " " + result + ";";
+                            break;
+                        case "ELSE":
+                            output = opcode + " " + factor2 + ";";
+                            break;
+                        case "ELSEIF":
+                            output = opcode + " " + factor2 + ";";
+                            break;
+                        case "ENDDO":
+                            MessageBox.Show("Result may be incorrect for current loop block.");
+                            output = "Enddo;";
+                            break;
+                        case "ENDIF":
+                            output = opcode + ";";
+                            break;
+                        case "ENDMON":
+                            output = opcode + ";";
+                            break;
+                        case "ENDSL":
+                            output = opcode + ";";
+                            break;
+                        case "ENDSR":
+                            output = opcode + ";";
+                            break;
+                        case "EVAL":
+                            output = extended + ";";
+                            break;
+                        case "EVALR":
+                            output = opcode + " " + extended + ";";
+                            break;
+                        case "EXFMT":
+                            output = opcode + " " + factor2 + ";";
+                            break;
+                        case "EXSR":
+                            output = opcode + " " + factor2 + ";";
+                            break;
+                        case "FOR":
+                            output = opcode + " " + extended + ";";
+                            break;
+                        case "IF":
+                            output = opcode + " " + extended + ";";
+                            break;
+                        case "IN":
+                            output = opcode + " " + factor1 + " " + factor2 + ";";
+                            break;
+                        case "ITER":
+                            output = opcode + ";";
+                            break;
+                        case "LEAVE":
+                            output = opcode + ";";
+                            break;
+                        case "LEAVESR":
+                            output = opcode + ";";
+                            break;
+                        case "LOOKUP":
+                            output = "*In" + ind3 + " = (%Lookup(" + factor1 + ":" + factor2 + ") > 0);";
+                            break;
+                        case "MONITOR":
+                            output = opcode + ";";
+                            break;
+                        case "MULT":
+                            output = result + " = " + factor1 + " / " + factor2 + ";";
+                            break;
+                        case "ON-ERROR":
+                            output = opcode + " " + factor2 + ";";
+                            break;
+                        case "OPEN":
+                            output = opcode + " " + factor2 + ";";
+                            break;
+                        case "OUT":
+                            output = opcode + " " + factor1 + " " + factor2 + ";";
+                            break;
+                        case "READ":
+                        case "READC":
+                            output = opcode + " " + factor2 + " " + result + ";";
+                            break;
+                        case "READE":
+                            output = opcode + " " + factor1 + " " + factor2 + " " + result + ";";
+                            break;
+                        case "READP":
+                            output = opcode + " " + factor2 + " " + result + ";";
+                            break;
+                        case "READPE":
+                            output = opcode + " " + factor1 + " " + factor2 + " " + result + ";";
+                            break;
+                        case "RETURN":
+                            output = opcode + " " + factor2 + ";";
+                            break;
+                        case "SCAN":
+                            output = result + " = %Scan(" + factor1 + ":" + factor2 + ");";
+                            break;
+                        case "SELECT":
+                            output = opcode + ";";
+                            break;
+                        case "SETGT":
+                            output = opcode + " " + factor1 + " " + factor2 + ";";
+                            break;
+                        case "SETLL":
+                            output = opcode + " " + factor1 + " " + factor2 + ";";
+                            break;
+                        case "SORTA":
+                            output = opcode + " " + extended + ";";
+                            break;
+                        case "SUB":
+                            output = result + " = " + factor1 + " - " + factor2 + ";";
+                            break;
+                        case "SUBST":
+                            if (factor2.Contains(":"))
+                            {
+                                sep = factor2.Split(':')[1];
+                                factor2 = factor2.Split(':')[0].Trim();
+                            }
+                            output = result + " = %Subst(" + factor2 + ":" + sep + ":" + factor1 + ");";
+                            break;
+                        case "UNLOCK":
+                            output = opcode + " " + factor2 + ";";
+                            break;
+                        case "UPDATE":
+                            output = opcode + " " + factor2 + " " + result + ";";
+                            break;
+                        case "WRITE":
+                            output = opcode + " " + factor2 + " " + result + ";";
+                            break;
+                        case "Z-ADD":
+                            output = result + " = 0 + " + factor2;
+                            break;
+                        case "Z-SUB":
+                            output = result + " = 0 - " + factor2;
+                            break;
+                        default:
+                            MessageBox.Show(output + " is not supported.", "Conversion error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return "";
                     }
                     break;
 
                 default:
                     MessageBox.Show("Specification not supported by converter.", "Conversion error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    break;
+                    return "";
             }
 
             return "".PadLeft(8) + output;

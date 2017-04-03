@@ -9,7 +9,7 @@ IBMiCmd (maybe referenced as IBMiCmds) is a Notepad++ plugin for ILE development
 * Command entry
 * System bindings (a group of system commands to submit on one job - primarily for compiling)
 * Error listing for ILE compiles (read from the EVFEVENT file)
-* Ability to convert fixed-format definitions to free-format
+* Ability to convert fixed-format definitions and calculations to free-format
 
 ### Prerequisites
 

@@ -107,6 +107,7 @@
             this.Controls.Add(this.textBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "rpgForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Fixed to free form - RPG";
             this.Load += new System.EventHandler(this.rpgForm_Load);
             this.ResumeLayout(false);
