@@ -25,6 +25,8 @@ namespace IBMiCmd
                 _config.Add("system", "mysystem");
                 _config.Add("username", "myuser");
                 _config.Add("password", "mypass");
+                _config.Add("relicdir", "rpgapp");
+                _config.Add("reliclib", "#dev");
 
                 _config.Add("binds", "COMPILE|RELIC|BUILD");
                 _config.Add("COMPILE", "CD '/home/MYUSER'|CRTSQLRPGI OBJ(#MYUSER/%file%) SRCSTMF('%file%.%ext%') OPTION(*EVENTF) REPLACE(*YES) COMMIT(*NONE)|ERRORS #MYUSER %file%");

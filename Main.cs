@@ -39,9 +39,9 @@ namespace IBMiCmd
             PluginBase.SetCommand(2, "IBM i Command Entry", commandDialog);
             PluginBase.SetCommand(3, "IBM i Error Listing", errorDialog);
             PluginBase.SetCommand(4, "IBM i Command Bindings", bindsDialog);
-            PluginBase.SetCommand(5, "IBM i Compile Bind Creator", launchPrompter);
 
             PluginBase.SetCommand(6, "IBM i RPG Conversion", launchConversion, new ShortcutKey(true, false, false, Keys.F4));
+            PluginBase.SetCommand(6, "IBM i Relic Build", launchRBLD, new ShortcutKey(true, false, false, Keys.F5));
         }
         internal static void SetToolBarIcon()
         {
@@ -59,9 +59,15 @@ namespace IBMiCmd
             MessageBox.Show("IBMiCmds, created by WorksOfBarry.");
         }
 
-        internal static void launchPrompter()
+        internal static void launchRBLD()
         {
-            new Forms.prompts.listPrompt().Show();
+            DialogResult outp = MessageBox.Show("Confirm build of '" + IBMi.getConfig("relicdir") + "' into " + IBMi.getConfig("reliclib") + "?", "Relic Build", MessageBoxButtons.YesNo);
+
+            if (outp == DialogResult.Yes)
+            {
+                IBMi.runCommands(new string[] { "QUOTE RCMD CD '" + IBMi.getConfig("relicdir") + "'", "QUOTE RCMD RBLD " + IBMi.getConfig("reliclib") });
+                if (commandWindow != null) commandWindow.loadNewCommands();
+            }
         }
 
         internal static void launchConversion()
@@ -69,7 +75,7 @@ namespace IBMiCmd
             rpgForm.curFileLine = (int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETCURRENTLINE, 0, 0);
             new rpgForm().ShowDialog();
         }
-
+        
         internal static void remoteSetup()
         {
             new userSettings().ShowDialog();

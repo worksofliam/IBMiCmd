@@ -125,24 +125,6 @@
     <Compile Include="Forms\programChoose.Designer.cs">
       <DependentUpon>programChoose.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\prompts\clPrompt.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\prompts\clPrompt.Designer.cs">
-      <DependentUpon>clPrompt.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\prompts\dspfPrompt.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\prompts\dspfPrompt.Designer.cs">
-      <DependentUpon>dspfPrompt.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\prompts\listPrompt.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\prompts\listPrompt.Designer.cs">
-      <DependentUpon>listPrompt.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\rpgForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -186,15 +168,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\programChoose.resx">
       <DependentUpon>programChoose.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\prompts\clPrompt.resx">
-      <DependentUpon>clPrompt.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\prompts\dspfPrompt.resx">
-      <DependentUpon>dspfPrompt.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\prompts\listPrompt.resx">
-      <DependentUpon>listPrompt.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\rpgForm.resx">
       <DependentUpon>rpgForm.cs</DependentUpon>
