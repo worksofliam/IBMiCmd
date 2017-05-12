@@ -65,8 +65,21 @@ namespace IBMiCmd
 
             if (outp == DialogResult.Yes)
             {
-                IBMi.runCommands(new string[] { "QUOTE RCMD CD '" + IBMi.getConfig("relicdir") + "'", "QUOTE RCMD RBLD " + IBMi.getConfig("reliclib") });
+                string filetemp = Path.GetTempFileName();
+                string buildDir = IBMi.getConfig("relicdir");
+                if (!buildDir.EndsWith("/"))
+                {
+                    buildDir += '/';
+                }
+
+                IBMi.runCommands(new string[] {
+                    "QUOTE RCMD CD '" + IBMi.getConfig("relicdir") + "'",
+                    "QUOTE RCMD RBLD " + IBMi.getConfig("reliclib"),
+                    "ASCII",
+                    "RECV " + buildDir + "RELICBLD.log \"" + filetemp + "\""
+                });
                 if (commandWindow != null) commandWindow.loadNewCommands();
+                Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DOOPEN, 0, filetemp);
             }
         }
 
