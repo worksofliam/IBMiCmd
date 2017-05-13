@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using NppPluginNET;
 using IBMiCmd.Forms;
+using System.Threading;
 
 namespace IBMiCmd
 {
@@ -65,21 +66,24 @@ namespace IBMiCmd
 
             if (outp == DialogResult.Yes)
             {
-                string filetemp = Path.GetTempFileName();
-                string buildDir = IBMi.getConfig("relicdir");
-                if (!buildDir.EndsWith("/"))
-                {
-                    buildDir += '/';
-                }
+                Thread gothread = new Thread((ThreadStart)delegate {
+                    string filetemp = Path.GetTempFileName();
+                    string buildDir = IBMi.getConfig("relicdir");
+                    if (!buildDir.EndsWith("/"))
+                    {
+                        buildDir += '/';
+                    }
 
-                IBMi.runCommands(new string[] {
-                    "QUOTE RCMD CD '" + IBMi.getConfig("relicdir") + "'",
-                    "QUOTE RCMD RBLD " + IBMi.getConfig("reliclib"),
-                    "ASCII",
-                    "RECV " + buildDir + "RELICBLD.log \"" + filetemp + "\""
+                    IBMi.runCommands(new string[] {
+                        "QUOTE RCMD CD '" + IBMi.getConfig("relicdir") + "'",
+                        "QUOTE RCMD RBLD " + IBMi.getConfig("reliclib"),
+                        "ASCII",
+                        "RECV " + buildDir + "RELICBLD.log \"" + filetemp + "\""
+                    });
+                    if (Main.commandWindow != null) Main.commandWindow.loadNewCommands();
+                    Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DOOPEN, 0, filetemp);
                 });
-                if (commandWindow != null) commandWindow.loadNewCommands();
-                Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DOOPEN, 0, filetemp);
+                gothread.Start();
             }
         }
 
