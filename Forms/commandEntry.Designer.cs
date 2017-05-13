@@ -31,6 +31,7 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -43,7 +44,7 @@
             this.textBox1.Location = new System.Drawing.Point(0, 0);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(291, 118);
+            this.textBox1.Size = new System.Drawing.Size(291, 55);
             this.textBox1.TabIndex = 0;
             this.textBox1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyUp);
             // 
@@ -53,7 +54,7 @@
             this.richTextBox1.Location = new System.Drawing.Point(0, 0);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(291, 119);
+            this.richTextBox1.Size = new System.Drawing.Size(291, 182);
             this.richTextBox1.TabIndex = 1;
             this.richTextBox1.Text = "Supply multiple commands at once on new lines, this is necessary to have them run" +
     " in the same job.\nTo submit the command, use CTRL+ENTER.\n\nFor example:\n> CHGLIB\n" +
@@ -75,7 +76,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.textBox1);
             this.splitContainer1.Size = new System.Drawing.Size(291, 241);
-            this.splitContainer1.SplitterDistance = 119;
+            this.splitContainer1.SplitterDistance = 182;
             this.splitContainer1.TabIndex = 2;
             // 
             // commandEntry
@@ -89,6 +90,7 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 

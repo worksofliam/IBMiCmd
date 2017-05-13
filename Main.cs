@@ -74,14 +74,22 @@ namespace IBMiCmd
                         buildDir += '/';
                     }
 
+                    IBMi.addOutput("Starting build of '" + IBMi.getConfig("relicdir") + "' into " + IBMi.getConfig("reliclib"));
+                    if (Main.commandWindow != null) Main.commandWindow.loadNewCommands();
                     IBMi.runCommands(new string[] {
                         "QUOTE RCMD CD '" + IBMi.getConfig("relicdir") + "'",
                         "QUOTE RCMD RBLD " + IBMi.getConfig("reliclib"),
                         "ASCII",
                         "RECV " + buildDir + "RELICBLD.log \"" + filetemp + "\""
                     });
+                    IBMi.addOutput("");
+                    foreach(string line in File.ReadAllLines(filetemp))
+                    {
+                        IBMi.addOutput("> " + line);
+                    }
+                    IBMi.addOutput("");
+                    IBMi.addOutput("End of build.");
                     if (Main.commandWindow != null) Main.commandWindow.loadNewCommands();
-                    Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DOOPEN, 0, filetemp);
                 });
                 gothread.Start();
             }

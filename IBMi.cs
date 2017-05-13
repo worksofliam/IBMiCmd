@@ -99,6 +99,11 @@ namespace IBMiCmd
             }
         }
 
+        public static void addOutput(string text)
+        {
+            _output.Add(text);
+        }
+
         public static string[] getOutput()
         {
             string[] result = _output.ToArray();
@@ -169,7 +174,7 @@ namespace IBMiCmd
                         {
                             case "250":
                             case "550":
-                                _output.Add(outLine.Data.Substring(4));
+                                _output.Add("> " + outLine.Data.Substring(4));
                                 break;
                         }
                     }
