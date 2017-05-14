@@ -98,6 +98,11 @@ namespace IBMiCmd
             new userSettings().ShowDialog();
         }
 
+        internal static void liblDialog()
+        {
+            new libraryList().ShowDialog();
+        }
+
         internal static void commandDialog()
         {
             if (commandWindow == null)
@@ -210,44 +215,6 @@ namespace IBMiCmd
                 Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, bindsWindow.Handle);
             }
         }
-
-
-		internal static void liblDialog()
-		{
-			if (liblWindow == null)
-			{
-				liblWindow = new libraryList();
-
-				using (Bitmap newBmp = new Bitmap(16, 16))
-				{
-					Graphics g = Graphics.FromImage(newBmp);
-					ColorMap[] colorMap = new ColorMap[1];
-					colorMap[0] = new ColorMap();
-					colorMap[0].OldColor = Color.Fuchsia;
-					colorMap[0].NewColor = Color.FromKnownColor(KnownColor.Orange);
-					ImageAttributes attr = new ImageAttributes();
-					attr.SetRemapTable(colorMap);
-					g.DrawImage(tbBmp_tbTab, new Rectangle(0, 0, 16, 16), 0, 0, 16, 16, GraphicsUnit.Pixel, attr);
-					tbIcon = Icon.FromHandle(newBmp.GetHicon());
-				}
-
-				NppTbData _nppTbData = new NppTbData();
-				_nppTbData.hClient = liblWindow.Handle;
-				_nppTbData.pszName = "Set Library List";
-				_nppTbData.dlgID = idMyDlg;
-				_nppTbData.uMask = NppTbMsg.DWS_DF_CONT_RIGHT | NppTbMsg.DWS_ICONTAB | NppTbMsg.DWS_ICONBAR;
-				_nppTbData.hIconTab = (uint)tbIcon.Handle;
-				_nppTbData.pszModuleName = PluginName;
-				IntPtr _ptrNppTbData = Marshal.AllocHGlobal(Marshal.SizeOf(_nppTbData));
-				Marshal.StructureToPtr(_nppTbData, _ptrNppTbData, false);
-
-				Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMREGASDCKDLG, 0, _ptrNppTbData);
-			}
-			else
-			{
-				Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, errorWindow.Handle);
-			}
-		}
 		#endregion
 	}
 }

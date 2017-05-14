@@ -39,27 +39,24 @@ namespace IBMiCmd.Forms
 			}
 
 			foreach (var item in textBox1.Text.Trim().Split(',')) {
-				// Check that each entered item matches the requirement for a library name in QSYS.LIB
-				Match match = Regex.Match(item, "^[a-zA-Z]\\w{0,9}}$");
-				if (match.Success)
-				{
-					s += item + ',';
-				}
-				else {
-					label2.Text = "Invalid Library List Syntax. Valid syntax is < LIB,LIB,LIB >";
-					label2.Update();
-					return;
-				}
-			}
-			// Remove last comma
-			s.Remove(s.Length - 1, 1);
+                // Check that each entered item matches the requirement for a library name in QSYS.LIB
+                Match match = Regex.Match(item.Trim(), "^[a-zA-Z]\\w{0,9}$");
 
-			IBMi.setConfig("datalibl", s);
+                if (match.Success)
+                {
+                    s += item.Trim() + ',';
+                }
+                else
+                {
+                    label2.Text = "Invalid Library List Syntax. Valid syntax is < LIB,LIB,LIB >";
+                    label2.Update();
+                    return;
+                }
+            }
+         
+            IBMi.setConfig("datalibl", s.Remove(s.Length - 1, 1)); //Remove last comma
 
-			label2.Text = "";
-			label2.Update();
-
-			this.Close();
-		}
+            this.Close();
+        }
 	}
 }
