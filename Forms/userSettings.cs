@@ -24,7 +24,6 @@ namespace IBMiCmd.Forms
             textBox3.Text = IBMi.getConfig("password");
             textBox4.Text = IBMi.getConfig("relicdir");
             textBox5.Text = IBMi.getConfig("reliclib");
-			textBox6.Text = IBMi.getConfig("datalibl");
 		}
 
         private void button2_Click(object sender, EventArgs e)
@@ -55,7 +54,6 @@ namespace IBMiCmd.Forms
             IBMi.setConfig("password", textBox3.Text);
             IBMi.setConfig("relicdir", textBox4.Text);
             IBMi.setConfig("reliclib", textBox5.Text);
-			IBMi.setConfig("datalibl", textBox6.Text);
 
 			this.Close();
         }
