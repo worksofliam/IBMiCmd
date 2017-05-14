@@ -52,8 +52,9 @@ namespace IBMiCmd
                 richTextBox1.AppendText(Environment.NewLine);
                 foreach (string line in IBMi.getOutput())
                 {
-                    richTextBox1.AppendText(Environment.NewLine + "> " + line);
+                    richTextBox1.AppendText(Environment.NewLine + line);
                 }
+                IBMi.flushOutput();
             });
         }
 
