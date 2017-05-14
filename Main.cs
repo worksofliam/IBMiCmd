@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using NppPluginNET;
 using IBMiCmd.Forms;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace IBMiCmd
 {
@@ -46,8 +47,11 @@ namespace IBMiCmd
             PluginBase.SetCommand(7, "IBM i Relic Build", launchRBLD, new ShortcutKey(true, false, false, Keys.F5));
 
 			// Set Library list config
-			PluginBase.SetCommand(8, "IBM i LIBL", liblDialog, new ShortcutKey(true, false, false, Keys.F6));
-		}
+			PluginBase.SetCommand(8, "IBM i Library List", liblDialog, new ShortcutKey(true, false, false, Keys.F6));
+
+            // Get Record format info for all EXTNAME data strctures in current source
+            PluginBase.SetCommand(8, "IBM i Refresh External DS Defintions", launchFFDCollection, new ShortcutKey(true, false, false, Keys.F7));
+        }
         
         internal static void SetToolBarIcon()
         {
@@ -114,6 +118,65 @@ namespace IBMiCmd
         internal static void liblDialog()
         {
             new libraryList().ShowDialog();
+        }
+
+        internal static void launchFFDCollection()
+        {
+            Thread gothread = new Thread((ThreadStart)delegate {
+                List<SourceLine> list = RPGParser.parseCurrentFileForExtName();
+
+                string[] cmd = new string[list.Count + 2];
+                int i = 0;
+
+                string librayList = "";
+                foreach (string lib in IBMi.getConfig("datalibl").Split(',')) {
+                    librayList += lib + ' ';
+                }
+
+                cmd[i++] = "QUOTE RCMD CHGLIBL LIBL(" + librayList + ")";
+                cmd[i++] = "ASCII";
+                foreach (SourceLine sl in list) {
+                    cmd[i++] = "QUOTE RCMD DSPFFD(*LIBL/"+ sl.searchResult + ") OUTPUT(*OUTFILE) OUTFILE(" + IBMi.getConfig("username") + '/' + sl.searchResult + ")";
+                }
+
+                IBMi.runCommands(cmd);
+
+                string[] tmp = new string[cmd.Length];  
+                cmd[i] = "QUOTE RCMD CHGLIBL LIBL(" + librayList + ")";
+                i = 0;
+                foreach (SourceLine sl in list)
+                {
+                    tmp[i] = Path.GetTempFileName();
+                    cmd[i++] = "RECV " + IBMi.getConfig("username") + '/' + sl.searchResult + " \"" + tmp[i] + "\"";
+                }
+            });
+            gothread.Start();
+
+            //string filetemp = Path.GetTempFileName();
+            //    string buildDir = IBMi.getConfig("relicdir");
+            //    if (!buildDir.EndsWith("/"))
+            //    {
+            //        buildDir += '/';
+            //    }
+
+            //    IBMi.addOutput("Starting build of '" + IBMi.getConfig("relicdir") + "' into " + IBMi.getConfig("reliclib"));
+            //    if (Main.commandWindow != null) Main.commandWindow.loadNewCommands();
+            //    IBMi.runCommands(new string[] {
+            //        "QUOTE RCMD CD '" + IBMi.getConfig("relicdir") + "'",
+            //        "QUOTE RCMD RBLD " + IBMi.getConfig("reliclib"),
+            //        "ASCII",
+            //        "RECV " + buildDir + "RELICBLD.log \"" + filetemp + "\""
+            //    });
+            //    IBMi.addOutput("");
+            //    foreach (string line in File.ReadAllLines(filetemp))
+            //    {
+            //        IBMi.addOutput("> " + line);
+            //    }
+            //    IBMi.addOutput("");
+            //    IBMi.addOutput("End of build.");
+            //    if (Main.commandWindow != null) Main.commandWindow.loadNewCommands();
+            //});
+            //gothread.Start();
         }
 
         internal static void commandDialog()
