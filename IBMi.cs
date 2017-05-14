@@ -27,13 +27,15 @@ namespace IBMiCmd
                 _config.Add("password", "mypass");
                 _config.Add("relicdir", "rpgapp");
                 _config.Add("reliclib", "#dev");
+				_config.Add("datalibl", "mylibl");
 
                 _config.Add("binds", "COMPILE|RELIC|BUILD");
                 _config.Add("COMPILE", "CD '/home/MYUSER'|CRTSQLRPGI OBJ(#MYUSER/%file%) SRCSTMF('%file%.%ext%') OPTION(*EVENTF) REPLACE(*YES) COMMIT(*NONE)|ERRORS #MYUSER %file%");
                 _config.Add("RELIC", "CRTBNDRPG OBJ(#MYUSER/RELIC) SRCSTMF('RelicPackageManager/QSOURCE/RELIC.SQLRPGLE') OPTION(*EVENTF) REPLACE(*YES) COMMIT(*NONE)");
                 _config.Add("BUILD", "CD '/home/MYUSER'|CRTBNDRPG PGM(#MYUSER/BUILD) SRCSTMF('RelicPackageManager/QSOURCE/BUILD.SQLRPGLE') OPTION(*EVENTF) REPLACE(*YES)|ERRORS #MYUSER BUILD");
+				_config.Add("RETRIEVE DATA DEFINITION", "DSPFFD FILE(MYFILE) OUTPUT(*)|ERRORS #MYUSER %file%");
 
-                printConfig();
+				printConfig();
 
                 MessageBox.Show("Thanks for using IBMiCmds. You will now be prompted to enter in a Remote System.");
                 Main.remoteSetup();

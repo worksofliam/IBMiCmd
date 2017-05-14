@@ -17,6 +17,7 @@ namespace IBMiCmd
         static string iniFilePath = null;
         public static commandEntry commandWindow = null;
         public static errorListing errorWindow = null;
+		public static libraryList liblWindow = null;
         public static cmdBindings bindsWindow = null;
         static int idMyDlg = -1;
         static Bitmap tbBmp = Properties.Resources.star;
@@ -41,8 +42,10 @@ namespace IBMiCmd
             PluginBase.SetCommand(4, "IBM i Command Bindings", bindsDialog);
 
             PluginBase.SetCommand(6, "IBM i RPG Conversion", launchConversion, new ShortcutKey(true, false, false, Keys.F4));
-            PluginBase.SetCommand(6, "IBM i Relic Build", launchRBLD, new ShortcutKey(true, false, false, Keys.F5));
-        }
+            PluginBase.SetCommand(7, "IBM i Relic Build", launchRBLD, new ShortcutKey(true, false, false, Keys.F5));
+
+			PluginBase.SetCommand(8, "IBM i LIBL", liblDialog);
+		}
         internal static void SetToolBarIcon()
         {
             
@@ -206,6 +209,44 @@ namespace IBMiCmd
                 Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, bindsWindow.Handle);
             }
         }
-        #endregion
-    }
+
+
+		internal static void liblDialog()
+		{
+			if (errorWindow == null)
+			{
+				errorWindow = new errorListing();
+
+				using (Bitmap newBmp = new Bitmap(16, 16))
+				{
+					Graphics g = Graphics.FromImage(newBmp);
+					ColorMap[] colorMap = new ColorMap[1];
+					colorMap[0] = new ColorMap();
+					colorMap[0].OldColor = Color.Fuchsia;
+					colorMap[0].NewColor = Color.FromKnownColor(KnownColor.Orange);
+					ImageAttributes attr = new ImageAttributes();
+					attr.SetRemapTable(colorMap);
+					g.DrawImage(tbBmp_tbTab, new Rectangle(0, 0, 16, 16), 0, 0, 16, 16, GraphicsUnit.Pixel, attr);
+					tbIcon = Icon.FromHandle(newBmp.GetHicon());
+				}
+
+				NppTbData _nppTbData = new NppTbData();
+				_nppTbData.hClient = errorWindow.Handle;
+				_nppTbData.pszName = "Error Listing";
+				_nppTbData.dlgID = idMyDlg;
+				_nppTbData.uMask = NppTbMsg.DWS_DF_CONT_RIGHT | NppTbMsg.DWS_ICONTAB | NppTbMsg.DWS_ICONBAR;
+				_nppTbData.hIconTab = (uint)tbIcon.Handle;
+				_nppTbData.pszModuleName = PluginName;
+				IntPtr _ptrNppTbData = Marshal.AllocHGlobal(Marshal.SizeOf(_nppTbData));
+				Marshal.StructureToPtr(_nppTbData, _ptrNppTbData, false);
+
+				Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMREGASDCKDLG, 0, _ptrNppTbData);
+			}
+			else
+			{
+				Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, errorWindow.Handle);
+			}
+		}
+		#endregion
+	}
 }
