@@ -119,6 +119,12 @@
     <Compile Include="Forms\errorListing.Designer.cs">
       <DependentUpon>errorListing.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\libraryList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\libraryList.Designer.cs">
+      <DependentUpon>libraryList.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\programChoose.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -144,6 +150,7 @@
       <DependentUpon>wrkBind.cs</DependentUpon>
     </Compile>
     <Compile Include="IBMi.cs" />
+    <Compile Include="IBMiUtilities.cs" />
     <Compile Include="listError.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="NppPluginNETBase.cs" />
@@ -165,6 +172,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\errorListing.resx">
       <DependentUpon>errorListing.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\libraryList.resx">
+      <DependentUpon>libraryList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\programChoose.resx">
       <DependentUpon>programChoose.cs</DependentUpon>

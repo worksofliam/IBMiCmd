@@ -31,18 +31,8 @@ namespace IBMiCmd.Forms
 		private void button2_Click(object sender, EventArgs e)
 		{
 			string s = "";
-		
-			if (textBox1.Text.Trim() == "")
-			{
-				textBox1.Focus();
-				return;
-			}
-
-			foreach (var item in textBox1.Text.Trim().Split(',')) {
-                // Check that each entered item matches the requirement for a library name in QSYS.LIB
-                Match match = Regex.Match(item.Trim(), "^[a-zA-Z]\\w{0,9}$");
-
-                if (match.Success)
+			foreach (string item in textBox1.Text.Trim().Split(',')) {
+                if (IBMiUtilities.isValidQSYSObjectName(item.Trim()))
                 {
                     s += item.Trim() + ',';
                 }
