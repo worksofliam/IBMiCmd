@@ -48,6 +48,7 @@ namespace IBMiCmd
 			// Set Library list config
 			PluginBase.SetCommand(8, "IBM i LIBL", liblDialog, new ShortcutKey(true, false, false, Keys.F6));
 		}
+        
         internal static void SetToolBarIcon()
         {
             
