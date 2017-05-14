@@ -46,13 +46,18 @@ namespace IBMiCmd.Forms
 					s += item + ',';
 				}
 				else {
-					// TODO: Notify of syntax error
+					label2.Text = "Invalid Library List Syntax. Valid syntax is < LIB,LIB,LIB >";
+					label2.Update();
+					return;
 				}
 			}
 			// Remove last comma
 			s.Remove(s.Length - 1, 1);
 
 			IBMi.setConfig("datalibl", s);
+
+			label2.Text = "";
+			label2.Update();
 
 			this.Close();
 		}

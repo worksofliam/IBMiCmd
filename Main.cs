@@ -44,7 +44,8 @@ namespace IBMiCmd
             PluginBase.SetCommand(6, "IBM i RPG Conversion", launchConversion, new ShortcutKey(true, false, false, Keys.F4));
             PluginBase.SetCommand(7, "IBM i Relic Build", launchRBLD, new ShortcutKey(true, false, false, Keys.F5));
 
-			PluginBase.SetCommand(8, "IBM i LIBL", liblDialog);
+			// Set Library list config
+			PluginBase.SetCommand(8, "IBM i LIBL", liblDialog, new ShortcutKey(true, false, false, Keys.F6));
 		}
         internal static void SetToolBarIcon()
         {
@@ -213,9 +214,9 @@ namespace IBMiCmd
 
 		internal static void liblDialog()
 		{
-			if (errorWindow == null)
+			if (liblWindow == null)
 			{
-				errorWindow = new errorListing();
+				liblWindow = new libraryList();
 
 				using (Bitmap newBmp = new Bitmap(16, 16))
 				{
@@ -231,8 +232,8 @@ namespace IBMiCmd
 				}
 
 				NppTbData _nppTbData = new NppTbData();
-				_nppTbData.hClient = errorWindow.Handle;
-				_nppTbData.pszName = "Error Listing";
+				_nppTbData.hClient = liblWindow.Handle;
+				_nppTbData.pszName = "Set Library List";
 				_nppTbData.dlgID = idMyDlg;
 				_nppTbData.uMask = NppTbMsg.DWS_DF_CONT_RIGHT | NppTbMsg.DWS_ICONTAB | NppTbMsg.DWS_ICONBAR;
 				_nppTbData.hIconTab = (uint)tbIcon.Handle;
