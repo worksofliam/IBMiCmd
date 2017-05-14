@@ -42,7 +42,7 @@ namespace IBMiCmd
             PluginBase.SetCommand(4, "IBM i Command Bindings", bindsDialog);
 
             PluginBase.SetCommand(6, "IBM i RPG Conversion", launchConversion, new ShortcutKey(true, false, false, Keys.F4));
-            PluginBase.SetCommand(6, "IBM i Relic Build", launchRBLD, new ShortcutKey(true, false, false, Keys.F5));
+            PluginBase.SetCommand(7, "IBM i Relic Build", launchRBLD, new ShortcutKey(true, false, false, Keys.F5));
         }
         internal static void SetToolBarIcon()
         {
