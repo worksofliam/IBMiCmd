@@ -18,9 +18,9 @@ namespace IBMiCmd
 
         public static void loadConfig(string FileLoc)
         {
-            _ConfigFile = FileLoc;
+            _ConfigFile = FileLoc + ".cfg";
             string[] data;
-            if (!File.Exists(FileLoc))
+            if (!File.Exists(_ConfigFile))
             {
                 _config.Add("system", "mysystem");
                 _config.Add("username", "myuser");
@@ -28,12 +28,12 @@ namespace IBMiCmd
                 _config.Add("relicdir", "rpgapp");
                 _config.Add("reliclib", "#dev");
 				_config.Add("datalibl", "mylibl");
+                _config.Add("curlib", "mypwd");
 
                 _config.Add("binds", "COMPILE|RELIC|BUILD");
                 _config.Add("COMPILE", "CD '/home/MYUSER'|CRTSQLRPGI OBJ(#MYUSER/%file%) SRCSTMF('%file%.%ext%') OPTION(*EVENTF) REPLACE(*YES) COMMIT(*NONE)|ERRORS #MYUSER %file%");
                 _config.Add("RELIC", "CRTBNDRPG OBJ(#MYUSER/RELIC) SRCSTMF('RelicPackageManager/QSOURCE/RELIC.SQLRPGLE') OPTION(*EVENTF) REPLACE(*YES) COMMIT(*NONE)");
                 _config.Add("BUILD", "CD '/home/MYUSER'|CRTBNDRPG PGM(#MYUSER/BUILD) SRCSTMF('RelicPackageManager/QSOURCE/BUILD.SQLRPGLE') OPTION(*EVENTF) REPLACE(*YES)|ERRORS #MYUSER BUILD");
-				_config.Add("RETRIEVE DATA DEFINITION", "DSPFFD FILE(MYFILE) OUTPUT(*)|ERRORS #MYUSER %file%");
 
 				printConfig();
 
@@ -41,7 +41,7 @@ namespace IBMiCmd
                 Main.remoteSetup();
             }
 
-            foreach (string Line in File.ReadAllLines(FileLoc))
+            foreach (string Line in File.ReadAllLines(_ConfigFile))
             {
                 data = Line.Split('=');
                 for (int i = 0; i < data.Length; i++) data[i] = data[i].Trim();
@@ -129,16 +129,21 @@ namespace IBMiCmd
             lines.Add("bin");
             foreach(string cmd in list)
             {
-                if (cmd.Trim() != "") lines.Add(cmd);
+                if (cmd.Trim() != "") {
+                    IBMiUtilities.Log("Writing Command to file: " + cmd);
+                    lines.Add(cmd);
+                }
             }
             lines.Add("quit");
 
             File.WriteAllLines(tempfile, lines.ToArray());
+            IBMiUtilities.Log("Command File Prepared!");
             runFTP(tempfile);
         }
 
         private static void runFTP(string FileLoc)
         {
+            IBMiUtilities.Log("Preparing FTP of command file " + FileLoc);
             _notConnected = false;
             Process process = new Process();
             process.StartInfo.FileName = "cmd.exe";
@@ -151,10 +156,12 @@ namespace IBMiCmd
             process.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
             process.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);
 
+            IBMiUtilities.Log("Starting FTP of command file " + FileLoc);
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
             process.WaitForExit();
+            IBMiUtilities.Log("FTP of command file " + FileLoc + " completed");
         }
 
         private static void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)

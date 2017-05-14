@@ -34,11 +34,12 @@ namespace IBMiCmd
 
             List<SourceLine> lines = new List<SourceLine>();
 
+            IBMiUtilities.Log("Starting to parse the current file...");
+
             while (true)
             {
                 line++;
                 int lineLength = (int)Win32.SendMessage(curScintilla, SciMsg.SCI_LINELENGTH, line, 0);
-
                 if (lineLength == END_OF_FILE) break;
                 else if (lineLength < MINIMUM_LINE_LENGTH_FOR_EXTNAME) continue;
 
@@ -48,6 +49,7 @@ namespace IBMiCmd
                 if (sb == null) break;
 
                 string sourceStatement = sb.ToString().ToUpper();
+
                 if (sourceStatement.Contains("EXTNAME("))
                 {
                     SourceLine result = new SourceLine();

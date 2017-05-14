@@ -25,6 +25,7 @@ namespace IBMiCmd
         static Bitmap tbBmp = Properties.Resources.star;
         static Bitmap tbBmp_tbTab = Properties.Resources.star_bmp;
         static Icon tbIcon = null;
+        
         #endregion
 
         #region " StartUp/CleanUp "
@@ -32,11 +33,13 @@ namespace IBMiCmd
         {
             StringBuilder sbIniFilePath = new StringBuilder(Win32.MAX_PATH);
             Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETPLUGINSCONFIGDIR, Win32.MAX_PATH, sbIniFilePath);
-            iniFilePath = sbIniFilePath.ToString();
+            iniFilePath = sbIniFilePath.ToString() + "/" + PluginName + "/";
             if (!Directory.Exists(iniFilePath)) Directory.CreateDirectory(iniFilePath);
 
-            IBMi.loadConfig(iniFilePath + PluginName + ".cfg");
-            
+            IBMi.loadConfig(iniFilePath + PluginName);
+            IBMiUtilities.CreateLog(iniFilePath + PluginName);
+            IBMiUtilities.Log("Starting up plugin...");
+
             PluginBase.SetCommand(0, "About IBMiCmd", myMenuFunction, new ShortcutKey(false, false, false, Keys.None));
             PluginBase.SetCommand(1, "IBM i Remote System Setup", remoteSetup);
             PluginBase.SetCommand(2, "IBM i Command Entry", commandDialog);
@@ -121,11 +124,13 @@ namespace IBMiCmd
         }
 
         internal static void launchFFDCollection()
-        {
-            Thread gothread = new Thread((ThreadStart)delegate {
+        {            
+            //IBMiUtilities.Log("launchFFDCollection...");
+            Thread thread = new Thread((ThreadStart) delegate {
+                //IBMiUtilities.Log("Thread Starting...");
                 List<SourceLine> list = RPGParser.parseCurrentFileForExtName();
 
-                string[] cmd = new string[list.Count + 2];
+                string[] cmd = new string[list.Count + 1];
                 int i = 0;
 
                 string librayList = "";
@@ -133,24 +138,41 @@ namespace IBMiCmd
                     librayList += lib + ' ';
                 }
 
-                cmd[i++] = "QUOTE RCMD CHGLIBL LIBL(" + librayList + ")";
-                cmd[i++] = "ASCII";
-                foreach (SourceLine sl in list) {
-                    cmd[i++] = "QUOTE RCMD DSPFFD(*LIBL/"+ sl.searchResult + ") OUTPUT(*OUTFILE) OUTFILE(" + IBMi.getConfig("username") + '/' + sl.searchResult + ")";
+                // Run commands on remote
+                cmd[i++] = "QUOTE RCMD CHGLIBL LIBL(" + librayList + ") CURLIB(" + IBMi.getConfig("curlib") + ")";
+                foreach (SourceLine sl in list) {                    
+                    cmd[i++] = "QUOTE RCMD DSPFFD(*LIBL/"+ sl.searchResult + ") OUTPUT(*OUTFILE) OUTFILE(" + IBMi.getConfig("curlib") + '/' + sl.searchResult + ")";
+                    IBMiUtilities.Log("Generating Command: " + cmd[i-1]);
                 }
 
+                //IBMiUtilities.Log("MAIN: Sending commands...");
                 IBMi.runCommands(cmd);
+                //IBMiUtilities.Log("MAIN: Sending commands completed.");
 
                 string[] tmp = new string[cmd.Length];  
-                cmd[i] = "QUOTE RCMD CHGLIBL LIBL(" + librayList + ")";
+                //cmd[i] = "QUOTE RCMD CHGLIBL LIBL(" + librayList + ")";
                 i = 0;
                 foreach (SourceLine sl in list)
                 {
-                    tmp[i] = Path.GetTempFileName();
-                    cmd[i++] = "RECV " + IBMi.getConfig("username") + '/' + sl.searchResult + " \"" + tmp[i] + "\"";
+                    string[] recvCmd = new string[2];
+                    IBMiUtilities.Log("MAIN: Prepare receive of record format.");
+                    tmp[i++] = Path.GetTempFileName();
+                    cmd[0] = "ASCII";
+                    cmd[1] = "RECV " + IBMi.getConfig("curlib") + '/' + sl.searchResult + " \"" + tmp[i-1] + "\"";
+                    IBMiUtilities.Log("MAIN: Command: " + cmd[1]);
+                    IBMi.runCommands(cmd);
+                    IBMiUtilities.Log("MAIN: Command: " + cmd[1] + " completed.");
+                    IBMi.addOutput("");
+                    foreach (string line in File.ReadAllLines(tmp[i]))
+                    {
+                        IBMi.addOutput("> " + line);
+                    }
+                    IBMi.addOutput("");
+                    IBMi.addOutput("End of "+ tmp[i] + ".");
+                    if (Main.commandWindow != null) Main.commandWindow.loadNewCommands();
                 }
             });
-            gothread.Start();
+            thread.Start();
 
             //string filetemp = Path.GetTempFileName();
             //    string buildDir = IBMi.getConfig("relicdir");

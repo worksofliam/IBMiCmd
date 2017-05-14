@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using System.IO;
+using System;
 
 namespace IBMiCmd
 {
     public class IBMiUtilities
     {
+        private static string _LogFile = null;
+
         /// <summary>
         /// Returns true if input string is a valid IBM i QSYS Object Name
         /// </summary>
@@ -44,6 +44,17 @@ namespace IBMiCmd
                 if (end <= 0) return "";
                 return part.Substring(0, end);
             }
+        }
+
+        public static void CreateLog(string logFilePath)
+        {
+            _LogFile = logFilePath + ".log";
+            File.WriteAllText(_LogFile, DateTime.Now.ToString() + " : Log Created..." + Environment.NewLine);
+        }
+
+        public static void Log(string m)
+        {
+            File.AppendAllText(_LogFile, DateTime.Now.ToString() + " : " + m + Environment.NewLine);
         }
     }
 }
