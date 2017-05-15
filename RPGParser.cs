@@ -51,6 +51,10 @@ namespace IBMiCmd
         /// <param name="f">File with DSPFFD output</param>
         /// <param name="srcLine">source line with extName</param>
         public static void LoadFFD(string f, SourceLine srcLine) {
+#if DEBUG
+            IBMiUtilities.Log("File name: " + f);
+#endif
+            if (f == null || f == "") return; 
             if (dataStructures == null) dataStructures = new List<DataStructure>();
 
             bool firstLine = true;

@@ -1,7 +1,7 @@
 PGM          PARM(&FILE)                                                   
 DCL          VAR(&FILE) TYPE(*CHAR) LEN(10)                                
 DCL          VAR(&USER) TYPE(*CHAR) LEN(10)                                
-             RTVJOBA    USER(&USER)                                        
+             RTVJOBA    CURUSER(&USER)                                        
              DLTF       FILE(QTEMP/&FILE)                                  
              MONMSG     MSGID(CPF2105)                                     
              CRTPF      FILE(QTEMP/&FILE) RCDLEN(1730) +                   
