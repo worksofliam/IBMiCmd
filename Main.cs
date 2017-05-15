@@ -37,8 +37,8 @@ namespace IBMiCmd
             if (!Directory.Exists(iniFilePath)) Directory.CreateDirectory(iniFilePath);
 
             IBMi.loadConfig(iniFilePath + PluginName);
+
             IBMiUtilities.CreateLog(iniFilePath + PluginName);
-            IBMiUtilities.Log("Starting up plugin...");
 
             PluginBase.SetCommand(0, "About IBMiCmd", myMenuFunction, new ShortcutKey(false, false, false, Keys.None));
             PluginBase.SetCommand(1, "IBM i Remote System Setup", remoteSetup);
@@ -101,6 +101,7 @@ namespace IBMiCmd
                     }
                     IBMi.addOutput("");
                     IBMi.addOutput("End of build.");
+                    File.Delete(filetemp);
                     if (Main.commandWindow != null) Main.commandWindow.loadNewCommands();
                 });
                 gothread.Start();
@@ -127,78 +128,51 @@ namespace IBMiCmd
         {            
             //IBMiUtilities.Log("launchFFDCollection...");
             Thread thread = new Thread((ThreadStart) delegate {
-                //IBMiUtilities.Log("Thread Starting...");
-                List<SourceLine> list = RPGParser.parseCurrentFileForExtName();
+#if DEBUG
+                IBMiUtilities.Log("Thread launchFFDCollection Starting...");
+#endif
+                List<SourceLine> src = RPGParser.parseCurrentFileForExtName();
 
-                string[] cmd = new string[list.Count + 1];
-                int i = 0;
+                if (src.Count == 0) return;
 
-                string librayList = "";
-                foreach (string lib in IBMi.getConfig("datalibl").Split(',')) {
-                    librayList += lib + ' ';
-                }
-
+                // Temporary recfmt files
+                string[] tmp = new string[src.Count];
+                int[] index  = new int[src.Count];
+                string[] cmd = new string[(src.Count * 3) + 3];
+                int i = 0, t = 0;
                 // Run commands on remote
-                cmd[i++] = "QUOTE RCMD CHGLIBL LIBL(" + librayList + ") CURLIB(" + IBMi.getConfig("curlib") + ")";
-                foreach (SourceLine sl in list) {                    
-                    cmd[i++] = "QUOTE RCMD DSPFFD(*LIBL/"+ sl.searchResult + ") OUTPUT(*OUTFILE) OUTFILE(" + IBMi.getConfig("curlib") + '/' + sl.searchResult + ")";
-                    IBMiUtilities.Log("Generating Command: " + cmd[i-1]);
+                cmd[i++] = "ASCII";
+                cmd[i++] = "QUOTE RCMD CHGLIBL LIBL(" + IBMi.getConfig("datalibl").Replace(',', ' ') + ") CURLIB(" + IBMi.getConfig("curlib") + ")";
+                foreach (SourceLine sl in src) {
+                    tmp[t++] = Path.GetTempFileName();
+                    cmd[i++] = "QUOTE RCMD DSPFFDIFS " + sl.searchResult;
+                    cmd[i++] = "RECV /home/" + IBMi.getConfig("username") + '/' + sl.searchResult + ".tmp \"" + tmp[t - 1] + "\"";
+                    cmd[i++] = "QUOTE RCMD RMVLNK OBJLNK('/home/" + IBMi.getConfig("username") + '/' + sl.searchResult + ".tmp')";
                 }
+                // cmd[i++] = "QUOTE RCMD DSPJOBLOG"; // For Debug on remote 
 
-                //IBMiUtilities.Log("MAIN: Sending commands...");
-                IBMi.runCommands(cmd);
-                //IBMiUtilities.Log("MAIN: Sending commands completed.");
+                IBMi.runCommands(cmd); // Get all record formats to local temp files
 
-                string[] tmp = new string[cmd.Length];  
-                //cmd[i] = "QUOTE RCMD CHGLIBL LIBL(" + librayList + ")";
                 i = 0;
-                foreach (SourceLine sl in list)
+                foreach (string f in tmp)
                 {
-                    string[] recvCmd = new string[2];
-                    IBMiUtilities.Log("MAIN: Prepare receive of record format.");
-                    tmp[i++] = Path.GetTempFileName();
-                    cmd[0] = "ASCII";
-                    cmd[1] = "RECV " + IBMi.getConfig("curlib") + '/' + sl.searchResult + " \"" + tmp[i-1] + "\"";
-                    IBMiUtilities.Log("MAIN: Command: " + cmd[1]);
-                    IBMi.runCommands(cmd);
-                    IBMiUtilities.Log("MAIN: Command: " + cmd[1] + " completed.");
-                    IBMi.addOutput("");
-                    foreach (string line in File.ReadAllLines(tmp[i]))
-                    {
-                        IBMi.addOutput("> " + line);
+                    i++;
+#if DEBUG
+                    IBMiUtilities.Log("File Received: " + f);
+#endif
+                    try {
+                        RPGParser.LoadFFD(f, src.);
+                    } catch (Exception e) {
+                        IBMiUtilities.Log(e.ToString());
+                    } finally {
+                        File.Delete(f);
                     }
-                    IBMi.addOutput("");
-                    IBMi.addOutput("End of "+ tmp[i] + ".");
-                    if (Main.commandWindow != null) Main.commandWindow.loadNewCommands();
                 }
+#if DEBUG
+                IBMiUtilities.Log("Thread launchFFDCollection completed.");
+#endif
             });
             thread.Start();
-
-            //string filetemp = Path.GetTempFileName();
-            //    string buildDir = IBMi.getConfig("relicdir");
-            //    if (!buildDir.EndsWith("/"))
-            //    {
-            //        buildDir += '/';
-            //    }
-
-            //    IBMi.addOutput("Starting build of '" + IBMi.getConfig("relicdir") + "' into " + IBMi.getConfig("reliclib"));
-            //    if (Main.commandWindow != null) Main.commandWindow.loadNewCommands();
-            //    IBMi.runCommands(new string[] {
-            //        "QUOTE RCMD CD '" + IBMi.getConfig("relicdir") + "'",
-            //        "QUOTE RCMD RBLD " + IBMi.getConfig("reliclib"),
-            //        "ASCII",
-            //        "RECV " + buildDir + "RELICBLD.log \"" + filetemp + "\""
-            //    });
-            //    IBMi.addOutput("");
-            //    foreach (string line in File.ReadAllLines(filetemp))
-            //    {
-            //        IBMi.addOutput("> " + line);
-            //    }
-            //    IBMi.addOutput("");
-            //    IBMi.addOutput("End of build.");
-            //    if (Main.commandWindow != null) Main.commandWindow.loadNewCommands();
-            //});
-            //gothread.Start();
         }
 
         internal static void commandDialog()

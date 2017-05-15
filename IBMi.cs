@@ -120,30 +120,47 @@ namespace IBMiCmd
 
         public static void runCommands(string[] list)
         {
-            flushOutput();
-            string tempfile = Path.GetTempFileName() + ".ftp";
-            List<string> lines = new List<string>();
-
-            lines.Add("user " + _config["username"]);
-            lines.Add(_config["password"]);
-            lines.Add("bin");
-            foreach(string cmd in list)
+            try
             {
-                if (cmd.Trim() != "") {
-                    IBMiUtilities.Log("Writing Command to file: " + cmd);
-                    lines.Add(cmd);
-                }
-            }
-            lines.Add("quit");
+                flushOutput();
+                string tempfile = Path.GetTempFileName();
+                File.Move(tempfile, tempfile + ".ftp");
+                tempfile += ".ftp";
+                List<string> lines = new List<string>();
 
-            File.WriteAllLines(tempfile, lines.ToArray());
-            IBMiUtilities.Log("Command File Prepared!");
-            runFTP(tempfile);
+                lines.Add("user " + _config["username"]);
+                lines.Add(_config["password"]);
+                lines.Add("bin");
+                foreach (string cmd in list)
+                {
+                    if (cmd == null) continue;
+                    if (cmd.Trim() != "")
+                    {
+#if DEBUG
+                        IBMiUtilities.Log("Collecting command for ftp file: " + cmd);
+#endif
+                        lines.Add(cmd);
+                    }
+                }
+                lines.Add("quit");
+
+                File.WriteAllLines(tempfile, lines.ToArray());
+                runFTP(tempfile);
+                File.Delete(tempfile);
+
+            }
+            catch(Exception e) {
+                IBMiUtilities.Log(e.ToString());
+            }
         }
 
         private static void runFTP(string FileLoc)
         {
+
+#if DEBUG
             IBMiUtilities.Log("Preparing FTP of command file " + FileLoc);
+#endif
+
             _notConnected = false;
             Process process = new Process();
             process.StartInfo.FileName = "cmd.exe";
@@ -156,12 +173,18 @@ namespace IBMiCmd
             process.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
             process.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);
 
+#if DEBUG
             IBMiUtilities.Log("Starting FTP of command file " + FileLoc);
+#endif
+
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
             process.WaitForExit();
+
+#if DEBUG
             IBMiUtilities.Log("FTP of command file " + FileLoc + " completed");
+#endif
         }
 
         private static void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
