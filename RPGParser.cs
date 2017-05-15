@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.IO;
-using System.Threading.Tasks;
 using NppPluginNET;
 using System.Runtime.InteropServices;
 
@@ -36,15 +34,22 @@ namespace IBMiCmd
 
     public class RPGParser
     {
-        public const int RCDFMT_NAME = 47;
-        public const int RCDFMT_NAME_LEN = 10;
-        public const int RCDFMT_FIELD_NAME = 130;
-        public const int RCDFMT_FIELD_NAME_LEN = 10;
-        public const int RCDFMT_ALT_FIELD_NAME = 262;
-        public const int RCDFMT_ALT_FIELD_LEN = 30;
+        // 
+        public const int DSPFFD_FILE_NAME       = 46;
+        public const int DSPFFD_FILE_NAME_LEN   = 10;
+        public const int DSPFFD_FIELD_NAME      = 129;
+        public const int DSPFFD_FIELD_NAME_LEN  = 10;
+        public const int DSPFFD_ALT_FIELD_NAME  = 261;
+        public const int DSPFFD_ALT_FIELD_LEN   = 30;
 
         static List<DataStructure> dataStructures = null;
 
+        /// <summary>
+        /// Gets a file containing the output of a DSPFFD command
+        /// Parses the output into a DataStructure item
+        /// </summary>
+        /// <param name="f">File with DSPFFD output</param>
+        /// <param name="srcLine">source line with extName</param>
         public static void LoadFFD(string f, SourceLine srcLine) {
             if (dataStructures == null) dataStructures = new List<DataStructure>();
 
@@ -52,39 +57,40 @@ namespace IBMiCmd
             bool exists = false;
             DataStructure d = new DataStructure();  
             int i = 0;
-            foreach (string line in File.ReadAllLines(f))
+            foreach (string l in File.ReadAllLines(f))
             {
                 if (firstLine) {
+#if DEBUG
+                    IBMiUtilities.Log("File name: " + l.Substring(DSPFFD_FILE_NAME, DSPFFD_FILE_NAME_LEN));
+#endif
                     foreach (DataStructure ds in dataStructures) {
-                        if (ds.Contains(line.Substring(RCDFMT_NAME, RCDFMT_NAME_LEN))) {
+                        if (ds.Contains(l.Substring(DSPFFD_FILE_NAME, DSPFFD_FILE_NAME_LEN))) {
                             exists = true;
                             d.name = ds.name;
-                            d.fields = ds.fields;
+                            d.fields = new List<string>(); // Createw new list because format might have changed
                             i = dataStructures.IndexOf(ds);
                             break;
                         }
                     }
                     if (!exists) {
-                        d.name = line.Substring(RCDFMT_NAME, RCDFMT_NAME_LEN);
+                        d.name = l.Substring(DSPFFD_FILE_NAME, DSPFFD_FILE_NAME_LEN);
                         d.fields = new List<string>();
                     }
                 }
 
-#if DEBUG
-                IBMiUtilities.Log("File Substring" + line.Substring(RCDFMT_NAME, RCDFMT_NAME_LEN));
-                IBMiUtilities.Log("Field Substring" + line.Substring(RCDFMT_FIELD_NAME, RCDFMT_FIELD_NAME_LEN));
-                IBMiUtilities.Log("Alias Substring" + line.Substring(RCDFMT_ALT_FIELD_NAME, RCDFMT_ALT_FIELD_LEN));               
+#if DEBUG                
+                IBMiUtilities.Log("Field Substring: " + l.Substring(DSPFFD_FIELD_NAME, DSPFFD_FIELD_NAME_LEN));
+                IBMiUtilities.Log("Alias Substring: " + l.Substring(DSPFFD_ALT_FIELD_NAME, DSPFFD_ALT_FIELD_LEN));               
 #endif
 
                 if (srcLine.alias) {
-                    if (line.Substring(RCDFMT_ALT_FIELD_NAME, RCDFMT_ALT_FIELD_LEN) != ""){
-
-                        d.fields.Add(line.Substring(RCDFMT_ALT_FIELD_NAME, RCDFMT_ALT_FIELD_LEN));
+                    if (l.Substring(DSPFFD_ALT_FIELD_NAME, DSPFFD_ALT_FIELD_LEN) != ""){
+                        d.fields.Add(l.Substring(DSPFFD_ALT_FIELD_NAME, DSPFFD_ALT_FIELD_LEN));
                     } else {
-                        d.fields.Add(line.Substring(RCDFMT_FIELD_NAME, RCDFMT_FIELD_NAME_LEN));
+                        d.fields.Add(l.Substring(DSPFFD_FIELD_NAME, DSPFFD_FIELD_NAME_LEN));
                     }
                 } else {
-                    d.fields.Add(line.Substring(RCDFMT_FIELD_NAME, RCDFMT_FIELD_NAME_LEN));
+                    d.fields.Add(l.Substring(DSPFFD_FIELD_NAME, DSPFFD_FIELD_NAME_LEN));
                 }
             }
 
@@ -156,6 +162,16 @@ namespace IBMiCmd
 #endif
 
             return lines;
+        }
+
+        /// <summary>
+        /// TODO Sends information to the auto complete function of notepad++
+        /// </summary>
+        internal static void NotifyNPP()
+        {
+#if DEBUG
+            IBMiUtilities.Log("TODO: Update NPP Definitions for auto complete!");
+#endif
         }
     }
 }

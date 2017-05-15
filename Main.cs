@@ -153,19 +153,15 @@ namespace IBMiCmd
 
                 IBMi.runCommands(cmd); // Get all record formats to local temp files
 
-                i = 0;
-                foreach (string f in tmp)
-                {
-                    i++;
-#if DEBUG
-                    IBMiUtilities.Log("File Received: " + f);
-#endif
-                    try {
-                        RPGParser.LoadFFD(f, src.);
+                t = 0;
+                foreach (SourceLine sl in src){
+                    try{
+                        RPGParser.LoadFFD(tmp[t], sl);
+                        RPGParser.NotifyNPP();
                     } catch (Exception e) {
                         IBMiUtilities.Log(e.ToString());
                     } finally {
-                        File.Delete(f);
+                        File.Delete(tmp[t++]);
                     }
                 }
 #if DEBUG
