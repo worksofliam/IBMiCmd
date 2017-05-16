@@ -141,10 +141,6 @@ namespace IBMiCmd
 #endif
                 List<SourceLine> src = RPGParser.parseCurrentFileForExtName();
 
-#if DEBUG
-                IBMiUtilities.Log(src.Count + " lines to collect for.");
-#endif
-
                 if (src.Count == 0) return;
 
                 // Temporary recfmt files

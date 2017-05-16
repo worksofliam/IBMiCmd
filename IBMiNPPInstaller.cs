@@ -20,10 +20,8 @@ namespace IBMiCmd
 #if DEBUG
                 IBMiUtilities.Log("Thread installRemoteLib Starting...");
 #endif
-
                 try
                 {
-
                     List<string> sourceFiles = generateRemoteSource();
                     // Make room for <upload, copy, delete, compile> for each file
                     string[] cmd = new string[sourceFiles.Count * 4 + 4];
@@ -34,19 +32,8 @@ namespace IBMiCmd
                     cmd[i++] = "QUOTE RCMD CRTPF FILE(QTEMP/NPPCMDSRC) RCDLEN(112) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy NPP plugin commands')";
                     foreach (string f in sourceFiles)
                     {
-#if DEBUG
-                        IBMiUtilities.Log("Preparing send and create of path: " + f);
-#endif
                         string file = f.Substring(f.LastIndexOf("\\") + 1);
-#if DEBUG
-                        IBMiUtilities.Log("Preparing send and create of file: " + file);
-                        IBMiUtilities.Log("Start: " + (f.LastIndexOf("-") + 1));
-                        IBMiUtilities.Log("Length: " + (f.LastIndexOf(".") - (f.LastIndexOf("-") + 1)));
-#endif
                         string member = file.Substring(file.LastIndexOf("-") + 1, file.LastIndexOf(".") - (file.LastIndexOf("-") + 1));
-#if DEBUG
-                        IBMiUtilities.Log("Preparing send and create of member: " + member);
-#endif
                         string sourceFile = null, crtCmd = null;
 
                         switch (file.Substring(file.Length - 4))
@@ -69,7 +56,7 @@ namespace IBMiCmd
                         cmd[i++] = "QUOTE RCMD RMVLNK OBJLNK('/home/" + IBMi.getConfig("username") + '/' + file + "')";
                         cmd[i++] = "QUOTE RCMD " + crtCmd;
                     }
-                    cmd[i++] = "QUOTE RCMD DSPJOBLOG"; // For Debug on remote 
+                    // cmd[i++] = "QUOTE RCMD DSPJOBLOG"; // For Debug on remote 
 
                     IBMi.runCommands(cmd); // Send -> Copy -> Cleanup -> Compile
 

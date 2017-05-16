@@ -156,11 +156,6 @@ namespace IBMiCmd
 
         private static void runFTP(string FileLoc)
         {
-
-#if DEBUG
-            IBMiUtilities.Log("Preparing FTP of command file " + FileLoc);
-#endif
-
             _notConnected = false;
             Process process = new Process();
             process.StartInfo.FileName = "cmd.exe";
