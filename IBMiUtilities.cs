@@ -46,13 +46,13 @@ namespace IBMiCmd
             }
         }
 
-        public static void CreateLog(string logFilePath)
+        internal static void CreateLog(string logFilePath)
         {
             _LogFile = logFilePath + ".log";
             File.WriteAllText(_LogFile, DateTime.Now.ToString() + " : Log Created..." + Environment.NewLine);
         }
 
-        public static void Log(string m)
+        internal static void Log(string m)
         {
             File.AppendAllText(_LogFile, DateTime.Now.ToString() + " : " + m + Environment.NewLine);
         }

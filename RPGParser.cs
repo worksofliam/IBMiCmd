@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 namespace IBMiCmd
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct SourceLine
+    internal struct SourceLine
     {
         public string statement;
         public string searchResult;
@@ -17,7 +17,7 @@ namespace IBMiCmd
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct DataStructure
+    internal struct DataStructure
     {
         public string name;
         public List<string> fields;
@@ -32,7 +32,7 @@ namespace IBMiCmd
         }
     }
 
-    public class RPGParser
+    internal class RPGParser
     {
         // 
         public const int DSPFFD_FILE_NAME       = 46;
@@ -50,9 +50,9 @@ namespace IBMiCmd
         /// </summary>
         /// <param name="f">File with DSPFFD output</param>
         /// <param name="srcLine">source line with extName</param>
-        public static void LoadFFD(string f, SourceLine srcLine) {
+        internal static void LoadFFD(string f, SourceLine srcLine) {
 #if DEBUG
-            IBMiUtilities.Log("File name: " + f);
+            IBMiUtilities.Log("LoadFFD -> File name: " + f);
 #endif
             if (f == null || f == "") return; 
             if (dataStructures == null) dataStructures = new List<DataStructure>();
@@ -102,7 +102,7 @@ namespace IBMiCmd
             else dataStructures.Insert(i, d);
         }
 
-        public static void LoadLikeDS(string f)
+        internal static void LoadLikeDS(string f)
         {
             if (dataStructures == null) dataStructures = new List<DataStructure>();
 
@@ -118,7 +118,7 @@ namespace IBMiCmd
         /// in the searchResult field of the data structure
         /// </summary>
         /// <returns>SourceLine(s) from current file containing EXTNAME</returns>
-        public static List<SourceLine> parseCurrentFileForExtName()
+        internal static List<SourceLine> parseCurrentFileForExtName()
         {
             // extname('F')
             const int MINIMUM_LINE_LENGTH_FOR_EXTNAME = 12;

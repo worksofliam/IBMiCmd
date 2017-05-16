@@ -119,6 +119,12 @@
     <Compile Include="Forms\errorListing.Designer.cs">
       <DependentUpon>errorListing.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\installRemote.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\installRemote.Designer.cs">
+      <DependentUpon>installRemote.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\libraryList.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -150,6 +156,7 @@
       <DependentUpon>wrkBind.cs</DependentUpon>
     </Compile>
     <Compile Include="IBMi.cs" />
+    <Compile Include="IBMiNPPInstaller.cs" />
     <Compile Include="IBMiUtilities.cs" />
     <Compile Include="listError.cs" />
     <Compile Include="Main.cs" />
@@ -173,6 +180,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\errorListing.resx">
       <DependentUpon>errorListing.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\installRemote.resx">
+      <DependentUpon>installRemote.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\libraryList.resx">
       <DependentUpon>libraryList.cs</DependentUpon>

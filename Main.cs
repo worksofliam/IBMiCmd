@@ -46,14 +46,17 @@ namespace IBMiCmd
             PluginBase.SetCommand(3, "IBM i Error Listing", errorDialog);
             PluginBase.SetCommand(4, "IBM i Command Bindings", bindsDialog);
 
-            PluginBase.SetCommand(6, "IBM i RPG Conversion", launchConversion, new ShortcutKey(true, false, false, Keys.F4));
-            PluginBase.SetCommand(7, "IBM i Relic Build", launchRBLD, new ShortcutKey(true, false, false, Keys.F5));
-
-			// Set Library list config
-			PluginBase.SetCommand(8, "IBM i Library List", liblDialog, new ShortcutKey(true, false, false, Keys.F6));
+            PluginBase.SetCommand(5, "IBM i RPG Conversion", launchConversion, new ShortcutKey(true, false, false, Keys.F4));
+            PluginBase.SetCommand(6, "IBM i Relic Build", launchRBLD, new ShortcutKey(true, false, false, Keys.F5));
 
             // Get Record format info for all EXTNAME data strctures in current source
-            PluginBase.SetCommand(8, "IBM i Refresh External DS Defintions", launchFFDCollection, new ShortcutKey(true, false, false, Keys.F7));
+            PluginBase.SetCommand(7, "IBM i Refresh External DS Defintions", launchFFDCollection, new ShortcutKey(true, false, false, Keys.F6));
+
+            // Set Library list config
+            PluginBase.SetCommand(8, "IBM i Library List", liblDialog, new ShortcutKey(true, false, false, Keys.F7));
+
+            // Get Record format info for all EXTNAME data strctures in current source
+            PluginBase.SetCommand(9, "IBM i Remote Install Plugin Server", remoteInstall);
         }
         
         internal static void SetToolBarIcon()
@@ -117,6 +120,11 @@ namespace IBMiCmd
         internal static void remoteSetup()
         {
             new userSettings().ShowDialog();
+        }
+
+        internal static void remoteInstall()
+        {
+            new installRemote().ShowDialog();          
         }
 
         internal static void liblDialog()
@@ -287,6 +295,6 @@ namespace IBMiCmd
                 Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, bindsWindow.Handle);
             }
         }
-		#endregion
-	}
+        #endregion
+    }
 }
