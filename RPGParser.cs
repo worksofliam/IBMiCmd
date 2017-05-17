@@ -9,7 +9,7 @@ using System.Threading;
 namespace IBMiCmd
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    internal struct SourceLine
+    public struct SourceLine
     {
         public string statement;
         public string searchResult;
@@ -18,14 +18,16 @@ namespace IBMiCmd
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    internal struct DataStructure
+    public struct DataStructure
     {
         public string name;
         public List<string> fields;
+        public List<DataStructure> dataStructures;
 
         public DataStructure(string name) {
             this.name = name;
             this.fields = new List<string>();
+            this.dataStructures = null;
         }
 
         public bool Contains(String n) {
@@ -33,18 +35,24 @@ namespace IBMiCmd
         }
     }
 
-    internal class RPGParser
+    public class RPGParser
     {
         private const int DSPFFD_FILE_NAME       = 46;
         private const int DSPFFD_FILE_NAME_LEN   = 10;
         private const int DSPFFD_FIELD_NAME      = 129;
         private const int DSPFFD_FIELD_NAME_LEN  = 10;
+
+        internal static string GetVariableAtColumn(string curLine, int curPos )
+        {
+            return "";
+        }
+
         private const int DSPFFD_ALT_FIELD_NAME  = 261;
         private const int DSPFFD_ALT_FIELD_LEN   = 30;
 
         public static List<DataStructure> dataStructures { get; set; }
 
-        internal static void launchFFDCollection()
+        internal static void LaunchFFDCollection()
         {
             Thread thread = new Thread((ThreadStart)delegate {
                 IBMiUtilities.DebugLog("launchFFDCollection start");
@@ -156,8 +164,7 @@ namespace IBMiCmd
 
             while (true)
             {
-                line++;
-                int lineLength = (int)Win32.SendMessage(curScintilla, SciMsg.SCI_LINELENGTH, line, 0);
+                int lineLength = (int)Win32.SendMessage(curScintilla, SciMsg.SCI_LINELENGTH, ++line, 0);
                 if (lineLength == END_OF_FILE) break;
                 else if (lineLength < MINIMUM_LINE_LENGTH_FOR_EXTNAME) continue;
 

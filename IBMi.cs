@@ -38,7 +38,7 @@ namespace IBMiCmd
 				printConfig();
 
                 MessageBox.Show("Thanks for using IBMiCmds. You will now be prompted to enter in a Remote System.");
-                Main.remoteSetup();
+                Main.RemoteSetup();
             }
 
             foreach (string Line in File.ReadAllLines(_ConfigFile))

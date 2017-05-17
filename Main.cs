@@ -41,26 +41,26 @@ namespace IBMiCmd
 
             IBMiUtilities.CreateLog(iniFilePath + PluginName);
 
-            PluginBase.SetCommand(0, "About IBMiCmd", myMenuFunction, new ShortcutKey(false, false, false, Keys.None));
-            PluginBase.SetCommand(1, "IBM i Remote System Setup", remoteSetup);
-            PluginBase.SetCommand(2, "IBM i Command Entry", commandDialog);
-            PluginBase.SetCommand(3, "IBM i Error Listing", errorDialog);
-            PluginBase.SetCommand(4, "IBM i Command Bindings", bindsDialog);
+            PluginBase.SetCommand(0, "About IBMiCmd", About, new ShortcutKey(false, false, false, Keys.None));
+            PluginBase.SetCommand(1, "IBM i Remote System Setup", RemoteSetup);
+            PluginBase.SetCommand(2, "IBM i Command Entry", CommandDialog);
+            PluginBase.SetCommand(3, "IBM i Error Listing", ErrorDialog);
+            PluginBase.SetCommand(4, "IBM i Command Bindings", BindsDialog);
 
-            PluginBase.SetCommand(5, "IBM i RPG Conversion", launchConversion, new ShortcutKey(true, false, false, Keys.F4));
-            PluginBase.SetCommand(6, "IBM i Relic Build", launchRBLD, new ShortcutKey(true, false, false, Keys.F5));
+            PluginBase.SetCommand(5, "IBM i RPG Conversion", LaunchConversion, new ShortcutKey(true, false, false, Keys.F4));
+            PluginBase.SetCommand(6, "IBM i Relic Build", LaunchRBLD, new ShortcutKey(true, false, false, Keys.F5));
 
             // Parse RPG Source and retrieve contect information from remote system
-            PluginBase.SetCommand(7, "IBM i Refresh Definitions", buildSourceContext, new ShortcutKey(true, false, false, Keys.F6));
+            PluginBase.SetCommand(7, "IBM i Refresh Definitions", BuildSourceContext, new ShortcutKey(true, false, false, Keys.F6));
 
             // TODO: Implement SCI API calls to provide suggestions for current line + cursor position based on source context
-            PluginBase.SetCommand(8, "IBM i Auto Complete", autoComplete, new ShortcutKey(true, false, false, Keys.Space));
+            PluginBase.SetCommand(8, "IBM i Auto Complete", AutoComplete, new ShortcutKey(true, false, false, Keys.Space));
 
             // Set Library list config
-            PluginBase.SetCommand(9, "IBM i Library List", liblDialog, new ShortcutKey(true, false, false, Keys.F7));
+            PluginBase.SetCommand(9, "IBM i Library List", LiblDialog, new ShortcutKey(true, false, false, Keys.F7));
 
             // Get Record format info for all EXTNAME data strctures in current source
-            PluginBase.SetCommand(10, "IBM i Remote Install Plugin Server", remoteInstall);
+            PluginBase.SetCommand(10, "IBM i Remote Install Plugin Server", RemoteInstall);
         }
         
         internal static void SetToolBarIcon()
@@ -74,12 +74,12 @@ namespace IBMiCmd
         #endregion
 
         #region " Menu functions "
-        internal static void myMenuFunction()
+        internal static void About()
         {
             MessageBox.Show("IBMiCmds, created by WorksOfBarry.");
         }
 
-        internal static void launchRBLD()
+        internal static void LaunchRBLD()
         {
             DialogResult outp = MessageBox.Show("Confirm build of '" + IBMi.getConfig("relicdir") + "' into " + IBMi.getConfig("reliclib") + "?", "Relic Build", MessageBoxButtons.YesNo);
             if (outp == DialogResult.Yes)
@@ -88,37 +88,38 @@ namespace IBMiCmd
             }
         }
 
-        internal static void launchConversion()
+        internal static void LaunchConversion()
         {
             rpgForm.curFileLine = (int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETCURRENTLINE, 0, 0);
             new rpgForm().ShowDialog();
         }
         
-        internal static void remoteSetup()
+        internal static void RemoteSetup()
         {
             new userSettings().ShowDialog();
         }
 
-        internal static void remoteInstall()
+        internal static void RemoteInstall()
         {
-            new installRemote().ShowDialog();          
+            new installRemote().ShowDialog();
+            Main.commandWindow.loadNewCommands();
         }
 
-        internal static void liblDialog()
+        internal static void LiblDialog()
         {
             new libraryList().ShowDialog();
         }
 
-        internal static void buildSourceContext()
+        internal static void BuildSourceContext()
         {
-            RPGParser.launchFFDCollection();
+            RPGParser.LaunchFFDCollection();
         }
 
-        internal static void autoComplete() {
+        internal static void AutoComplete() {
             RPGAutoCompleter.ProvideSuggestions(RPGParser.dataStructures);
         }
 
-        internal static void commandDialog()
+        internal static void CommandDialog()
         {
             if (commandWindow == null)
             {
@@ -155,7 +156,7 @@ namespace IBMiCmd
             }
         }
 
-        internal static void errorDialog()
+        internal static void ErrorDialog()
         {
             if (errorWindow == null)
             {
@@ -192,7 +193,7 @@ namespace IBMiCmd
             }
         }
 
-        internal static void bindsDialog()
+        internal static void BindsDialog()
         {
             if (bindsWindow == null)
             {
