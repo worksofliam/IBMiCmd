@@ -176,6 +176,13 @@ namespace IBMiCmd
             process.BeginErrorReadLine();
             process.WaitForExit();
 
+#if DEBUG
+            foreach (string retMsg in _output)
+            {
+                IBMiUtilities.DebugLog(retMsg);
+            }
+#endif            
+
             IBMiUtilities.DebugLog("FTP of command file " + FileLoc + " completed");
         }
 

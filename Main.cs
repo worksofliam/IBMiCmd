@@ -16,7 +16,8 @@ namespace IBMiCmd
     {
         #region " Fields "
         internal const string PluginName = "IBMiCmd";
-        
+        internal const string PluginDescription = "IBMiCmd v1.3.1.0 github.com/WorksOfBarry/IBMiCmd";
+
         public static commandEntry commandWindow { get; set; }
         public static errorListing errorWindow { get; set; }
         public static libraryList liblWindow { get; set; }
@@ -76,7 +77,7 @@ namespace IBMiCmd
         #region " Menu functions "
         internal static void About()
         {
-            MessageBox.Show("IBMiCmds, created by WorksOfBarry.");
+            MessageBox.Show($"IBMiCmd, created by WorksOfBarry. { Environment.NewLine} github.com/WorksOfBarry/IBMiCmd");
         }
 
         internal static void LaunchRBLD()

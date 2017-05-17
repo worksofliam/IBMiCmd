@@ -106,35 +106,59 @@ namespace IBMiCmd
             int i = 0;
             foreach (string l in File.ReadAllLines(f))
             {
-                if (firstLine) {
-                    foreach (DataStructure ds in dataStructures) {
-                        if (ds.Contains(l.Substring(DSPFFD_FILE_NAME, DSPFFD_FILE_NAME_LEN))) {
+                if (firstLine)
+                {
+                    foreach (DataStructure ds in dataStructures)
+                    {
+                        if (ds.Contains(l.Substring(DSPFFD_FILE_NAME, DSPFFD_FILE_NAME_LEN)))
+                        {
                             exists = true;
                             d.name = ds.name;
-                            d.fields = new List<string>(); // Createw new list because format might have changed
+                            d.fields = new List<string>(); // Create new list because format might have changed
                             i = dataStructures.IndexOf(ds);
                             break;
                         }
                     }
-                    if (!exists) {
+                    if (!exists)
+                    {
                         d.name = l.Substring(DSPFFD_FILE_NAME, DSPFFD_FILE_NAME_LEN);
                         d.fields = new List<string>();
                     }
+                    firstLine = false;
                 }             
 
-                if (srcLine.alias) {
-                    if (l.Substring(DSPFFD_ALT_FIELD_NAME, DSPFFD_ALT_FIELD_LEN) != ""){
+                if (srcLine.alias)
+                {
+                    if (l.Substring(DSPFFD_ALT_FIELD_NAME, DSPFFD_ALT_FIELD_LEN) != "")
+                    {
                         d.fields.Add(l.Substring(DSPFFD_ALT_FIELD_NAME, DSPFFD_ALT_FIELD_LEN));
-                    } else {
+                    }
+                    else
+                    {
                         d.fields.Add(l.Substring(DSPFFD_FIELD_NAME, DSPFFD_FIELD_NAME_LEN));
                     }
-                } else {
+                }
+                else
+                {
                     d.fields.Add(l.Substring(DSPFFD_FIELD_NAME, DSPFFD_FIELD_NAME_LEN));
                 }
             }
 
             if (!exists) dataStructures.Add(d);
             else dataStructures.Insert(i, d);
+
+#if DEBUG
+            foreach (DataStructure ds in dataStructures)
+            {
+                IBMiUtilities.DebugLog("<<< Start Data Structure Definition >>>");
+                IBMiUtilities.DebugLog(ds.name);
+                foreach (string Field in ds.fields)
+                {
+                    IBMiUtilities.DebugLog($"  {Field}");
+                }
+                IBMiUtilities.DebugLog("<<< End Data Structure Definition >>>");
+            }
+#endif
         }
 
         internal static void LoadLikeDS(string f)

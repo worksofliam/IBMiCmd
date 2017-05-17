@@ -66,11 +66,11 @@ namespace IBMiCmd
                 {
                     case ".clp":
                         sourceFile = "NPPCLSRC";
-                        crtCmd = $"CRTCLPGM PGM({library}/{member}) SRCFILE(QTEMP/NPPCLSRC) SRCMBR({member}) REPLACE(*YES)";
+                        crtCmd = $"CRTCLPGM PGM({library}/{member}) SRCFILE(QTEMP/NPPCLSRC) SRCMBR({member}) REPLACE(*YES) TEXT('{Main.PluginDescription}')";
                         break;
                     case ".cmd":
                         sourceFile = "NPPCMDSRC";
-                        crtCmd = $"CRTCMD CMD({library}/{member}) PGM({library}/{member}) SRCFILE(QTEMP/NPPCMDSRC) SRCMBR({member}) REPLACE(*YES)";
+                        crtCmd = $"CRTCMD CMD({library}/{member}) PGM({library}/{member}) SRCFILE(QTEMP/NPPCMDSRC) SRCMBR({member}) REPLACE(*YES) TEXT('{Main.PluginDescription}')";
                         break;
                     default:
                         continue;
