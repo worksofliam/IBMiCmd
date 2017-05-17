@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using NppPluginNET;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace IBMiCmd
 {
@@ -34,15 +35,51 @@ namespace IBMiCmd
 
     internal class RPGParser
     {
-        // 
-        public const int DSPFFD_FILE_NAME       = 46;
-        public const int DSPFFD_FILE_NAME_LEN   = 10;
-        public const int DSPFFD_FIELD_NAME      = 129;
-        public const int DSPFFD_FIELD_NAME_LEN  = 10;
-        public const int DSPFFD_ALT_FIELD_NAME  = 261;
-        public const int DSPFFD_ALT_FIELD_LEN   = 30;
+        private const int DSPFFD_FILE_NAME       = 46;
+        private const int DSPFFD_FILE_NAME_LEN   = 10;
+        private const int DSPFFD_FIELD_NAME      = 129;
+        private const int DSPFFD_FIELD_NAME_LEN  = 10;
+        private const int DSPFFD_ALT_FIELD_NAME  = 261;
+        private const int DSPFFD_ALT_FIELD_LEN   = 30;
 
-        static List<DataStructure> dataStructures = null;
+        public static List<DataStructure> dataStructures { get; set; }
+
+        internal static void launchFFDCollection()
+        {
+            Thread thread = new Thread((ThreadStart)delegate {
+                IBMiUtilities.DebugLog("launchFFDCollection start");
+                List<SourceLine> src = ParseCurrentFileForExtName();
+                if (src.Count == 0) return;
+                // Generate temporary files to receive data
+                string[] tmp = new string[src.Count];
+                for (int i = 0; i < src.Count; i++)
+                {
+                    tmp[i] = Path.GetTempFileName();
+                }
+
+                // Receive record formats via remote command NPPDSPFFD
+                IBMi.runCommands(IBMiCommandRender.RenderFFDCollectionScript(src, tmp)); // Get all record formats to local temp files
+
+                // Load Context & Cleanup temp files
+                for (int i = 0; i < src.Count; i++)
+                {
+                    try
+                    {
+                        RPGParser.LoadFFD(tmp[i], src[i]);
+                    }
+                    catch (Exception e)
+                    {
+                        IBMiUtilities.Log(e.ToString()); // TODO: Show error?
+                    }
+                    finally
+                    {
+                        File.Delete(tmp[i]);
+                    }
+                }
+                IBMiUtilities.DebugLog("launchFFDCollection end");
+            });
+            thread.Start();
+        }
 
         /// <summary>
         /// Gets a file containing the output of a DSPFFD command
@@ -51,9 +88,7 @@ namespace IBMiCmd
         /// <param name="f">File with DSPFFD output</param>
         /// <param name="srcLine">source line with extName</param>
         internal static void LoadFFD(string f, SourceLine srcLine) {
-#if DEBUG
-            IBMiUtilities.Log("LoadFFD -> File name: " + f);
-#endif
+            IBMiUtilities.DebugLog("LoadFFD -> File name: " + f);
             if (f == null || f == "") return; 
             if (dataStructures == null) dataStructures = new List<DataStructure>();
 
@@ -64,9 +99,6 @@ namespace IBMiCmd
             foreach (string l in File.ReadAllLines(f))
             {
                 if (firstLine) {
-#if DEBUG
-                    IBMiUtilities.Log("File name: " + l.Substring(DSPFFD_FILE_NAME, DSPFFD_FILE_NAME_LEN));
-#endif
                     foreach (DataStructure ds in dataStructures) {
                         if (ds.Contains(l.Substring(DSPFFD_FILE_NAME, DSPFFD_FILE_NAME_LEN))) {
                             exists = true;
@@ -80,12 +112,7 @@ namespace IBMiCmd
                         d.name = l.Substring(DSPFFD_FILE_NAME, DSPFFD_FILE_NAME_LEN);
                         d.fields = new List<string>();
                     }
-                }
-
-#if DEBUG                
-                IBMiUtilities.Log("Field Substring: " + l.Substring(DSPFFD_FIELD_NAME, DSPFFD_FIELD_NAME_LEN));
-                IBMiUtilities.Log("Alias Substring: " + l.Substring(DSPFFD_ALT_FIELD_NAME, DSPFFD_ALT_FIELD_LEN));               
-#endif
+                }             
 
                 if (srcLine.alias) {
                     if (l.Substring(DSPFFD_ALT_FIELD_NAME, DSPFFD_ALT_FIELD_LEN) != ""){
@@ -112,25 +139,20 @@ namespace IBMiCmd
             }
         }
 
-
         /// <summary>
         /// Returns a list of SourceLine structs that contains names of externally described files
         /// in the searchResult field of the data structure
         /// </summary>
         /// <returns>SourceLine(s) from current file containing EXTNAME</returns>
-        internal static List<SourceLine> parseCurrentFileForExtName()
+        private static List<SourceLine> ParseCurrentFileForExtName()
         {
-            // extname('F')
+            IBMiUtilities.DebugLog("Starting to parse current file for extName definitions...");
             const int MINIMUM_LINE_LENGTH_FOR_EXTNAME = 12;
             const short END_OF_FILE = 0;
             int line = 0;
             IntPtr curScintilla = PluginBase.GetCurrentScintilla();
 
             List<SourceLine> lines = new List<SourceLine>();
-
-#if DEBUG
-            IBMiUtilities.Log("Starting to parse current file for extName definitions...");
-#endif
 
             while (true)
             {
@@ -148,12 +170,12 @@ namespace IBMiCmd
 
                 if (sourceStatement.Contains("EXTNAME("))
                 {
-                    SourceLine result = new SourceLine();
-
-                    result.statement = sourceStatement;
-                    result.searchResult = IBMiUtilities.extractString(sourceStatement, "EXTNAME('", "')");
-                    result.lineNumber = line;
-
+                    SourceLine result = new SourceLine()
+                    {
+                        statement = sourceStatement,
+                        searchResult = IBMiUtilities.extractString(sourceStatement, "EXTNAME('", "')"),
+                        lineNumber = line
+                    };
                     if (sourceStatement.Contains("ALIAS")) result.alias = true;
                     else result.alias = false;
 
@@ -161,9 +183,7 @@ namespace IBMiCmd
                 }
             }
 
-#if DEBUG
-            IBMiUtilities.Log("Parsing completed... found " + lines.Count + " extName definitions.");
-#endif
+            IBMiUtilities.DebugLog("Parsing completed... found " + lines.Count + " extName definitions.");
 
             return lines;
         }
@@ -173,9 +193,7 @@ namespace IBMiCmd
         /// </summary>
         internal static void NotifyNPP()
         {
-#if DEBUG
-            IBMiUtilities.Log("TODO: Update NPP Definitions for auto complete!");
-#endif
+            IBMiUtilities.DebugLog("TODO: Update NPP Definitions for auto complete!");
         }
     }
 }

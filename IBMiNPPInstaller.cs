@@ -11,87 +11,77 @@ namespace IBMiCmd
     class IBMiNPPInstaller
     {
         /// <summary>
+        /// TODO: ?
+        /// </summary>
+        internal static void RebuildRelic()
+        {
+            Thread gothread = new Thread((ThreadStart)delegate {
+                IBMiUtilities.DebugLog("RebuildRelic!");
+                string tmpFile = Path.GetTempFileName();
+                IBMi.addOutput("Starting build of '" + IBMi.getConfig("relicdir") + "' into " + IBMi.getConfig("reliclib"));
+                if (Main.commandWindow != null) Main.commandWindow.loadNewCommands();
+                IBMi.runCommands(IBMiCommandRender.RenderRelicRebuildScript(tmpFile));
+                IBMi.addOutput("");
+                foreach (string line in File.ReadAllLines(tmpFile))
+                {
+                    IBMi.addOutput($"> { line }");
+                }
+                IBMi.addOutput("");
+                IBMi.addOutput("End of build.");
+                File.Delete(tmpFile);
+                if (Main.commandWindow != null) Main.commandWindow.loadNewCommands();
+                IBMiUtilities.DebugLog("RebuildRelic - DONE!");
+            });
+            gothread.Start();
+        }
+
+        /// <summary>
         /// Installs the remote objects that the plugin requires on the server
         /// </summary>
-        internal static void installRemoteLib(string library = "QGPL")
+        internal static void InstallRemoteLib(string library = "QGPL")
         {
-            //IBMiUtilities.Log("launchFFDCollection...");
             Thread thread = new Thread((ThreadStart) delegate {
-#if DEBUG
-                IBMiUtilities.Log("Thread installRemoteLib Starting...");
-#endif
+                IBMiUtilities.DebugLog($"InstallRemoteLib -> {library}!");
                 try
                 {
-                    List<string> sourceFiles = generateRemoteSource();
-                    // Make room for <upload, copy, delete, compile> for each file
-                    string[] cmd = new string[sourceFiles.Count * 4 + 4];
+                    List<string> sourceFiles = GenerateRemoteSource();
 
-                    int i = 0;
-                    cmd[i++] = "ASCII";
-                    cmd[i++] = "QUOTE RCMD CRTPF FILE(QTEMP/NPPCLSRC)  RCDLEN(112) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy NPP plugin commands')";
-                    cmd[i++] = "QUOTE RCMD CRTPF FILE(QTEMP/NPPCMDSRC) RCDLEN(112) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy NPP plugin commands')";
-                    foreach (string f in sourceFiles)
+                    IBMi.runCommands(IBMiCommandRender.RenderRemoteInstallScript(sourceFiles, library));
+
+                    // Cleanup temp files
+                    foreach (string file in sourceFiles)
                     {
-                        string file = f.Substring(f.LastIndexOf("\\") + 1);
-                        string member = file.Substring(file.LastIndexOf("-") + 1, file.LastIndexOf(".") - (file.LastIndexOf("-") + 1));
-                        string sourceFile = null, crtCmd = null;
-
-                        switch (file.Substring(file.Length - 4))
-                        {
-                            case ".clp":
-                                sourceFile = "NPPCLSRC";
-                                crtCmd = "CRTCLPGM PGM(QGPL/" + member + ") SRCFILE(QTEMP/NPPCLSRC) SRCMBR(" + member + ") REPLACE(*YES)";
-                                break;
-                            case ".cmd":
-                                sourceFile = "NPPCMDSRC";
-                                crtCmd = "CRTCMD CMD(QGPL/" + member + ") PGM(QGPL/" + member + ") SRCFILE(QTEMP/NPPCMDSRC) SRCMBR(" + member + ") REPLACE(*YES)";
-                                break;
-                            default:
-                                continue;
-                        }
-
-                        cmd[i++] = "SEND " + f + " /home/" + IBMi.getConfig("username") + "/" + file;
-                        cmd[i++] = "QUOTE RCMD CPYFRMSTMF FROMSTMF('/home/" + IBMi.getConfig("username") + "/" + file + "') "
-                                 +                       "TOMBR('/QSYS.LIB/QTEMP.LIB/" + sourceFile + ".FILE/" + member + ".MBR')";
-                        cmd[i++] = "QUOTE RCMD RMVLNK OBJLNK('/home/" + IBMi.getConfig("username") + '/' + file + "')";
-                        cmd[i++] = "QUOTE RCMD " + crtCmd;
-                    }
-                    // cmd[i++] = "QUOTE RCMD DSPJOBLOG"; // For Debug on remote 
-
-                    IBMi.runCommands(cmd); // Send -> Copy -> Cleanup -> Compile
-
-                    // Cleanup local
-                    foreach (string f in sourceFiles)
-                    {
-                        File.Delete(f);
+                        File.Delete(file);
                     }
                 } catch (Exception e) {
-                    IBMiUtilities.Log(e.ToString());
+                    IBMiUtilities.Log(e.ToString()); // TODO: Show error?
                 }
-#if DEBUG
-                IBMiUtilities.Log("Thread installRemoteLib completed.");
-#endif
+                IBMiUtilities.DebugLog("InstallRemoteLib - DONE!");
             });
             thread.Start();
         }
 
-        private static List<string> generateRemoteSource()
+        /// <summary>
+        /// Generates source that provides extra functionality to plugin
+        /// </summary>
+        /// <returns></returns>
+        private static List<string> GenerateRemoteSource()
         {
             List<string> tmpFiles = new List<string>();
             string tmp = "";
 
             tmp = Path.GetTempFileName();
             File.Delete(tmp); 
-            tmpFiles.Add(generateNPPDspFfdPgm(tmp));
+            tmpFiles.Add(GenerateNPPDspFfdPgm(tmp));
 
             tmp = Path.GetTempFileName();
             File.Delete(tmp);
-            tmpFiles.Add(generateNPPDspFfdCmd(tmp));
+            tmpFiles.Add(GenerateNPPDspFfdCmd(tmp));
 
             return tmpFiles;
         }
 
-        private static string generateNPPDspFfdPgm(string path)
+        private static string GenerateNPPDspFfdPgm(string path)
         {
             List<string> src = new List<string>();
             src.Add("PGM          PARM(&FILE) ");
@@ -120,7 +110,7 @@ namespace IBMiCmd
             return path + "-NPPDSPFFD.clp";
         }
 
-        private static string generateNPPDspFfdCmd(string path)
+        private static string GenerateNPPDspFfdCmd(string path)
         {
             List<string> src = new List<string>();
             src.Add("            CMD        ALLOW(*ALL)");

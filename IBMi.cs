@@ -136,12 +136,13 @@ namespace IBMiCmd
                     if (cmd == null) continue;
                     if (cmd.Trim() != "")
                     {
-#if DEBUG
-                        IBMiUtilities.Log("Collecting command for ftp file: " + cmd);
-#endif
+                        IBMiUtilities.DebugLog("Collecting command for ftp file: " + cmd);
                         lines.Add(cmd);
                     }
                 }
+#if DEBUG
+                lines.Add("QUOTE RCMD DSPJOBLOG");
+#endif
                 lines.Add("quit");
 
                 File.WriteAllLines(tempfile, lines.ToArray());
@@ -168,18 +169,14 @@ namespace IBMiCmd
             process.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
             process.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);
 
-#if DEBUG
-            IBMiUtilities.Log("Starting FTP of command file " + FileLoc);
-#endif
+            IBMiUtilities.DebugLog("Starting FTP of command file " + FileLoc);
 
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
             process.WaitForExit();
 
-#if DEBUG
-            IBMiUtilities.Log("FTP of command file " + FileLoc + " completed");
-#endif
+            IBMiUtilities.DebugLog("FTP of command file " + FileLoc + " completed");
         }
 
         private static void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)

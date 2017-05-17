@@ -156,6 +156,7 @@
       <DependentUpon>wrkBind.cs</DependentUpon>
     </Compile>
     <Compile Include="IBMi.cs" />
+    <Compile Include="IBMiCommandRender.cs" />
     <Compile Include="IBMiNPPInstaller.cs" />
     <Compile Include="IBMiUtilities.cs" />
     <Compile Include="listError.cs" />
@@ -168,6 +169,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="RPGAutoCompleter.cs" />
     <Compile Include="RPGParser.cs" />
     <Compile Include="UnmanagedExports.cs" />
   </ItemGroup>

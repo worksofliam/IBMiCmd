@@ -56,5 +56,11 @@ namespace IBMiCmd
         {
             File.AppendAllText(_LogFile, DateTime.Now.ToString() + " : " + m + Environment.NewLine);
         }
+
+        [System.Diagnostics.Conditional("DEBUG")]
+        internal static void DebugLog(string m)
+        {
+            File.AppendAllText(_LogFile, DateTime.Now.ToString() + " : " + m + Environment.NewLine);
+        }
     }
 }

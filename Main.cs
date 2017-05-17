@@ -16,16 +16,17 @@ namespace IBMiCmd
     {
         #region " Fields "
         internal const string PluginName = "IBMiCmd";
-        static string iniFilePath = null;
-        public static commandEntry commandWindow = null;
-        public static errorListing errorWindow = null;
-		public static libraryList liblWindow = null;
-        public static cmdBindings bindsWindow = null;
-        static int idMyDlg = -1;
-        static Bitmap tbBmp = Properties.Resources.star;
-        static Bitmap tbBmp_tbTab = Properties.Resources.star_bmp;
-        static Icon tbIcon = null;
         
+        public static commandEntry commandWindow { get; set; }
+        public static errorListing errorWindow { get; set; }
+        public static libraryList liblWindow { get; set; }
+        public static cmdBindings bindsWindow { get; set; }
+
+        private static string iniFilePath = null;
+        private static int idMyDlg = -1;
+        private static Bitmap tbBmp = Properties.Resources.star;
+        private static Bitmap tbBmp_tbTab = Properties.Resources.star_bmp;
+        private static Icon tbIcon = null;  
         #endregion
 
         #region " StartUp/CleanUp "
@@ -33,7 +34,7 @@ namespace IBMiCmd
         {
             StringBuilder sbIniFilePath = new StringBuilder(Win32.MAX_PATH);
             Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETPLUGINSCONFIGDIR, Win32.MAX_PATH, sbIniFilePath);
-            iniFilePath = sbIniFilePath.ToString() + "/" + PluginName + "/";
+            iniFilePath = $"{ sbIniFilePath.ToString() }/{ PluginName }/";
             if (!Directory.Exists(iniFilePath)) Directory.CreateDirectory(iniFilePath);
 
             IBMi.loadConfig(iniFilePath + PluginName);
@@ -49,14 +50,17 @@ namespace IBMiCmd
             PluginBase.SetCommand(5, "IBM i RPG Conversion", launchConversion, new ShortcutKey(true, false, false, Keys.F4));
             PluginBase.SetCommand(6, "IBM i Relic Build", launchRBLD, new ShortcutKey(true, false, false, Keys.F5));
 
-            // Get Record format info for all EXTNAME data strctures in current source
-            PluginBase.SetCommand(7, "IBM i Refresh External DS Defintions", launchFFDCollection, new ShortcutKey(true, false, false, Keys.F6));
+            // Parse RPG Source and retrieve contect information from remote system
+            PluginBase.SetCommand(7, "IBM i Refresh Definitions", buildSourceContext, new ShortcutKey(true, false, false, Keys.F6));
+
+            // TODO: Implement SCI API calls to provide suggestions for current line + cursor position based on source context
+            PluginBase.SetCommand(8, "IBM i Auto Complete", autoComplete, new ShortcutKey(true, false, false, Keys.Space));
 
             // Set Library list config
-            PluginBase.SetCommand(8, "IBM i Library List", liblDialog, new ShortcutKey(true, false, false, Keys.F7));
+            PluginBase.SetCommand(9, "IBM i Library List", liblDialog, new ShortcutKey(true, false, false, Keys.F7));
 
             // Get Record format info for all EXTNAME data strctures in current source
-            PluginBase.SetCommand(9, "IBM i Remote Install Plugin Server", remoteInstall);
+            PluginBase.SetCommand(10, "IBM i Remote Install Plugin Server", remoteInstall);
         }
         
         internal static void SetToolBarIcon()
@@ -78,36 +82,9 @@ namespace IBMiCmd
         internal static void launchRBLD()
         {
             DialogResult outp = MessageBox.Show("Confirm build of '" + IBMi.getConfig("relicdir") + "' into " + IBMi.getConfig("reliclib") + "?", "Relic Build", MessageBoxButtons.YesNo);
-
             if (outp == DialogResult.Yes)
             {
-                Thread gothread = new Thread((ThreadStart)delegate {
-                    string filetemp = Path.GetTempFileName();
-                    string buildDir = IBMi.getConfig("relicdir");
-                    if (!buildDir.EndsWith("/"))
-                    {
-                        buildDir += '/';
-                    }
-
-                    IBMi.addOutput("Starting build of '" + IBMi.getConfig("relicdir") + "' into " + IBMi.getConfig("reliclib"));
-                    if (Main.commandWindow != null) Main.commandWindow.loadNewCommands();
-                    IBMi.runCommands(new string[] {
-                        "QUOTE RCMD CD '" + IBMi.getConfig("relicdir") + "'",
-                        "QUOTE RCMD RBLD " + IBMi.getConfig("reliclib"),
-                        "ASCII",
-                        "RECV " + buildDir + "RELICBLD.log \"" + filetemp + "\""
-                    });
-                    IBMi.addOutput("");
-                    foreach(string line in File.ReadAllLines(filetemp))
-                    {
-                        IBMi.addOutput("> " + line);
-                    }
-                    IBMi.addOutput("");
-                    IBMi.addOutput("End of build.");
-                    File.Delete(filetemp);
-                    if (Main.commandWindow != null) Main.commandWindow.loadNewCommands();
-                });
-                gothread.Start();
+                IBMiNPPInstaller.RebuildRelic();
             }
         }
 
@@ -132,51 +109,13 @@ namespace IBMiCmd
             new libraryList().ShowDialog();
         }
 
-        internal static void launchFFDCollection()
-        {            
-            //IBMiUtilities.Log("launchFFDCollection...");
-            Thread thread = new Thread((ThreadStart) delegate {
-#if DEBUG
-                IBMiUtilities.Log("Thread launchFFDCollection Starting...");
-#endif
-                List<SourceLine> src = RPGParser.parseCurrentFileForExtName();
+        internal static void buildSourceContext()
+        {
+            RPGParser.launchFFDCollection();
+        }
 
-                if (src.Count == 0) return;
-
-                // Temporary recfmt files
-                string[] tmp = new string[src.Count];
-                int[] index  = new int[src.Count];
-                string[] cmd = new string[(src.Count * 3) + 3];
-                int i = 0, t = 0;
-                // Run commands on remote
-                cmd[i++] = "ASCII";
-                cmd[i++] = "QUOTE RCMD CHGLIBL LIBL(" + IBMi.getConfig("datalibl").Replace(',', ' ') + ") CURLIB(" + IBMi.getConfig("curlib") + ")";
-                foreach (SourceLine sl in src) {
-                    tmp[t++] = Path.GetTempFileName();
-                    cmd[i++] = "QUOTE RCMD DSPFFDIFS " + sl.searchResult;
-                    cmd[i++] = "RECV /home/" + IBMi.getConfig("username") + '/' + sl.searchResult + ".tmp \"" + tmp[t - 1] + "\"";
-                    cmd[i++] = "QUOTE RCMD RMVLNK OBJLNK('/home/" + IBMi.getConfig("username") + '/' + sl.searchResult + ".tmp')";
-                }
-                // cmd[i++] = "QUOTE RCMD DSPJOBLOG"; // For Debug on remote 
-
-                IBMi.runCommands(cmd); // Get all record formats to local temp files
-
-                t = 0;
-                foreach (SourceLine sl in src){
-                    try{
-                        RPGParser.LoadFFD(tmp[t], sl);
-                        RPGParser.NotifyNPP();
-                    } catch (Exception e) {
-                        IBMiUtilities.Log(e.ToString());
-                    } finally {
-                        File.Delete(tmp[t++]);
-                    }
-                }
-#if DEBUG
-                IBMiUtilities.Log("Thread launchFFDCollection completed.");
-#endif
-            });
-            thread.Start();
+        internal static void autoComplete() {
+            RPGAutoCompleter.ProvideSuggestions(RPGParser.dataStructures);
         }
 
         internal static void commandDialog()
