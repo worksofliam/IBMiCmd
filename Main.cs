@@ -23,7 +23,8 @@ namespace IBMiCmd
         public static libraryList liblWindow { get; set; }
         public static cmdBindings bindsWindow { get; set; }
 
-        private static string iniFilePath = null;
+        public static string configDirectory { get; set; }
+        public static string fileCacheDirectory { get; set; }
         private static int idMyDlg = -1;
         private static Bitmap tbBmp = Properties.Resources.star;
         private static Bitmap tbBmp_tbTab = Properties.Resources.star_bmp;
@@ -33,14 +34,18 @@ namespace IBMiCmd
         #region " StartUp/CleanUp "
         internal static void CommandMenuInit()
         {
-            StringBuilder sbIniFilePath = new StringBuilder(Win32.MAX_PATH);
-            Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETPLUGINSCONFIGDIR, Win32.MAX_PATH, sbIniFilePath);
-            iniFilePath = $"{ sbIniFilePath.ToString() }/{ PluginName }/";
-            if (!Directory.Exists(iniFilePath)) Directory.CreateDirectory(iniFilePath);
+            StringBuilder sbConfigDirectory = new StringBuilder(Win32.MAX_PATH);
+            Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETPLUGINSCONFIGDIR, Win32.MAX_PATH, sbConfigDirectory);
+            configDirectory = $"{ sbConfigDirectory.ToString() }/{ PluginName }/";
+            fileCacheDirectory = $"{ sbConfigDirectory.ToString() }/{ PluginName }/cache";
+            if (!Directory.Exists(configDirectory)) Directory.CreateDirectory(configDirectory);
+            if (!Directory.Exists(fileCacheDirectory)) Directory.CreateDirectory(fileCacheDirectory);
 
-            IBMi.loadConfig(iniFilePath + PluginName);
+            IBMi.loadConfig(configDirectory + PluginName);
 
-            IBMiUtilities.CreateLog(iniFilePath + PluginName);
+            IBMiUtilities.CreateLog(configDirectory + PluginName);
+
+            RPGParser.LoadFileCache();
 
             PluginBase.SetCommand(0, "About IBMiCmd", About, new ShortcutKey(false, false, false, Keys.None));
             PluginBase.SetCommand(1, "IBM i Remote System Setup", RemoteSetup);

@@ -10,7 +10,6 @@ namespace IBMiCmd
 {
     class IBMiCommandRender
     {
-
         internal static string[] RenderRelicRebuildScript(string tmp)
         {
             string buildDir = IBMi.getConfig("relicdir");
@@ -25,7 +24,6 @@ namespace IBMiCmd
                 "ASCII",
                 $"RECV { buildDir }RELICBLD.log \"{ tmp }\""
             };
-
         }
 
         internal static string[] RenderFFDCollectionScript(List<SourceLine> src, string[] tmp)

@@ -25,15 +25,27 @@ namespace IBMiCmd
 
             int cursorPosition = (int)Win32.SendMessage(curScintilla, SciMsg.SCI_GETCURRENTPOS, 0, 0);         
 
-            string variable = RPGParser.GetVariableAtColumn(sb.ToString(), cursorPosition);
+            string lookupString = RPGParser.GetVariableAtColumn(sb.ToString(), cursorPosition - 1);
 
-            NotifyAutoCompletion(MatchLine(variable));
+            NotifyAutoCompletion(curScintilla, lookupString, MatchLine(lookupString));
         }
 
-        private static void NotifyAutoCompletion(List<string> matches)
+        private static void NotifyAutoCompletion(IntPtr curScintilla, string variable, List<string> matches)
         {
+            if (matches.Count == 0)
+            {
+                // TODO; add information message instead of selectable text?
+                return;
+                //matches.Add("No match was found");
+            }
 
+            StringBuilder sb = new StringBuilder();
+            foreach (string item in matches)
+            {
+                sb.Append($"{item.Trim()} ");
+            }
 
+            Win32.SendMessage(curScintilla, SciMsg.SCI_AUTOCSHOW, variable.Length, sb.ToString());
             return;
         }
 
@@ -45,7 +57,7 @@ namespace IBMiCmd
             DataStructure start = new DataStructure()
             {
                 name = "",
-                fields = new List<string>(),
+                fields = new List<DataColumn>(),
                 dataStructures = dataStructures
             };
             MatchLineInDS(variable, matches, start);
@@ -57,9 +69,9 @@ namespace IBMiCmd
         {
             if (dataStructure.name.StartsWith(variable) && (dataStructure.name.Length >= variable.Length)) matches.Add(dataStructure.name);
 
-            foreach (string field in dataStructure.fields)
+            foreach (DataColumn field in dataStructure.fields)
             {
-                if (field.StartsWith(variable) && (field.Length >= variable.Length)) matches.Add(field);
+                if (field.name.StartsWith(variable) && (field.name.Length >= variable.Length)) matches.Add(field.name);
             }
 
             if (dataStructure.dataStructures != null)

@@ -30,7 +30,7 @@ namespace IBMiCmd.Forms
         private void button2_Click(object sender, EventArgs e)
         {
             string installLibrary = "";
-            if (IBMiUtilities.isValidQSYSObjectName(textBox1.Text.Trim()))
+            if (IBMiUtilities.IsValidQSYSObjectName(textBox1.Text.Trim()))
             {
                 installLibrary += textBox1.Text.Trim();
             }

@@ -36,7 +36,7 @@ namespace IBMiCmd.Forms
 
             string s = "";
 			foreach (string item in textBox1.Text.Trim().Split(',')) {
-                if (IBMiUtilities.isValidQSYSObjectName(item.Trim()))
+                if (IBMiUtilities.IsValidQSYSObjectName(item.Trim()))
                 {
                     s += item.Trim() + ',';
                 }
@@ -48,7 +48,7 @@ namespace IBMiCmd.Forms
                 }
             }
 
-            if (IBMiUtilities.isValidQSYSObjectName(textBox2.Text.Trim())) {
+            if (IBMiUtilities.IsValidQSYSObjectName(textBox2.Text.Trim())) {
                 IBMi.setConfig("curlib", textBox2.Text.Trim()); //Remove last comma
             }
             else
