@@ -17,8 +17,6 @@
                    ProjectDirectory="$(MSBuildProjectDirectory)"
                    InputFileName="$(TargetPath)"
                    FrameworkPath="$(TargetedFrameworkDir);$(TargetFrameworkDirectory)"
-                   LibToolPath="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86"
-                   LibToolDllPath="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86"
                    SdkPath="$(SDK40ToolsPath)"/>
   </Target>
 </Project>
