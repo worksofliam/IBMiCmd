@@ -38,15 +38,13 @@ namespace IBMiCmd
             StringBuilder sbConfigDirectory = new StringBuilder(Win32.MAX_PATH);
             Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETPLUGINSCONFIGDIR, Win32.MAX_PATH, sbConfigDirectory);
             ConfigDirectory = $"{ sbConfigDirectory.ToString() }/{ PluginName }/";
-            FileCacheDirectory = $"{ sbConfigDirectory.ToString() }/{ PluginName }/cache";
+            FileCacheDirectory = $"{ConfigDirectory}/cache/";
+
             if (!Directory.Exists(ConfigDirectory)) Directory.CreateDirectory(ConfigDirectory);
             if (!Directory.Exists(FileCacheDirectory)) Directory.CreateDirectory(FileCacheDirectory);
 
-
             IBMi.LoadConfig(ConfigDirectory + PluginName);
-
             IBMiUtilities.CreateLog(ConfigDirectory + PluginName);
-
             RPGParser.LoadFileCache();
 
             PluginBase.SetCommand(0, "About IBMiCmd", About, new ShortcutKey(false, false, false, Keys.None));
@@ -54,20 +52,11 @@ namespace IBMiCmd
             PluginBase.SetCommand(2, "IBM i Command Entry", CommandDialog);
             PluginBase.SetCommand(3, "IBM i Error Listing", ErrorDialog);
             PluginBase.SetCommand(4, "IBM i Command Bindings", BindsDialog);
-
             PluginBase.SetCommand(5, "IBM i RPG Conversion", LaunchConversion, new ShortcutKey(true, false, false, Keys.F4));
             PluginBase.SetCommand(6, "IBM i Relic Build", LaunchRBLD, new ShortcutKey(true, false, false, Keys.F5));
-
-            // Parse RPG Source and retrieve contect information from remote system
             PluginBase.SetCommand(7, "IBM i Refresh Definitions", BuildSourceContext, new ShortcutKey(true, false, false, Keys.F6));
-
-            // TODO: Implement SCI API calls to provide suggestions for current line + cursor position based on source context
             PluginBase.SetCommand(8, "IBM i Auto Complete", AutoComplete, new ShortcutKey(false, true, false, Keys.Space));
-
-            // Set Library list config
             PluginBase.SetCommand(9, "IBM i Library List", LiblDialog, new ShortcutKey(true, false, false, Keys.F7));
-
-            // Get Record format info for all EXTNAME data strctures in current source
             PluginBase.SetCommand(10, "IBM i Remote Install Plugin Server", RemoteInstall);
         }
 

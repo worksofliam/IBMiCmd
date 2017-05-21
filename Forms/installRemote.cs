@@ -19,7 +19,7 @@ namespace IBMiCmd.Forms
 
         private void installRemote_Load(object sender, EventArgs e)
         {
-            textBox1.Text = "QGPL";
+            textBox1.Text = IBMi.GetConfig("installlib");
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -44,11 +44,6 @@ namespace IBMiCmd.Forms
             IBMiNPPInstaller.InstallRemoteLib(installLibrary);
 
             this.Close();
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

@@ -53,6 +53,8 @@ namespace IBMiCmd
                     {
                         File.Delete(file);
                     }
+
+                    IBMi.SetConfig("installlib", library);
                 } catch (Exception e) {
                     IBMiUtilities.Log(e.ToString()); // TODO: Show error?
                 }

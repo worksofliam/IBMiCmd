@@ -26,6 +26,7 @@ namespace IBMiCmd
             int cursorPosition = (int)Win32.SendMessage(curScintilla, SciMsg.SCI_GETCURRENTPOS, 0, 0);
             int lineOffsetPosition = (int)Win32.SendMessage(curScintilla, SciMsg.SCI_POSITIONFROMLINE, curLine, 0);
             int linePosition = cursorPosition - lineOffsetPosition;
+            if (linePosition == 0) return;
 
             string lookupString = RPGParser.GetVariableAtColumn(sb.ToString(), linePosition);
 
@@ -48,7 +49,7 @@ namespace IBMiCmd
                 sb.Append($"{item.Trim()} ");
             }
 
-            Win32.SendMessage(curScintilla, SciMsg.SCI_AUTOCSHOW, 0, sb.ToString());
+            Win32.SendMessage(curScintilla, SciMsg.SCI_AUTOCSHOW, lookupString.Length, sb.ToString());
            
             return;
         }

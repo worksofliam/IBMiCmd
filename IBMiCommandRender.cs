@@ -36,7 +36,7 @@ namespace IBMiCmd
             cmd[i++] = $"QUOTE RCMD CHGLIBL LIBL({ IBMi.GetConfig("datalibl").Replace(',', ' ')})  CURLIB({ IBMi.GetConfig("curlib") })";
             foreach (SourceLine sl in src)
             {
-                cmd[i++] = $"QUOTE RCMD NPPDSPFFD {sl.searchResult}";
+                cmd[i++] = $"QUOTE RCMD {IBMi.GetConfig("installlib")}/NPPDSPFFD {sl.searchResult}";
                 cmd[i++] = $"RECV /home/{ IBMi.GetConfig("username") }/{ sl.searchResult }.tmp \"{ tmp[t++] }\"";
                 cmd[i++] = $"QUOTE RCMD RMVLNK OBJLNK('/home/{ IBMi.GetConfig("username") }/{ sl.searchResult }.tmp')";
             }
