@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using NppPluginNET;
 
 namespace IBMiCmd
 {
@@ -61,6 +62,13 @@ namespace IBMiCmd
                 IBMiUtilities.DebugLog("InstallRemoteLib - DONE!");
             });
             thread.Start();
+        }
+
+        internal static void InstallLocalDefinitions()
+        {
+            StringBuilder notepadInstallationDir = new StringBuilder(Win32.MAX_PATH);
+            Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETNPPDIRECTORY, Win32.MAX_PATH, notepadInstallationDir);
+            string installationDirectory = $"{notepadInstallationDir.ToString()}/";
         }
 
         /// <summary>

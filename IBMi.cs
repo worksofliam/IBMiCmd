@@ -11,11 +11,12 @@ namespace IBMiCmd
 {
     class IBMi
     {
+        public static string _ConfigFile { get; set; }
+
         private static Boolean _notConnected = false;
         private static Dictionary<string, string> _config = new Dictionary<string, string>();
         private static List<string> _output = new List<string>();
-        private static string _ConfigFile;
-
+        
         public static void LoadConfig(string FileLoc)
         {
             _ConfigFile = FileLoc + ".cfg";
@@ -30,6 +31,8 @@ namespace IBMiCmd
 				_config.Add("datalibl", "mylibl");
                 _config.Add("curlib", "mylib");
                 _config.Add("installlib", "qgpl");
+
+                _config.Add("localDefintionsInstalled", "false");
 
                 _config.Add("binds", "COMPILE|RELIC|BUILD");
                 _config.Add("COMPILE", "CD '/home/MYUSER'|CRTSQLRPGI OBJ(#MYUSER/%file%) SRCSTMF('%file%.%ext%') OPTION(*EVENTF) REPLACE(*YES) COMMIT(*NONE)|ERRORS #MYUSER %file%");

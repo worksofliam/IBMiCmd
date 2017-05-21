@@ -1,6 +1,6 @@
 ﻿#Decide for an API Technology to compilment FTP Transfers as IBM i interface - L
 #Extend the RPGParser class to understand likeds and /include and make that feed into Auto completion and the function list - L
-#Create Function List Parser for RPG & Make it install automatically on plugin startup, store state in config file - M
+#Include the Function List Parser for RPG & Make it install automatically on plugin startup, store state in config file - M
 #Include the RPG Highlighting & Make it install automatically on plugin startup, store state in config file - M
 #Create a debug engine - XL
 #Make the auto completer / language parser load dynamically on open file type - M

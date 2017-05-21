@@ -35,15 +35,17 @@ namespace IBMiCmd
         #region " StartUp/CleanUp "
         internal static void CommandMenuInit()
         {
-            StringBuilder sbConfigDirectory = new StringBuilder(Win32.MAX_PATH);
-            Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETPLUGINSCONFIGDIR, Win32.MAX_PATH, sbConfigDirectory);
-            ConfigDirectory = $"{ sbConfigDirectory.ToString() }/{ PluginName }/";
+            StringBuilder pluginsConfigDir = new StringBuilder(Win32.MAX_PATH);
+            Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETPLUGINSCONFIGDIR, Win32.MAX_PATH, pluginsConfigDir);
+            ConfigDirectory = $"{ pluginsConfigDir.ToString() }/{ PluginName }/";
             FileCacheDirectory = $"{ConfigDirectory}/cache/";
-
+            
             if (!Directory.Exists(ConfigDirectory)) Directory.CreateDirectory(ConfigDirectory);
-            if (!Directory.Exists(FileCacheDirectory)) Directory.CreateDirectory(FileCacheDirectory);
+            if (!Directory.Exists(FileCacheDirectory)) Directory.CreateDirectory(FileCacheDirectory);           
 
             IBMi.LoadConfig(ConfigDirectory + PluginName);
+            if (IBMi.GetConfig("") == "false") IBMiNPPInstaller.InstallLocalDefinitions(); 
+
             IBMiUtilities.CreateLog(ConfigDirectory + PluginName);
             RPGParser.LoadFileCache();
 

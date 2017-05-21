@@ -28,29 +28,37 @@ namespace IBMiCmd
             int linePosition = cursorPosition - lineOffsetPosition;
             if (linePosition == 0) return;
 
-            string lookupString = RPGParser.GetVariableAtColumn(sb.ToString(), linePosition);
+            string lookupString = RPGParser.GetVariableAtColumn(sb.ToString(), linePosition, out MatchType typeOfMatch);
 
             if (lookupString == "") return;
 
-            NotifyAutoCompletion(curScintilla, lookupString, SearchDataStructureDefinitions(lookupString));
+            NotifyAutoCompletion(curScintilla, lookupString, SearchDataStructureDefinitions(lookupString), typeOfMatch);
         }
 
-        private static void NotifyAutoCompletion(IntPtr curScintilla, string lookupString, List<string> matches)
+        private static void NotifyAutoCompletion(IntPtr curScintilla, string lookupString, List<string> matches, MatchType typeOfMatch)
         {
             if (matches.Count == 0)
             {                
-                return; // TODO; add information message instead of selectable text?
-                //matches.Add("No match was found");
+                return;
             }
-
+            
             StringBuilder sb = new StringBuilder();
             foreach (string item in matches)
             {
                 sb.Append($"{item.Trim()} ");
             }
 
-            Win32.SendMessage(curScintilla, SciMsg.SCI_AUTOCSHOW, lookupString.Length, sb.ToString());
-           
+            switch (typeOfMatch) {
+                case MatchType.STRUCT:
+                    Win32.SendMessage(curScintilla, SciMsg.SCI_AUTOCSHOW, 0, sb.ToString());
+                    break;
+                case MatchType.VARIABLE:
+                    Win32.SendMessage(curScintilla, SciMsg.SCI_AUTOCSHOW, lookupString.Length, sb.ToString());
+                    break;
+                default:
+                    Win32.SendMessage(curScintilla, SciMsg.SCI_AUTOCSHOW, lookupString.Length, sb.ToString());
+                    break;
+            }
             return;
         }
 

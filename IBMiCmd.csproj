@@ -216,6 +216,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="NotepadConfig\RPGFunctionList.xml" />
+    <Content Include="NotepadConfig\RPGLanguageDefinition.xml" />
     <Content Include="TODO.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

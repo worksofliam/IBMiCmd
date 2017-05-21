@@ -45,6 +45,12 @@ namespace IBMiCmd
         }
     }
 
+    public enum MatchType {
+        NONE,
+        VARIABLE,
+        STRUCT
+    };
+
     public class RPGParser
     {
         // In memory cache of data structures referenced by source code
@@ -71,12 +77,14 @@ namespace IBMiCmd
         private const int DSPFFD_FIELD_CCSID_LEN                = 3;
         //        private const int DSPFFD_FILE_NAME_LEN = 10;
 
-        public static string GetVariableAtColumn(string curLine, int curPos )
+        public static string GetVariableAtColumn(string curLine, int curPos, out MatchType type)
         {
+            type = MatchType.NONE;
             if (curPos > curLine.Length) return "";
             StringBuilder sb = new StringBuilder();
             if (curLine[--curPos] == '.')
-            {                
+            {
+                type = MatchType.STRUCT;
                 for (int i = curPos - 1; i >= 0; i--)
                 {
                     if (curLine[i] == ' ' || curLine[i] == '.' || curLine[i] == ')' || curLine[i] == '(') break;
@@ -91,7 +99,7 @@ namespace IBMiCmd
                 }
             }
             else
-            {
+            {                
                 for (int i = curPos; i >= 0; i--)
                 {
                     if (i == curPos && curLine[i] == ' ') return "";
@@ -100,6 +108,7 @@ namespace IBMiCmd
                         if (curLine[i] == ' ' || curLine[i] == '.' || curLine[i] == ')' || curLine[i] == '(') break;
                         else
                         {
+                            type = MatchType.VARIABLE;
                             sb.Append(curLine[i]);
                         }
                     }
@@ -114,6 +123,7 @@ namespace IBMiCmd
             }
             else
             {
+                type = MatchType.NONE;
                 return "";
             }
         }
@@ -396,7 +406,7 @@ namespace IBMiCmd
             string[] fileContent = new string[2 + d.fields.Count];
 
             int i = 0;
-            fileContent[i++] = $"<ffd name=\"{d.name.TrimEnd()}\"";
+            fileContent[i++] = $"<ffd name=\"{d.name.TrimEnd()}\">";
             foreach (DataColumn field in d.fields)
             {
                 fileContent[i++] = $"\t\t<column type=\"{field.type}\" length=\"{field.length}\">{field.name.TrimEnd()}</column>";
