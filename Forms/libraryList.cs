@@ -21,7 +21,8 @@ namespace IBMiCmd.Forms
 		private void libraryList_Load(object sender, EventArgs e)
 		{
 			textBox1.Text = IBMi.getConfig("datalibl");
-		}
+            textBox2.Text = IBMi.getConfig("curlib");
+        }
 
 		private void button1_Click(object sender, EventArgs e)
 		{
@@ -30,9 +31,12 @@ namespace IBMiCmd.Forms
 
 		private void button2_Click(object sender, EventArgs e)
 		{
-			string s = "";
+            label2.Text = "";
+            label2.Update();
+
+            string s = "";
 			foreach (string item in textBox1.Text.Trim().Split(',')) {
-                if (IBMiUtilities.isValidQSYSObjectName(item.Trim()))
+                if (IBMiUtilities.IsValidQSYSObjectName(item.Trim()))
                 {
                     s += item.Trim() + ',';
                 }
@@ -43,10 +47,20 @@ namespace IBMiCmd.Forms
                     return;
                 }
             }
-         
+
+            if (IBMiUtilities.IsValidQSYSObjectName(textBox2.Text.Trim())) {
+                IBMi.setConfig("curlib", textBox2.Text.Trim()); //Remove last comma
+            }
+            else
+            {
+                label2.Text = "Invalid Current Library Syntax. Valid syntax is < LIB >";
+                label2.Update();
+                return;
+            }
+
             IBMi.setConfig("datalibl", s.Remove(s.Length - 1, 1)); //Remove last comma
 
             this.Close();
         }
-	}
+    }
 }
