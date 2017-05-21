@@ -41,6 +41,7 @@ namespace IBMiCmd
             if (!Directory.Exists(configDirectory)) Directory.CreateDirectory(configDirectory);
             if (!Directory.Exists(fileCacheDirectory)) Directory.CreateDirectory(fileCacheDirectory);
 
+
             IBMi.loadConfig(configDirectory + PluginName);
 
             IBMiUtilities.CreateLog(configDirectory + PluginName);
@@ -67,6 +68,7 @@ namespace IBMiCmd
 
             // Get Record format info for all EXTNAME data strctures in current source
             PluginBase.SetCommand(10, "IBM i Remote Install Plugin Server", RemoteInstall);
+
         }
         
         internal static void SetToolBarIcon()
