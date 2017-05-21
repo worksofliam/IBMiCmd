@@ -41,7 +41,7 @@ namespace IBMiCmd
 
         public void runCommands(string[] commands)
         {
-            IBMi.runCommands(commands);
+            IBMi.RunCommands(commands);
             loadNewCommands();
         }
 
@@ -50,11 +50,11 @@ namespace IBMiCmd
             Invoke((MethodInvoker)delegate
             {
                 richTextBox1.AppendText(Environment.NewLine);
-                foreach (string line in IBMi.getOutput())
+                foreach (string line in IBMi.GetOutput())
                 {
                     richTextBox1.AppendText(Environment.NewLine + line);
                 }
-                IBMi.flushOutput();
+                IBMi.FlushOutput();
             });
         }
 

@@ -18,13 +18,14 @@ namespace IBMiCmd
         internal const string PluginName = "IBMiCmd";
         internal const string PluginDescription = "IBMiCmd v1.3.2.0 github.com/WorksOfBarry/IBMiCmd";
 
-        public static commandEntry commandWindow { get; set; }
-        public static errorListing errorWindow { get; set; }
-        public static libraryList liblWindow { get; set; }
-        public static cmdBindings bindsWindow { get; set; }
+        public static commandEntry CommandWindow { get; set; }
+        public static errorListing ErrorWindow { get; set; }
+        public static libraryList LiblWindow { get; set; }
+        public static cmdBindings BindsWindow { get; set; }
 
-        public static string configDirectory { get; set; }
-        public static string fileCacheDirectory { get; set; }
+        public static string ConfigDirectory { get; set; }
+        public static string FileCacheDirectory { get; set; }
+
         private static int idMyDlg = -1;
         private static Bitmap tbBmp = Properties.Resources.star;
         private static Bitmap tbBmp_tbTab = Properties.Resources.star_bmp;
@@ -36,15 +37,15 @@ namespace IBMiCmd
         {
             StringBuilder sbConfigDirectory = new StringBuilder(Win32.MAX_PATH);
             Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETPLUGINSCONFIGDIR, Win32.MAX_PATH, sbConfigDirectory);
-            configDirectory = $"{ sbConfigDirectory.ToString() }/{ PluginName }/";
-            fileCacheDirectory = $"{ sbConfigDirectory.ToString() }/{ PluginName }/cache";
-            if (!Directory.Exists(configDirectory)) Directory.CreateDirectory(configDirectory);
-            if (!Directory.Exists(fileCacheDirectory)) Directory.CreateDirectory(fileCacheDirectory);
+            ConfigDirectory = $"{ sbConfigDirectory.ToString() }/{ PluginName }/";
+            FileCacheDirectory = $"{ sbConfigDirectory.ToString() }/{ PluginName }/cache";
+            if (!Directory.Exists(ConfigDirectory)) Directory.CreateDirectory(ConfigDirectory);
+            if (!Directory.Exists(FileCacheDirectory)) Directory.CreateDirectory(FileCacheDirectory);
 
 
-            IBMi.loadConfig(configDirectory + PluginName);
+            IBMi.LoadConfig(ConfigDirectory + PluginName);
 
-            IBMiUtilities.CreateLog(configDirectory + PluginName);
+            IBMiUtilities.CreateLog(ConfigDirectory + PluginName);
 
             RPGParser.LoadFileCache();
 
@@ -88,7 +89,7 @@ namespace IBMiCmd
 
         internal static void LaunchRBLD()
         {
-            DialogResult outp = MessageBox.Show("Confirm build of '" + IBMi.getConfig("relicdir") + "' into " + IBMi.getConfig("reliclib") + "?", "Relic Build", MessageBoxButtons.YesNo);
+            DialogResult outp = MessageBox.Show("Confirm build of '" + IBMi.GetConfig("relicdir") + "' into " + IBMi.GetConfig("reliclib") + "?", "Relic Build", MessageBoxButtons.YesNo);
             if (outp == DialogResult.Yes)
             {
                 IBMiNPPInstaller.RebuildRelic();
@@ -97,7 +98,7 @@ namespace IBMiCmd
 
         internal static void LaunchConversion()
         {
-            rpgForm.curFileLine = (int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETCURRENTLINE, 0, 0);
+            rpgForm.curFileLine = (int) Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETCURRENTLINE, 0, 0);
             new rpgForm().ShowDialog();
         }
         
@@ -109,7 +110,7 @@ namespace IBMiCmd
         internal static void RemoteInstall()
         {
             new installRemote().ShowDialog();
-            Main.commandWindow.loadNewCommands();
+            Main.CommandWindow.loadNewCommands();
         }
 
         internal static void LiblDialog()
@@ -128,9 +129,9 @@ namespace IBMiCmd
 
         internal static void CommandDialog()
         {
-            if (commandWindow == null)
+            if (CommandWindow == null)
             {
-                commandWindow = new commandEntry();
+                CommandWindow = new commandEntry();
 
                 using (Bitmap newBmp = new Bitmap(16, 16))
                 {
@@ -146,7 +147,7 @@ namespace IBMiCmd
                 }
 
                 NppTbData _nppTbData = new NppTbData();
-                _nppTbData.hClient = commandWindow.Handle;
+                _nppTbData.hClient = CommandWindow.Handle;
                 _nppTbData.pszName = "Command Entry";
                 _nppTbData.dlgID = idMyDlg;
                 _nppTbData.uMask = NppTbMsg.DWS_DF_CONT_RIGHT | NppTbMsg.DWS_ICONTAB | NppTbMsg.DWS_ICONBAR;
@@ -159,15 +160,15 @@ namespace IBMiCmd
             }
             else
             {
-                Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, commandWindow.Handle);
+                Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, CommandWindow.Handle);
             }
         }
 
         internal static void ErrorDialog()
         {
-            if (errorWindow == null)
+            if (ErrorWindow == null)
             {
-                errorWindow = new errorListing();
+                ErrorWindow = new errorListing();
 
                 using (Bitmap newBmp = new Bitmap(16, 16))
                 {
@@ -183,7 +184,7 @@ namespace IBMiCmd
                 }
 
                 NppTbData _nppTbData = new NppTbData();
-                _nppTbData.hClient = errorWindow.Handle;
+                _nppTbData.hClient = ErrorWindow.Handle;
                 _nppTbData.pszName = "Error Listing";
                 _nppTbData.dlgID = idMyDlg;
                 _nppTbData.uMask = NppTbMsg.DWS_DF_CONT_RIGHT | NppTbMsg.DWS_ICONTAB | NppTbMsg.DWS_ICONBAR;
@@ -196,15 +197,15 @@ namespace IBMiCmd
             }
             else
             {
-                Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, errorWindow.Handle);
+                Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, ErrorWindow.Handle);
             }
         }
 
         internal static void BindsDialog()
         {
-            if (bindsWindow == null)
+            if (BindsWindow == null)
             {
-                bindsWindow = new cmdBindings();
+                BindsWindow = new cmdBindings();
 
                 using (Bitmap newBmp = new Bitmap(16, 16))
                 {
@@ -220,7 +221,7 @@ namespace IBMiCmd
                 }
 
                 NppTbData _nppTbData = new NppTbData();
-                _nppTbData.hClient = bindsWindow.Handle;
+                _nppTbData.hClient = BindsWindow.Handle;
                 _nppTbData.pszName = "Command Bindings";
                 _nppTbData.dlgID = idMyDlg;
                 _nppTbData.uMask = NppTbMsg.DWS_DF_CONT_RIGHT | NppTbMsg.DWS_ICONTAB | NppTbMsg.DWS_ICONBAR;
@@ -231,11 +232,11 @@ namespace IBMiCmd
 
                 Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMREGASDCKDLG, 0, _ptrNppTbData);
 
-                bindsWindow.cmdBindings_Load();
+                BindsWindow.cmdBindings_Load();
             }
             else
             {
-                Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, bindsWindow.Handle);
+                Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, BindsWindow.Handle);
             }
         }
         #endregion

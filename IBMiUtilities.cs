@@ -16,12 +16,13 @@ namespace IBMiCmd
         /// <returns>True if valid s is a valid object name</returns>
         public static bool IsValidQSYSObjectName(string s)
         {
-            if (s == null) return false;
+            if (s == null || s == "") return false;
             return Regex.Match(s, "^[a-zA-Z]\\w{0,9}$").Success;
         }
 
         /// <summary>
-        /// Extracts the first substring between the search and limit parameters, this method is excludes search and limit from the result.
+        /// Extracts the first substring between the search and limit parameters. 
+        /// This method excludes the search and limit data from the result.
         /// </summary>
         /// <param name="input">String to search</param>
         /// <param name="search">String that marks the begining</param>

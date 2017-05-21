@@ -8,7 +8,7 @@ namespace IBMiCmd
     public class RPGAutoCompleter
     {
         /// <summary>
-        /// Uses information about data structures to notify SCI Autocompletion
+        /// Uses information about position of the cursor and data structures to notify SCI Autocompletion
         /// </summary>
         /// <param name="dataStructures"></param>
         internal static void ProvideSuggestions(List<DataStructure> dataStructures)

@@ -20,8 +20,8 @@ namespace IBMiCmd.Forms
 
 		private void libraryList_Load(object sender, EventArgs e)
 		{
-			textBox1.Text = IBMi.getConfig("datalibl");
-            textBox2.Text = IBMi.getConfig("curlib");
+			textBox1.Text = IBMi.GetConfig("datalibl");
+            textBox2.Text = IBMi.GetConfig("curlib");
         }
 
 		private void button1_Click(object sender, EventArgs e)
@@ -49,7 +49,7 @@ namespace IBMiCmd.Forms
             }
 
             if (IBMiUtilities.IsValidQSYSObjectName(textBox2.Text.Trim())) {
-                IBMi.setConfig("curlib", textBox2.Text.Trim()); //Remove last comma
+                IBMi.SetConfig("curlib", textBox2.Text.Trim()); //Remove last comma
             }
             else
             {
@@ -58,7 +58,7 @@ namespace IBMiCmd.Forms
                 return;
             }
 
-            IBMi.setConfig("datalibl", s.Remove(s.Length - 1, 1)); //Remove last comma
+            IBMi.SetConfig("datalibl", s.Remove(s.Length - 1, 1)); //Remove last comma
 
             this.Close();
         }

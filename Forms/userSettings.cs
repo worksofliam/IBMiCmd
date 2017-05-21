@@ -19,11 +19,11 @@ namespace IBMiCmd.Forms
 
         private void userSettings_Load(object sender, EventArgs e)
         {
-            textBox1.Text = IBMi.getConfig("system");
-            textBox2.Text = IBMi.getConfig("username");
-            textBox3.Text = IBMi.getConfig("password");
-            textBox4.Text = IBMi.getConfig("relicdir");
-            textBox5.Text = IBMi.getConfig("reliclib");
+            textBox1.Text = IBMi.GetConfig("system");
+            textBox2.Text = IBMi.GetConfig("username");
+            textBox3.Text = IBMi.GetConfig("password");
+            textBox4.Text = IBMi.GetConfig("relicdir");
+            textBox5.Text = IBMi.GetConfig("reliclib");
 		}
 
         private void button2_Click(object sender, EventArgs e)
@@ -49,11 +49,11 @@ namespace IBMiCmd.Forms
                 return;
             }
 
-            IBMi.setConfig("system", textBox1.Text);
-            IBMi.setConfig("username", textBox2.Text);
-            IBMi.setConfig("password", textBox3.Text);
-            IBMi.setConfig("relicdir", textBox4.Text);
-            IBMi.setConfig("reliclib", textBox5.Text);
+            IBMi.SetConfig("system", textBox1.Text);
+            IBMi.SetConfig("username", textBox2.Text);
+            IBMi.SetConfig("password", textBox3.Text);
+            IBMi.SetConfig("relicdir", textBox4.Text);
+            IBMi.SetConfig("reliclib", textBox5.Text);
 
 			this.Close();
         }

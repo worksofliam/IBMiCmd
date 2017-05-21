@@ -16,7 +16,7 @@ namespace IBMiCmd
         private static List<string> _output = new List<string>();
         private static string _ConfigFile;
 
-        public static void loadConfig(string FileLoc)
+        public static void LoadConfig(string FileLoc)
         {
             _ConfigFile = FileLoc + ".cfg";
             string[] data;
@@ -35,7 +35,7 @@ namespace IBMiCmd
                 _config.Add("RELIC", "CRTBNDRPG OBJ(#MYUSER/RELIC) SRCSTMF('RelicPackageManager/QSOURCE/RELIC.SQLRPGLE') OPTION(*EVENTF) REPLACE(*YES) COMMIT(*NONE)");
                 _config.Add("BUILD", "CD '/home/MYUSER'|CRTBNDRPG PGM(#MYUSER/BUILD) SRCSTMF('RelicPackageManager/QSOURCE/BUILD.SQLRPGLE') OPTION(*EVENTF) REPLACE(*YES)|ERRORS #MYUSER BUILD");
 
-				printConfig();
+				PrintConfig();
 
                 MessageBox.Show("Thanks for using IBMiCmds. You will now be prompted to enter in a Remote System.");
                 Main.RemoteSetup();
@@ -57,7 +57,7 @@ namespace IBMiCmd
             }
         }
 
-        private static void printConfig()
+        private static void PrintConfig()
         {
             List<string> fileout = new List<string>();
             foreach (var key in _config.Keys)
@@ -67,7 +67,7 @@ namespace IBMiCmd
             File.WriteAllLines(_ConfigFile, fileout.ToArray());
         }
 
-        public static string getConfig(string key)
+        public static string GetConfig(string key)
         {
             if (_config.ContainsKey(key))
             {
@@ -79,7 +79,7 @@ namespace IBMiCmd
             }
         }
 
-        public static void setConfig(string key, string value)
+        public static void SetConfig(string key, string value)
         {
             if (_config.ContainsKey(key))
             {
@@ -90,10 +90,10 @@ namespace IBMiCmd
                 _config.Add(key, value);
             }
 
-            printConfig();
+            PrintConfig();
         }
 
-        public static void remConfig(string key)
+        public static void RemConfig(string key)
         {
             if (_config.ContainsKey(key))
             {
@@ -101,28 +101,28 @@ namespace IBMiCmd
             }
         }
 
-        public static void addOutput(string text)
+        public static void AddOutput(string text)
         {
             _output.Add(text);
         }
 
-        public static string[] getOutput()
+        public static string[] GetOutput()
         {
             string[] result = _output.ToArray();
             _output.Clear();
             return result;
         }
 
-        public static void flushOutput()
+        public static void FlushOutput()
         {
             _output.Clear();
         }
 
-        public static void runCommands(string[] list)
+        public static void RunCommands(string[] list)
         {
             try
             {
-                flushOutput();
+                FlushOutput();
                 string tempfile = Path.GetTempFileName();
                 File.Move(tempfile, tempfile + ".ftp");
                 tempfile += ".ftp";
@@ -146,7 +146,7 @@ namespace IBMiCmd
                 lines.Add("quit");
 
                 File.WriteAllLines(tempfile, lines.ToArray());
-                runFTP(tempfile);
+                RunFTP(tempfile);
                 File.Delete(tempfile);
 
             }
@@ -155,8 +155,10 @@ namespace IBMiCmd
             }
         }
 
-        private static void runFTP(string FileLoc)
+        private static void RunFTP(string FileLoc)
         {
+            IBMiUtilities.DebugLog("Starting FTP of command file " + FileLoc);
+
             _notConnected = false;
             Process process = new Process();
             process.StartInfo.FileName = "cmd.exe";
@@ -167,9 +169,7 @@ namespace IBMiCmd
             process.StartInfo.RedirectStandardError = true;
 
             process.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
-            process.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);
-
-            IBMiUtilities.DebugLog("Starting FTP of command file " + FileLoc);
+            process.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);        
 
             process.Start();
             process.BeginOutputReadLine();

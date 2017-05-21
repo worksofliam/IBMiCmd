@@ -12,7 +12,7 @@ namespace IBMiCmd
     {
         internal static string[] RenderRelicRebuildScript(string tmp)
         {
-            string buildDir = IBMi.getConfig("relicdir");
+            string buildDir = IBMi.GetConfig("relicdir");
             if (!buildDir.EndsWith("/"))
             {
                 buildDir += '/';
@@ -20,7 +20,7 @@ namespace IBMiCmd
 
             return new string[] {
                 $"QUOTE RCMD CD '{ buildDir }'",
-                $"QUOTE RCMD RBLD { IBMi.getConfig("reliclib") }",
+                $"QUOTE RCMD RBLD { IBMi.GetConfig("reliclib") }",
                 "ASCII",
                 $"RECV { buildDir }RELICBLD.log \"{ tmp }\""
             };
@@ -33,12 +33,12 @@ namespace IBMiCmd
             int i = 0, t = 0;
             // Run commands on remote
             cmd[i++] = "ASCII";
-            cmd[i++] = $"QUOTE RCMD CHGLIBL LIBL({ IBMi.getConfig("datalibl").Replace(',', ' ')})  CURLIB({ IBMi.getConfig("curlib") })";
+            cmd[i++] = $"QUOTE RCMD CHGLIBL LIBL({ IBMi.GetConfig("datalibl").Replace(',', ' ')})  CURLIB({ IBMi.GetConfig("curlib") })";
             foreach (SourceLine sl in src)
             {
                 cmd[i++] = $"QUOTE RCMD NPPDSPFFD {sl.searchResult}";
-                cmd[i++] = $"RECV /home/{ IBMi.getConfig("username") }/{ sl.searchResult }.tmp \"{ tmp[t++] }\"";
-                cmd[i++] = $"QUOTE RCMD RMVLNK OBJLNK('/home/{ IBMi.getConfig("username") }/{ sl.searchResult }.tmp')";
+                cmd[i++] = $"RECV /home/{ IBMi.GetConfig("username") }/{ sl.searchResult }.tmp \"{ tmp[t++] }\"";
+                cmd[i++] = $"QUOTE RCMD RMVLNK OBJLNK('/home/{ IBMi.GetConfig("username") }/{ sl.searchResult }.tmp')";
             }
             
             IBMiUtilities.DebugLog("RenderFFDCollectionScript - DONE!");
@@ -74,9 +74,9 @@ namespace IBMiCmd
                         continue;
                 }
 
-                cmd[i++] = $"SEND { file } /home/{ IBMi.getConfig("username") }/{ fileName }";
-                cmd[i++] = $"QUOTE RCMD CPYFRMSTMF FROMSTMF('/home/{ IBMi.getConfig("username") }/{ fileName }') TOMBR('/QSYS.LIB/QTEMP.LIB/{ sourceFile }.FILE/{ member }.MBR')";
-                cmd[i++] = $"QUOTE RCMD RMVLNK OBJLNK('/home/{ IBMi.getConfig("username") }/{ fileName }')";
+                cmd[i++] = $"SEND { file } /home/{ IBMi.GetConfig("username") }/{ fileName }";
+                cmd[i++] = $"QUOTE RCMD CPYFRMSTMF FROMSTMF('/home/{ IBMi.GetConfig("username") }/{ fileName }') TOMBR('/QSYS.LIB/QTEMP.LIB/{ sourceFile }.FILE/{ member }.MBR')";
+                cmd[i++] = $"QUOTE RCMD RMVLNK OBJLNK('/home/{ IBMi.GetConfig("username") }/{ fileName }')";
                 cmd[i++] = $"QUOTE RCMD { crtCmd }";
             }
             IBMiUtilities.DebugLog("RenderRemoteInstallScript - DONE!");

@@ -18,18 +18,18 @@ namespace IBMiCmd
             Thread gothread = new Thread((ThreadStart)delegate {
                 IBMiUtilities.DebugLog("RebuildRelic!");
                 string tmpFile = Path.GetTempFileName();
-                IBMi.addOutput("Starting build of '" + IBMi.getConfig("relicdir") + "' into " + IBMi.getConfig("reliclib"));
-                if (Main.commandWindow != null) Main.commandWindow.loadNewCommands();
-                IBMi.runCommands(IBMiCommandRender.RenderRelicRebuildScript(tmpFile));
-                IBMi.addOutput("");
+                IBMi.AddOutput("Starting build of '" + IBMi.GetConfig("relicdir") + "' into " + IBMi.GetConfig("reliclib"));
+                if (Main.CommandWindow != null) Main.CommandWindow.loadNewCommands();
+                IBMi.RunCommands(IBMiCommandRender.RenderRelicRebuildScript(tmpFile));
+                IBMi.AddOutput("");
                 foreach (string line in File.ReadAllLines(tmpFile))
                 {
-                    IBMi.addOutput($"> { line }");
+                    IBMi.AddOutput($"> { line }");
                 }
-                IBMi.addOutput("");
-                IBMi.addOutput("End of build.");
+                IBMi.AddOutput("");
+                IBMi.AddOutput("End of build.");
                 File.Delete(tmpFile);
-                if (Main.commandWindow != null) Main.commandWindow.loadNewCommands();
+                if (Main.CommandWindow != null) Main.CommandWindow.loadNewCommands();
                 IBMiUtilities.DebugLog("RebuildRelic - DONE!");
             });
             gothread.Start();
@@ -46,7 +46,7 @@ namespace IBMiCmd
                 {
                     List<string> sourceFiles = GenerateRemoteSource();
 
-                    IBMi.runCommands(IBMiCommandRender.RenderRemoteInstallScript(sourceFiles, library));
+                    IBMi.RunCommands(IBMiCommandRender.RenderRemoteInstallScript(sourceFiles, library));
 
                     // Cleanup temp files
                     foreach (string file in sourceFiles)

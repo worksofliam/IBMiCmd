@@ -27,7 +27,7 @@ namespace IBMiCmd
         //public int size; 
     }
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct DataStructure
     {
         public string name;
@@ -136,7 +136,7 @@ namespace IBMiCmd
                 }
 
                 // Receive record formats via remote command NPPDSPFFD
-                IBMi.runCommands(IBMiCommandRender.RenderFFDCollectionScript(src, tmp)); // Get all record formats to local temp files
+                IBMi.RunCommands(IBMiCommandRender.RenderFFDCollectionScript(src, tmp)); // Get all record formats to local temp files
 
                 // Load Context & Cleanup temp files
                 for (int i = 0; i < src.Count; i++)
@@ -330,7 +330,7 @@ namespace IBMiCmd
         {
             IBMiUtilities.DebugLog("Loading cached files...");
             dataStructures = new List<DataStructure>();
-            foreach(string file in Directory.GetFiles(Main.fileCacheDirectory))
+            foreach(string file in Directory.GetFiles(Main.FileCacheDirectory))
             {
                 IBMiUtilities.DebugLog($"Loading cached file {file}");
                 DataStructure ds = new DataStructure(" ");
@@ -392,7 +392,7 @@ namespace IBMiCmd
         private static void UpdateFileCache(DataStructure d)
         {
             IBMiUtilities.DebugLog("Updating file cache...");
-            string cacheFile = $"{Main.fileCacheDirectory}/{d.name.TrimEnd()}.ffd";
+            string cacheFile = $"{Main.FileCacheDirectory}/{d.name.TrimEnd()}.ffd";
             string[] fileContent = new string[2 + d.fields.Count];
 
             int i = 0;
@@ -418,7 +418,7 @@ namespace IBMiCmd
 
             foreach (string line in File.ReadAllLines(f))
             {
-                IBMi.addOutput("> " + line);
+                IBMi.AddOutput("> " + line);
             }
         }
 
