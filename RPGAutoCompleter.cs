@@ -8,7 +8,7 @@ namespace IBMiCmd
     public class RPGAutoCompleter
     {
         /// <summary>
-        /// Uses informtion about data structures to notify NPP
+        /// Uses information about data structures to notify SCI Autocompletion
         /// </summary>
         /// <param name="dataStructures"></param>
         internal static void ProvideSuggestions(List<DataStructure> dataStructures)
@@ -23,19 +23,22 @@ namespace IBMiCmd
             StringBuilder sb = new StringBuilder(lineLength);
             Win32.SendMessage(curScintilla, SciMsg.SCI_GETLINE, curLine, sb);
 
-            int cursorPosition = (int)Win32.SendMessage(curScintilla, SciMsg.SCI_GETCURRENTPOS, 0, 0);         
+            int cursorPosition = (int)Win32.SendMessage(curScintilla, SciMsg.SCI_GETCURRENTPOS, 0, 0);
+            int lineOffsetPosition = (int)Win32.SendMessage(curScintilla, SciMsg.SCI_POSITIONFROMLINE, curLine, 0);
+            int linePosition = cursorPosition - lineOffsetPosition;
 
-            string lookupString = RPGParser.GetVariableAtColumn(sb.ToString(), cursorPosition - 1);
+            string lookupString = RPGParser.GetVariableAtColumn(sb.ToString(), linePosition);
 
-            NotifyAutoCompletion(curScintilla, lookupString, MatchLine(lookupString));
+            if (lookupString == "") return;
+
+            NotifyAutoCompletion(curScintilla, lookupString, SearchDataStructureDefinitions(lookupString));
         }
 
-        private static void NotifyAutoCompletion(IntPtr curScintilla, string variable, List<string> matches)
+        private static void NotifyAutoCompletion(IntPtr curScintilla, string lookupString, List<string> matches)
         {
             if (matches.Count == 0)
-            {
-                // TODO; add information message instead of selectable text?
-                return;
+            {                
+                return; // TODO; add information message instead of selectable text?
                 //matches.Add("No match was found");
             }
 
@@ -45,40 +48,59 @@ namespace IBMiCmd
                 sb.Append($"{item.Trim()} ");
             }
 
-            Win32.SendMessage(curScintilla, SciMsg.SCI_AUTOCSHOW, variable.Length, sb.ToString());
+            Win32.SendMessage(curScintilla, SciMsg.SCI_AUTOCSHOW, 0, sb.ToString());
+           
             return;
         }
 
-        public static List<string> MatchLine(string variable)
+        /// <summary>
+        /// Searches the cached data structures and their fields for name matches
+        /// </summary>
+        /// <param name="lookupString"></param>
+        /// <returns></returns>
+        public static List<string> SearchDataStructureDefinitions(string lookupString)
         {
             List<string> matches = new List<string>();
             List<DataStructure> dataStructures = RPGParser.dataStructures;
-
             DataStructure start = new DataStructure()
             {
                 name = "",
                 fields = new List<DataColumn>(),
                 dataStructures = dataStructures
             };
-            MatchLineInDS(variable, matches, start);
-
+            SearchDataStructureDefinition(lookupString, matches, start);
             return matches;
         }
 
-        private static void MatchLineInDS(string variable, List<string> matches, DataStructure dataStructure)
+        private static void SearchDataStructureDefinition(string lookupString, List<string> matches, DataStructure dataStructure)
         {
-            if (dataStructure.name.StartsWith(variable) && (dataStructure.name.Length >= variable.Length)) matches.Add(dataStructure.name);
-
-            foreach (DataColumn field in dataStructure.fields)
+            if (dataStructure.name.ToUpper().StartsWith(lookupString.ToUpper()) && (dataStructure.name.Length > lookupString.Length))
             {
-                if (field.name.StartsWith(variable) && (field.name.Length >= variable.Length)) matches.Add(field.name);
+                matches.Add(dataStructure.name);
+            }
+            else if (dataStructure.name.ToUpper().StartsWith(lookupString.ToUpper()) && (dataStructure.name.Length == lookupString.Length))
+            {
+                foreach (DataColumn field in dataStructure.fields)
+                {
+                    matches.Add(field.name);
+                }
+            }
+            else
+            {
+                foreach (DataColumn field in dataStructure.fields)
+                {
+                    if (field.name.ToUpper().StartsWith(lookupString.ToUpper()) && (field.name.Length > lookupString.Length))
+                    {
+                        matches.Add(field.name);
+                    }
+                }
             }
 
             if (dataStructure.dataStructures != null)
             {
                 foreach (DataStructure inner in dataStructure.dataStructures)
                 {
-                    MatchLineInDS(variable, matches, inner);
+                    SearchDataStructureDefinition(lookupString, matches, inner);
                 }
             }            
         }

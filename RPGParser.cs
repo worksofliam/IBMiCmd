@@ -47,6 +47,9 @@ namespace IBMiCmd
 
     public class RPGParser
     {
+        // In memory cache of data structures referenced by source code
+        public static List<DataStructure> dataStructures { get; set; }
+
         ///  DSPFFD Format 
         private const int DSPFFD_FILE_NAME                      = 46;
         private const int DSPFFD_FILE_NAME_LEN                  = 10;
@@ -115,8 +118,10 @@ namespace IBMiCmd
             }
         }
 
-        public static List<DataStructure> dataStructures { get; set; }
-
+        /// <summary>
+        /// Executes remote commands on the configured server to collect data on externally
+        /// referenced tables that is then put into both memory and file cache
+        /// </summary>
         internal static void LaunchFFDCollection()
         {
             Thread thread = new Thread((ThreadStart)delegate {
@@ -155,8 +160,8 @@ namespace IBMiCmd
         }
 
         /// <summary>
-        /// Gets a file containing the output of a DSPFFD command
-        /// Parses the output into a DataStructure item
+        /// Gets a path to a file containing the output of a DSPFFD command
+        /// Parses the output into a DataStructure item and updates the file cache
         /// </summary>
         /// <param name="f">File with DSPFFD output</param>
         /// <param name="srcLine">source line with extName</param>
@@ -202,19 +207,6 @@ namespace IBMiCmd
             }
 
             UpdateFileCache(d);
-
-#if DEBUG
-            foreach (DataStructure ds in dataStructures)
-            {
-                IBMiUtilities.DebugLog("<<< Start Data Structure Definition >>>");
-                IBMiUtilities.DebugLog(ds.name);
-                foreach (DataColumn Field in ds.fields)
-                {
-                    IBMiUtilities.DebugLog($"  {Field.name}  {Field.type}  {Field.length}");
-                }
-                IBMiUtilities.DebugLog("<<< End Data Structure Definition >>>");
-            }
-#endif
         }
 
         private static DataColumn FFDParseColumn(string l, SourceLine srcLine)
@@ -330,6 +322,10 @@ namespace IBMiCmd
             }
         }
 
+        /// <summary>
+        /// Loads the files in the plugin folder /plugins/config/cache/
+        /// and parses and adds the content into the data structure list
+        /// </summary>
         internal static void LoadFileCache()
         {
             IBMiUtilities.DebugLog("Loading cached files...");
@@ -391,19 +387,6 @@ namespace IBMiCmd
                 }
             }
             IBMiUtilities.DebugLog("Loading cached files completed.");
-
-#if DEBUG
-            foreach (DataStructure ds in dataStructures)
-            {
-                IBMiUtilities.DebugLog("<<< Start Data Structure Definition >>>");
-                IBMiUtilities.DebugLog(ds.name);
-                foreach (DataColumn Field in ds.fields)
-                {
-                    IBMiUtilities.DebugLog($"  {Field.name}  {Field.type}  {Field.length}");
-                }
-                IBMiUtilities.DebugLog("<<< End Data Structure Definition >>>");
-            }
-#endif
         }
 
         private static void UpdateFileCache(DataStructure d)
@@ -424,6 +407,11 @@ namespace IBMiCmd
             IBMiUtilities.DebugLog("Updating file cache completed.");
         }
 
+        /// <summary>
+        /// TODO: Parse all data structures in code and retrieve definitions for them
+        ///       follow include files recursivly...
+        /// </summary>
+        /// <param name="f"></param>
         internal static void LoadLikeDS(string f)
         {
             if (dataStructures == null) dataStructures = new List<DataStructure>();
@@ -480,14 +468,6 @@ namespace IBMiCmd
             IBMiUtilities.DebugLog("Parsing completed... found " + lines.Count + " extName definitions.");
 
             return lines;
-        }
-
-        /// <summary>
-        /// TODO Sends information to the auto complete function of notepad++
-        /// </summary>
-        internal static void NotifyNPP()
-        {
-            IBMiUtilities.DebugLog("TODO: Update NPP Definitions for auto complete!");
         }
     }
 }

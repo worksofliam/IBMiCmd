@@ -16,7 +16,7 @@ namespace IBMiCmd
     {
         #region " Fields "
         internal const string PluginName = "IBMiCmd";
-        internal const string PluginDescription = "IBMiCmd v1.3.1.0 github.com/WorksOfBarry/IBMiCmd";
+        internal const string PluginDescription = "IBMiCmd v1.3.2.0 github.com/WorksOfBarry/IBMiCmd";
 
         public static commandEntry commandWindow { get; set; }
         public static errorListing errorWindow { get; set; }
@@ -60,7 +60,7 @@ namespace IBMiCmd
             PluginBase.SetCommand(7, "IBM i Refresh Definitions", BuildSourceContext, new ShortcutKey(true, false, false, Keys.F6));
 
             // TODO: Implement SCI API calls to provide suggestions for current line + cursor position based on source context
-            PluginBase.SetCommand(8, "IBM i Auto Complete", AutoComplete, new ShortcutKey(true, false, false, Keys.Space));
+            PluginBase.SetCommand(8, "IBM i Auto Complete", AutoComplete, new ShortcutKey(false, true, false, Keys.Space));
 
             // Set Library list config
             PluginBase.SetCommand(9, "IBM i Library List", LiblDialog, new ShortcutKey(true, false, false, Keys.F7));
