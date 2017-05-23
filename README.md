@@ -7,15 +7,16 @@ IBMiCmd (maybe referenced as IBMiCmds) is a Notepad++ plugin for ILE development
 ### Functionality
 
 * Command entry
-* System bindings (a group of system commands to submit on one job - primarily for compiling)
-* Error listing for ILE compiles (read from the EVFEVENT file)
-* Ability to convert fixed-format definitions and calculations to free-format
-* Integrates with [Relic](https://github.com/OSSILE/RelicPackageManager) to submit project buikds.
+* System bindings (a group of system commands to submit on one job - primarily for compiling) (Command Bindings)
+* Error listing for ILE compiles (read from the EVFEVENT file) (Error Listing)
+* Ability to convert fixed-format definitions and calculations to free-format. (Move the caret to the line you'd like to convert and press CTRL+F4)
+* Integrates with [Relic](https://github.com/OSSILE/RelicPackageManager) to submit project builds. More below.
 
 ### Prerequisites
 
 * For a list of source members or an IFS listing, a plugin named NppFTP is required. It is usually shipped with Notepad++, but if you don't have it: you can find it in the plugin manager within Notepad++. The connection you setup within NppFTP is seperate from the connection(s) you setup for IBMiCmd - make sure that both system connections and the same. When you have this plugin installed, you should configure a connection to the system you will develop on and also set the Transfer Mode to 'ASCII'.
 * C, C++ and COBOL highlighting is available in Notepad++ by default. To add free-format RPG highlighting, you will need to manually add the syntax highlighting which can be found [in this repository](https://github.com/WorksOfBarry/Notepad-RPG).
+* You can setup the Relic build settings in the Remote System Setup menu. The 'Relic Build' input box is for the directory with the build file, the 'Relic Output' input box is used for the library that the project will build into.
 
 ### Installation
 
