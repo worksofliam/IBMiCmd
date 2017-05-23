@@ -125,6 +125,12 @@
     <Compile Include="Forms\programChoose.Designer.cs">
       <DependentUpon>programChoose.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\rpgFileConvert.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\rpgFileConvert.Designer.cs">
+      <DependentUpon>rpgFileConvert.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\rpgForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -154,6 +160,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="RPGTools.cs" />
     <Compile Include="UnmanagedExports.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +175,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\programChoose.resx">
       <DependentUpon>programChoose.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\rpgFileConvert.resx">
+      <DependentUpon>rpgFileConvert.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\rpgForm.resx">
       <DependentUpon>rpgForm.cs</DependentUpon>

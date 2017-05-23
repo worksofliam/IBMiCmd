@@ -41,6 +41,7 @@ namespace IBMiCmd
             PluginBase.SetCommand(3, "IBM i Error Listing", errorDialog);
             PluginBase.SetCommand(4, "IBM i Command Bindings", bindsDialog);
             PluginBase.SetCommand(5, "IBM i RPG Conversion", launchConversion, new ShortcutKey(true, false, false, Keys.F4));
+            PluginBase.SetCommand(5, "IBM i RPG File Conversion", launchFileConversion, new ShortcutKey(true, false, false, Keys.F5));
         }
         internal static void SetToolBarIcon()
         {
@@ -63,7 +64,12 @@ namespace IBMiCmd
             rpgForm.curFileLine = (int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETCURRENTLINE, 0, 0);
             new rpgForm().ShowDialog();
         }
-        
+
+        internal static void launchFileConversion()
+        {
+            new rpgFileConvert().ShowDialog();
+        }
+
         internal static void remoteSetup()
         {
             new userSettings().ShowDialog();
