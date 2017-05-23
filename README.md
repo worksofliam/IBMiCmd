@@ -9,7 +9,7 @@ IBMiCmd (maybe referenced as IBMiCmds) is a Notepad++ plugin for ILE development
 * Command entry
 * System bindings (a group of system commands to submit on one job - primarily for compiling) (Command Bindings)
 * Error listing for ILE compiles (read from the EVFEVENT file) (Error Listing)
-* Ability to convert fixed-format definitions and calculations to free-format. (Move the caret to the line you'd like to convert and press CTRL+F4)
+* Ability to convert fixed-format definitions and calculations to free-format. Move the caret to the line you'd like to convert and press CTRL+F4, or convert a whole file with CTRL+F5.
 
 ### Prerequisites
 
@@ -28,6 +28,7 @@ IBMiCmd (maybe referenced as IBMiCmds) is a Notepad++ plugin for ILE development
 ![](https://camo.githubusercontent.com/dd96c8b1d8b341a7374b9e6895ba452671371788/68747470733a2f2f6c68332e676f6f676c6575736572636f6e74656e742e636f6d2f2d77726541475646514142632f574a7953505659415236492f41414141414141414271552f5f5534626831545a7846634a4e4e2d45456c525172664f685252787a496b4d7177434c30422f683430392f323031372d30322d30392e706e67)
 ![](https://cloud.githubusercontent.com/assets/3708366/24582419/8ce6bf78-1727-11e7-963d-c40af4c125e5.png)
 ![](https://cloud.githubusercontent.com/assets/3708366/24633350/003c2d48-18c0-11e7-82b0-e29345a14b39.png)
+![](http://i.imgur.com/5fUKdVn.png?1)
 
 #### Build tips
 
