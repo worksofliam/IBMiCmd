@@ -35,14 +35,12 @@ namespace IBMiCmd
 
             IBMi.loadConfig(iniFilePath + PluginName + ".cfg");
             
-            PluginBase.SetCommand(0, "About IBMiCmd", myMenuFunction, new ShortcutKey(false, false, false, Keys.None));
+            PluginBase.SetCommand(0, "About IBMiCmd", myMenuFunction);
             PluginBase.SetCommand(1, "IBM i Remote System Setup", remoteSetup);
             PluginBase.SetCommand(2, "IBM i Command Entry", commandDialog);
             PluginBase.SetCommand(3, "IBM i Error Listing", errorDialog);
             PluginBase.SetCommand(4, "IBM i Command Bindings", bindsDialog);
-
-            PluginBase.SetCommand(6, "IBM i RPG Conversion", launchConversion, new ShortcutKey(true, false, false, Keys.F4));
-            PluginBase.SetCommand(7, "IBM i Relic Build", launchRBLD, new ShortcutKey(true, false, false, Keys.F5));
+            PluginBase.SetCommand(5, "IBM i RPG Conversion", launchConversion, new ShortcutKey(true, false, false, Keys.F4));
         }
         internal static void SetToolBarIcon()
         {
@@ -58,41 +56,6 @@ namespace IBMiCmd
         internal static void myMenuFunction()
         {
             MessageBox.Show("IBMiCmds, created by WorksOfBarry.");
-        }
-
-        internal static void launchRBLD()
-        {
-            DialogResult outp = MessageBox.Show("Confirm build of '" + IBMi.getConfig("relicdir") + "' into " + IBMi.getConfig("reliclib") + "?", "Relic Build", MessageBoxButtons.YesNo);
-
-            if (outp == DialogResult.Yes)
-            {
-                Thread gothread = new Thread((ThreadStart)delegate {
-                    string filetemp = Path.GetTempFileName();
-                    string buildDir = IBMi.getConfig("relicdir");
-                    if (!buildDir.EndsWith("/"))
-                    {
-                        buildDir += '/';
-                    }
-
-                    IBMi.addOutput("Starting build of '" + IBMi.getConfig("relicdir") + "' into " + IBMi.getConfig("reliclib"));
-                    if (Main.commandWindow != null) Main.commandWindow.loadNewCommands();
-                    IBMi.runCommands(new string[] {
-                        "QUOTE RCMD CD '" + IBMi.getConfig("relicdir") + "'",
-                        "QUOTE RCMD RBLD " + IBMi.getConfig("reliclib"),
-                        "ASCII",
-                        "RECV " + buildDir + "RELICBLD.log \"" + filetemp + "\""
-                    });
-                    IBMi.addOutput("");
-                    foreach(string line in File.ReadAllLines(filetemp))
-                    {
-                        IBMi.addOutput("> " + line);
-                    }
-                    IBMi.addOutput("");
-                    IBMi.addOutput("End of build.");
-                    if (Main.commandWindow != null) Main.commandWindow.loadNewCommands();
-                });
-                gothread.Start();
-            }
         }
 
         internal static void launchConversion()
