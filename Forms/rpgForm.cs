@@ -37,6 +37,7 @@ namespace IBMiCmd.Forms
             else
             {
                 this.Close();
+                MessageBox.Show("Unable to convert line.");
             }
             
         }
