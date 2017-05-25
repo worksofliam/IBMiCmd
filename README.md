@@ -28,7 +28,7 @@ IBMiCmd (maybe referenced as IBMiCmds) is a Notepad++ plugin for ILE development
 ![](https://camo.githubusercontent.com/dd96c8b1d8b341a7374b9e6895ba452671371788/68747470733a2f2f6c68332e676f6f676c6575736572636f6e74656e742e636f6d2f2d77726541475646514142632f574a7953505659415236492f41414141414141414271552f5f5534626831545a7846634a4e4e2d45456c525172664f685252787a496b4d7177434c30422f683430392f323031372d30322d30392e706e67)
 ![](https://cloud.githubusercontent.com/assets/3708366/24582419/8ce6bf78-1727-11e7-963d-c40af4c125e5.png)
 ![](https://cloud.githubusercontent.com/assets/3708366/24633350/003c2d48-18c0-11e7-82b0-e29345a14b39.png)
-![](http://i.imgur.com/5fUKdVn.png?1)
+![](https://cloud.githubusercontent.com/assets/3708366/26458574/8ed2d5b0-416b-11e7-8d69-033542327e13.png)
 
 #### Build tips
 
