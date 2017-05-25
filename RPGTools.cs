@@ -340,7 +340,7 @@ namespace IBMiCmd
                     return "";
             }
 
-            return "".PadLeft(8) + output;
+            return "".PadLeft(7) + output;
         }
     }
 }
