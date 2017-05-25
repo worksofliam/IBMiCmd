@@ -49,7 +49,7 @@ namespace IBMiCmd.Forms
             StringBuilder sb = new StringBuilder(lineLength);
             Win32.SendMessage(curScintilla, SciMsg.SCI_GETLINE, line, sb);
 
-            line = (int)Win32.SendMessage(PluginBase.nppData._nppHandle, SciMsg.SCI_POSITIONFROMLINE, line, 0);
+            line = (int)Win32.SendMessage(curScintilla, SciMsg.SCI_POSITIONFROMLINE, line, 0);
             lineLength--;
             Win32.SendMessage(curScintilla, SciMsg.SCI_SETSELECTION, line, line+lineLength);
 
@@ -59,7 +59,8 @@ namespace IBMiCmd.Forms
         private static void setLine(string value)
         {
             //Hopefully is still selected?
-            Win32.SendMessage(PluginBase.nppData._nppHandle, SciMsg.SCI_REPLACESEL, 0, value);
+            IntPtr curScintilla = PluginBase.GetCurrentScintilla();
+            Win32.SendMessage(curScintilla, SciMsg.SCI_REPLACESEL, 0, value);
         }
 
         private void button1_Click(object sender, EventArgs e)
