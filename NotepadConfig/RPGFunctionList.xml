@@ -1,1 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8" ?> 
+﻿<association ext=".sqlrpgle" userDefinedLangName="sqlrpgle" id="sqlrpgle"/>
+<parser id="sqlrpgle" displayName="SQLRPGLE">
+	<function mainExpr="(\bdcl-proc\s)(\w+)" displayMode="$functionName">
+		<functionName>
+			<nameExpr expr="(?"<=dcl-proc ).*"/>
+		</functionName>
+	</function>
+</parser>

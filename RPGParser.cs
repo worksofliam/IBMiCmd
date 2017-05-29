@@ -6,6 +6,8 @@ using NppPluginNET;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Text.RegularExpressions;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Xml.Serialization;
 
 namespace IBMiCmd
 {
@@ -18,6 +20,7 @@ namespace IBMiCmd
         public bool alias;
     }
 
+    [Serializable]
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct DataColumn
     {
@@ -27,15 +30,18 @@ namespace IBMiCmd
         //public int size; 
     }
 
+    [Serializable]
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct DataStructure
     {
         public string name;
+        public string recordFormat;
         public List<DataColumn> fields;
         public List<DataStructure> dataStructures;
 
         public DataStructure(string name) {
             this.name = name;
+            this.recordFormat = null;
             this.fields = new List<DataColumn>();
             this.dataStructures = null;
         }
@@ -61,6 +67,8 @@ namespace IBMiCmd
         private const int DSPFFD_FILE_NAME_LEN                  = 10;
         private const int DSPFFD_FIELD_NAME                     = 129;
         private const int DSPFFD_FIELD_NAME_LEN                 = 10;
+        private const int DSPFFD_RECORD_FORMAT                  = 56;
+        private const int DSPFFD_RECORD_FORMAT_LEN              = 13;
         private const int DSPFFD_FIELD_ALIAS                    = 781;
         private const int DSPFFD_FIELD_ALIAS_LEN                = 258;
         private const int DSPFFD_FIELD_BYTE_SIZE                = 159;
@@ -191,7 +199,7 @@ namespace IBMiCmd
                     firstLine = false;
                     foreach (DataStructure ds in dataStructures)
                     {
-                        if (ds.Contains(l.Substring(DSPFFD_FILE_NAME, DSPFFD_FILE_NAME_LEN)))
+                        if (ds.Contains(l.Substring(DSPFFD_FILE_NAME, DSPFFD_FILE_NAME_LEN).TrimEnd()))
                         {
                             exists = true;
                             d.name = ds.name;
@@ -202,9 +210,10 @@ namespace IBMiCmd
                     }
                     if (!exists)
                     {
-                        d.name = l.Substring(DSPFFD_FILE_NAME, DSPFFD_FILE_NAME_LEN);
+                        d.name = l.Substring(DSPFFD_FILE_NAME, DSPFFD_FILE_NAME_LEN).TrimEnd();
                         d.fields = new List<DataColumn>();
-                    }                    
+                    }
+                    d.recordFormat = l.Substring(DSPFFD_RECORD_FORMAT, DSPFFD_RECORD_FORMAT_LEN);
                 }
                 d.fields.Add(FFDParseColumn(l, srcLine));
             }
@@ -319,102 +328,64 @@ namespace IBMiCmd
             {
                 if (l.Substring(DSPFFD_FIELD_ALIAS, DSPFFD_FIELD_ALIAS_LEN) != "")
                 {
-                    return l.Substring(DSPFFD_FIELD_ALIAS, DSPFFD_FIELD_ALIAS_LEN);
+                    return l.Substring(DSPFFD_FIELD_ALIAS, DSPFFD_FIELD_ALIAS_LEN).TrimEnd();
                 }
                 else
                 {
-                    return l.Substring(DSPFFD_FIELD_NAME, DSPFFD_FIELD_NAME_LEN);
+                    return l.Substring(DSPFFD_FIELD_NAME, DSPFFD_FIELD_NAME_LEN).TrimEnd();
                 }
             }
             else
             {
-                return l.Substring(DSPFFD_FIELD_NAME, DSPFFD_FIELD_NAME_LEN);
+                return l.Substring(DSPFFD_FIELD_NAME, DSPFFD_FIELD_NAME_LEN).TrimEnd();
             }
         }
 
         /// <summary>
-        /// Loads the files in the plugin folder /plugins/config/cache/
+        /// Loads the files in the plugin folder /plugins/config/IBMiCmd/cache/
         /// and parses and adds the content into the data structure list
         /// </summary>
         internal static void LoadFileCache()
         {
+            XmlSerializer xf = new XmlSerializer(typeof(DataStructure));
             IBMiUtilities.DebugLog("Loading cached files...");
             dataStructures = new List<DataStructure>();
             foreach(string file in Directory.GetFiles(Main.FileCacheDirectory))
             {
-                IBMiUtilities.DebugLog($"Loading cached file {file}");
-                DataStructure ds = new DataStructure(" ");
                 if (!file.EndsWith(".ffd"))
                 {
                     IBMiUtilities.Log($"{file} does not match the plugin cache format");
                     continue;
                 }
-                bool firstLine = true;
-                foreach (string line in File.ReadAllLines(file))
-                {
-                    if (firstLine)
-                    {
-                        firstLine = false;
-                        if (!line.StartsWith("<ffd name="))
-                        {
-                            IBMiUtilities.Log($"{file} does not match the plugin cache format");
-                            break;
-                        }
-                        ds.name = IBMiUtilities.ExtractString(line, "=\"", "\"");
-                    }
-                    else
-                    {
-                        if (line.TrimStart().StartsWith("<column"))
-                        {
-                            DataColumn dc = new DataColumn();
-                            dc.name = IBMiUtilities.ExtractString(line, ">", "<");
-                            dc.type = IBMiUtilities.ExtractString(line, "type=\"", "\"");
+                IBMiUtilities.DebugLog($"Loading cached file {file}");
 
-                            try
-                            {
-                                dc.length = int.Parse(IBMiUtilities.ExtractString(line, "length=\"", "\""));
-                            }
-                            catch (Exception e)
-                            {
-                                IBMiUtilities.Log($"Loading cached column length data failed: {e.ToString()}");
-                                dc.length = -1;
-                            }
-                            ds.fields.Add(dc);
-                        }
-                        else
-                        {
-                            if (!line.Equals("</ffd>")) 
-                            {
-                                IBMiUtilities.Log($"{file} does not match the plugin cache format");
-                                break;
-                            }
-                            else
-                            {
-                                dataStructures.Add(ds);   
-                            }
-                        }
+                using (Stream stream = File.Open(file, FileMode.Open))
+                {
+                    try
+                    {
+                        dataStructures.Add((DataStructure) xf.Deserialize(stream));
                     }
-                }
+                    catch (Exception e)
+                    {
+                        IBMiUtilities.Log($"{file} could not be loaded..");
+                        IBMiUtilities.Log(e.ToString());
+                    }
+                }           
             }
             IBMiUtilities.DebugLog("Loading cached files completed.");
         }
 
         private static void UpdateFileCache(DataStructure d)
         {
+            XmlSerializer xf = new XmlSerializer(typeof(DataStructure));
             IBMiUtilities.DebugLog("Updating file cache...");
-            string cacheFile = $"{Main.FileCacheDirectory}/{d.name.TrimEnd()}.ffd";
-            string[] fileContent = new string[2 + d.fields.Count];
-
-            int i = 0;
-            fileContent[i++] = $"<ffd name=\"{d.name.TrimEnd()}\">";
-            foreach (DataColumn field in d.fields)
+            string cacheFile = $"{Main.FileCacheDirectory}{d.name.TrimEnd()}.ffd";
+            IBMiUtilities.DebugLog($"Saving cache file {cacheFile}");
+            using (Stream stream = File.Open(cacheFile, FileMode.Create))
             {
-                fileContent[i++] = $"\t\t<column type=\"{field.type}\" length=\"{field.length}\">{field.name.TrimEnd()}</column>";
+                xf.Serialize(stream, d);
             }
-            fileContent[i++] = "</ffd>";
-
-            File.WriteAllLines(cacheFile, fileContent);
-            IBMiUtilities.DebugLog("Updating file cache completed.");
+            IBMiUtilities.DebugLog("Updating file cache completed.");                  
         }
 
         /// <summary>

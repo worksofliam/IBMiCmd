@@ -37,17 +37,20 @@ namespace IBMiCmd
         {
             StringBuilder pluginsConfigDir = new StringBuilder(Win32.MAX_PATH);
             Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETPLUGINSCONFIGDIR, Win32.MAX_PATH, pluginsConfigDir);
-            ConfigDirectory = $"{ pluginsConfigDir.ToString() }/{ PluginName }/";
-            FileCacheDirectory = $"{ConfigDirectory}/cache/";
+            ConfigDirectory = $"{ pluginsConfigDir.ToString() }\\{ PluginName }\\";
+            FileCacheDirectory = $"{ConfigDirectory}cache\\";
             
             if (!Directory.Exists(ConfigDirectory)) Directory.CreateDirectory(ConfigDirectory);
-            if (!Directory.Exists(FileCacheDirectory)) Directory.CreateDirectory(FileCacheDirectory);           
-
-            IBMi.LoadConfig(ConfigDirectory + PluginName);
-            if (IBMi.GetConfig("") == "false") IBMiNPPInstaller.InstallLocalDefinitions(); 
+            if (!Directory.Exists(FileCacheDirectory)) Directory.CreateDirectory(FileCacheDirectory);
 
             IBMiUtilities.CreateLog(ConfigDirectory + PluginName);
             RPGParser.LoadFileCache();
+
+            IBMi.LoadConfig(ConfigDirectory + PluginName);
+            //if (IBMi.GetConfig("localDefintionsInstalled") == "false")
+            //{
+            //    IBMiNPPInstaller.InstallLocalDefinitions();
+            //}
 
             PluginBase.SetCommand(0, "About IBMiCmd", About, new ShortcutKey(false, false, false, Keys.None));
             PluginBase.SetCommand(1, "IBM i Remote System Setup", RemoteSetup);

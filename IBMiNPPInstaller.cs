@@ -66,9 +66,55 @@ namespace IBMiCmd
 
         internal static void InstallLocalDefinitions()
         {
-            StringBuilder notepadInstallationDir = new StringBuilder(Win32.MAX_PATH);
-            Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETNPPDIRECTORY, Win32.MAX_PATH, notepadInstallationDir);
-            string installationDirectory = $"{notepadInstallationDir.ToString()}/";
+            IBMiUtilities.DebugLog("InstallLocalDefinitions starting...");
+            string functionList = $"%APPDATA%/Roaming/Notepad++/functionList.xml";
+            List<string> outputBuffer = new List<string>();
+            StringBuilder sb = new StringBuilder();
+
+            bool associationFound = false;
+            bool parserFound = false;
+            IBMiUtilities.DebugLog("InstallLocalDefinitions parsing functionList...");
+            foreach (string line in File.ReadAllLines(functionList))
+            {
+                if (!associationFound)
+                {
+                    if (line.Contains("<association ext=\".sqlrpgle\""))
+                    {
+                        associationFound = true;
+                    }
+                }
+                if (line.Contains("</associationMap>") && !associationFound)
+                {
+                    IBMiUtilities.DebugLog("InstallLocalDefinitions writing association to functionList...");
+                    outputBuffer.Add("<association ext=\".sqlrpgle\" userDefinedLangName=\"sqlrpgle\" id=\"sqlrpgle\"/>");
+                }
+
+                if (!parserFound)
+                {
+                    if (line.Contains("<parser id=\"sqlrpgle\""))
+                    {
+                        parserFound = true;
+                    }
+                }
+                if (line.Contains("</parser>") && !parserFound)
+                {
+                    IBMiUtilities.DebugLog("InstallLocalDefinitions writing parser to functionList...");
+                    outputBuffer.Add("\t\t\t<parser id=\"sqlrpgle\" displayName=\"SQLRPGLE\">");
+                    outputBuffer.Add("\t\t\t\t<function");
+                    outputBuffer.Add("\t\t\t\t\tmainExpr=\"(\bdcl - proc\\s)(\\w +)\"");
+                    outputBuffer.Add("\t\t\t\t\tdisplayMode=\"$functionName\">");
+                    outputBuffer.Add("\t\t\t\t\t<functionName>");
+                    outputBuffer.Add("\t\t\t\t\t\t<nameExpr expr=\"(?<= dcl - proc).*\"/>");
+                    outputBuffer.Add("\t\t\t\t\t</functionName>");
+                    outputBuffer.Add("\t\t\t\t</function>");
+                    outputBuffer.Add("\t\t\t</parser>");
+                }
+                outputBuffer.Add(line);
+            }
+            IBMiUtilities.DebugLog("InstallLocalDefinitions parsing functionList comeplted!");
+            File.WriteAllLines(functionList, outputBuffer);
+            IBMi.SetConfig("localDefintionsInstalled", "true");
+            IBMiUtilities.DebugLog("InstallLocalDefinitions completed!");
         }
 
         /// <summary>
