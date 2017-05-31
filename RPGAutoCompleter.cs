@@ -49,7 +49,7 @@ namespace IBMiCmd
             }
 
             switch (typeOfMatch) {
-                case MatchType.STRUCT:
+                case MatchType.STRUCT_FIELD: // Length of entered text is zero since we're giving suggestions for struct.
                     Win32.SendMessage(curScintilla, SciMsg.SCI_AUTOCSHOW, 0, sb.ToString());
                     break;
                 case MatchType.VARIABLE:
@@ -71,17 +71,17 @@ namespace IBMiCmd
         {
             List<string> matches = new List<string>();
             List<DataStructure> dataStructures = RPGParser.dataStructures;
-            DataStructure start = new DataStructure()
+            DataStructure startSearch = new DataStructure()
             {
                 name = "",
                 fields = new List<DataColumn>(),
                 dataStructures = dataStructures
             };
-            SearchDataStructureDefinition(lookupString, matches, start);
+            SearchDataStructure(lookupString, matches, startSearch);
             return matches;
         }
 
-        private static void SearchDataStructureDefinition(string lookupString, List<string> matches, DataStructure dataStructure)
+        private static void SearchDataStructure(string lookupString, List<string> matches, DataStructure dataStructure)
         {
             if (dataStructure.name.ToUpper().StartsWith(lookupString.ToUpper()) && (dataStructure.name.Length > lookupString.Length))
             {
@@ -107,9 +107,9 @@ namespace IBMiCmd
 
             if (dataStructure.dataStructures != null)
             {
-                foreach (DataStructure inner in dataStructure.dataStructures)
+                foreach (DataStructure child in dataStructure.dataStructures)
                 {
-                    SearchDataStructureDefinition(lookupString, matches, inner);
+                    SearchDataStructure(lookupString, matches, child);
                 }
             }            
         }

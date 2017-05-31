@@ -54,7 +54,7 @@ namespace IBMiCmd
     public enum MatchType {
         NONE,
         VARIABLE,
-        STRUCT
+        STRUCT_FIELD
     };
 
     public class RPGParser
@@ -92,7 +92,7 @@ namespace IBMiCmd
             StringBuilder sb = new StringBuilder();
             if (curLine[--curPos] == '.')
             {
-                type = MatchType.STRUCT;
+                type = MatchType.STRUCT_FIELD;
                 for (int i = curPos - 1; i >= 0; i--)
                 {
                     if (curLine[i] == ' ' || curLine[i] == '.' || curLine[i] == ')' || curLine[i] == '(') break;
@@ -142,8 +142,7 @@ namespace IBMiCmd
         /// </summary>
         internal static void LaunchFFDCollection()
         {
-            Thread thread = new Thread((ThreadStart)delegate {
-                IBMiUtilities.DebugLog("launchFFDCollection start");
+            Thread thread = new Thread((ThreadStart) delegate {
                 List<SourceLine> src = ParseCurrentFileForExtName();
                 if (src.Count == 0) return;
                 // Generate temporary files to receive data
@@ -172,7 +171,6 @@ namespace IBMiCmd
                         File.Delete(tmp[i]);
                     }
                 }
-                IBMiUtilities.DebugLog("launchFFDCollection end");
             });
             thread.Start();
         }
@@ -184,7 +182,6 @@ namespace IBMiCmd
         /// <param name="f">File with DSPFFD output</param>
         /// <param name="srcLine">source line with extName</param>
         internal static void LoadFFD(string f, SourceLine srcLine) {
-            IBMiUtilities.DebugLog("LoadFFD -> File name: " + f);
             if (f == null || f == "") return; 
             if (dataStructures == null) dataStructures = new List<DataStructure>();
 
@@ -348,7 +345,6 @@ namespace IBMiCmd
         internal static void LoadFileCache()
         {
             XmlSerializer xf = new XmlSerializer(typeof(DataStructure));
-            IBMiUtilities.DebugLog("Loading cached files...");
             dataStructures = new List<DataStructure>();
             foreach(string file in Directory.GetFiles(Main.FileCacheDirectory))
             {
@@ -357,7 +353,6 @@ namespace IBMiCmd
                     IBMiUtilities.Log($"{file} does not match the plugin cache format");
                     continue;
                 }
-                IBMiUtilities.DebugLog($"Loading cached file {file}");
 
                 using (Stream stream = File.Open(file, FileMode.Open))
                 {
@@ -372,20 +367,16 @@ namespace IBMiCmd
                     }
                 }           
             }
-            IBMiUtilities.DebugLog("Loading cached files completed.");
         }
 
         private static void UpdateFileCache(DataStructure d)
         {
             XmlSerializer xf = new XmlSerializer(typeof(DataStructure));
-            IBMiUtilities.DebugLog("Updating file cache...");
             string cacheFile = $"{Main.FileCacheDirectory}{d.name.TrimEnd()}.ffd";
-            IBMiUtilities.DebugLog($"Saving cache file {cacheFile}");
             using (Stream stream = File.Open(cacheFile, FileMode.Create))
             {
                 xf.Serialize(stream, d);
             }
-            IBMiUtilities.DebugLog("Updating file cache completed.");                  
         }
 
         /// <summary>
@@ -410,13 +401,11 @@ namespace IBMiCmd
         /// <returns>SourceLine(s) from current file containing EXTNAME</returns>
         private static List<SourceLine> ParseCurrentFileForExtName()
         {
-            IBMiUtilities.DebugLog("Starting to parse current file for extName definitions...");
             const int MINIMUM_LINE_LENGTH_FOR_EXTNAME = 12;
             const short END_OF_FILE = 0;
             int line = 0;
-            IntPtr curScintilla = PluginBase.GetCurrentScintilla();
-
             List<SourceLine> lines = new List<SourceLine>();
+            IntPtr curScintilla = PluginBase.GetCurrentScintilla();            
 
             while (true)
             {
@@ -445,9 +434,6 @@ namespace IBMiCmd
                     lines.Add(result);
                 }
             }
-
-            IBMiUtilities.DebugLog("Parsing completed... found " + lines.Count + " extName definitions.");
-
             return lines;
         }
     }

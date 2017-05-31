@@ -47,7 +47,6 @@ namespace IBMiCmd
 
         internal static string[] RenderRemoteInstallScript(List<string> sourceFiles, string library)
         {
-            IBMiUtilities.DebugLog("RenderRemoteInstallScript");
             // Make room for <upload, copy, delete, compile> for each file
             string[] cmd = new string[sourceFiles.Count * 4 + 3];
             int i = 0;
@@ -79,7 +78,6 @@ namespace IBMiCmd
                 cmd[i++] = $"QUOTE RCMD RMVLNK OBJLNK('/home/{ IBMi.GetConfig("username") }/{ fileName }')";
                 cmd[i++] = $"QUOTE RCMD { crtCmd }";
             }
-            IBMiUtilities.DebugLog("RenderRemoteInstallScript - DONE!");
             return cmd;
         }
     }
