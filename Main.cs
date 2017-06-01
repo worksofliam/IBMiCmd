@@ -41,7 +41,7 @@ namespace IBMiCmd
             PluginBase.SetCommand(3, "IBM i Error Listing", errorDialog);
             PluginBase.SetCommand(4, "IBM i Command Bindings", bindsDialog);
             PluginBase.SetCommand(5, "IBM i RPG Conversion", launchConversion, new ShortcutKey(true, false, false, Keys.F4));
-            PluginBase.SetCommand(5, "IBM i RPG File Conversion", launchFileConversion, new ShortcutKey(true, false, false, Keys.F5));
+            PluginBase.SetCommand(6, "IBM i RPG File Conversion", launchFileConversion, new ShortcutKey(true, false, false, Keys.F5));
         }
         internal static void SetToolBarIcon()
         {
