@@ -28,7 +28,7 @@ namespace IBMiCmd
             commands.Add("cd /QSYS.lib");
             commands.Add("recv " + lib + ".lib/EVFEVENT.file/" + obj + ".mbr \"" + filetemp + "\"");
 
-            IBMi.runCommands(commands.ToArray());
+            IBMi.RunCommands(commands.ToArray());
 
             ErrorHandle.doName(lib.ToUpper() + '/' + obj.ToUpper());
             ErrorHandle.setLines(File.ReadAllLines(filetemp));

@@ -25,7 +25,7 @@ namespace IBMiCmd.Forms
 
             bindings = new List<string>();
 
-            foreach (string bind in IBMi.getConfig("binds").Split('|'))
+            foreach (string bind in IBMi.GetConfig("binds").Split('|'))
             {
                 bindings.Add(bind.Trim());
             }
@@ -33,7 +33,7 @@ namespace IBMiCmd.Forms
             foreach (string bind in bindings)
             {
                 curNode = treeView1.Nodes.Add(bind);
-                curNode.Tag = IBMi.getConfig(bind);
+                curNode.Tag = IBMi.GetConfig(bind);
             }
         }
 
@@ -75,16 +75,16 @@ namespace IBMiCmd.Forms
 
         public void runCommands(string[] commands, string[] errDsp)
         {
-            IBMi.runCommands(commands);
-            if (Main.commandWindow != null) Main.commandWindow.loadNewCommands();
+            IBMi.RunCommands(commands);
+            if (Main.CommandWindow != null) Main.CommandWindow.loadNewCommands();
 
             if (errDsp != null)
             {
                 ErrorHandle.getErrors(errDsp[0], errDsp[1]);
-                if (Main.errorWindow != null)
+                if (Main.ErrorWindow != null)
                 {
-                    Main.errorWindow.publishErrors();
-                    Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, Main.errorWindow.Handle);
+                    Main.ErrorWindow.publishErrors();
+                    Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, Main.ErrorWindow.Handle);
                 }
             }
         }
@@ -116,7 +116,7 @@ namespace IBMiCmd.Forms
             if (treeView1.SelectedNode != null)
             {
                 editingBind = treeView1.SelectedNode.Text;
-                editingBindCmds = IBMi.getConfig(editingBind).Split('|');
+                editingBindCmds = IBMi.GetConfig(editingBind).Split('|');
 
                 wrkWithBind();
 
@@ -143,7 +143,7 @@ namespace IBMiCmd.Forms
             new wrkBind().ShowDialog();
             if (editingCanceled == false)
             {
-                IBMi.setConfig(editingBind, string.Join("|", editingBindCmds));
+                IBMi.GetConfig(editingBind, string.Join("|", editingBindCmds));
                 
                 if (bindings.Contains(editingBind))
                 {
@@ -155,7 +155,7 @@ namespace IBMiCmd.Forms
                     curNode.Tag = string.Join("|", editingBindCmds);
 
                     bindings.Add(editingBind);
-                    IBMi.setConfig("binds", string.Join("|", bindings.ToArray()));
+                    IBMi.GetConfig("binds", string.Join("|", bindings.ToArray()));
                 }
             }
         }
@@ -173,8 +173,8 @@ namespace IBMiCmd.Forms
                     if (confirmResult == DialogResult.Yes)
                     {
                         bindings.Remove(treeView1.SelectedNode.Text);
-                        IBMi.setConfig("binds", string.Join("|", bindings.ToArray()));
-                        IBMi.remConfig(treeView1.SelectedNode.Text);
+                        IBMi.SetConfig("binds", string.Join("|", bindings.ToArray()));
+                        IBMi.RemConfig(treeView1.SelectedNode.Text);
                         treeView1.Nodes.Remove(treeView1.SelectedNode);
                     }
                 }

@@ -11,33 +11,41 @@ namespace IBMiCmd
 {
     class IBMi
     {
+        public static string _ConfigFile { get; set; }
+
         private static Boolean _notConnected = false;
         private static Dictionary<string, string> _config = new Dictionary<string, string>();
         private static List<string> _output = new List<string>();
-        private static string _ConfigFile;
-
-        public static void loadConfig(string FileLoc)
+        
+        public static void LoadConfig(string FileLoc)
         {
-            _ConfigFile = FileLoc;
+            _ConfigFile = FileLoc + ".cfg";
             string[] data;
-            if (!File.Exists(FileLoc))
+            if (!File.Exists(_ConfigFile))
             {
                 _config.Add("system", "mysystem");
                 _config.Add("username", "myuser");
                 _config.Add("password", "mypass");
+                _config.Add("relicdir", "rpgapp");
+                _config.Add("reliclib", "#dev");
+				_config.Add("datalibl", "mylibl");
+                _config.Add("curlib", "mylib");
+                _config.Add("installlib", "qgpl");
+
+                _config.Add("localDefintionsInstalled", "false");
 
                 _config.Add("binds", "COMPILE|RELIC|BUILD");
                 _config.Add("COMPILE", "CD '/home/MYUSER'|CRTSQLRPGI OBJ(#MYUSER/%file%) SRCSTMF('%file%.%ext%') OPTION(*EVENTF) REPLACE(*YES) COMMIT(*NONE)|ERRORS #MYUSER %file%");
                 _config.Add("RELIC", "CRTBNDRPG OBJ(#MYUSER/RELIC) SRCSTMF('RelicPackageManager/QSOURCE/RELIC.SQLRPGLE') OPTION(*EVENTF) REPLACE(*YES) COMMIT(*NONE)");
                 _config.Add("BUILD", "CD '/home/MYUSER'|CRTBNDRPG PGM(#MYUSER/BUILD) SRCSTMF('RelicPackageManager/QSOURCE/BUILD.SQLRPGLE') OPTION(*EVENTF) REPLACE(*YES)|ERRORS #MYUSER BUILD");
 
-                printConfig();
+				PrintConfig();
 
                 MessageBox.Show("Thanks for using IBMiCmds. You will now be prompted to enter in a Remote System.");
-                Main.remoteSetup();
+                Main.RemoteSetup();
             }
 
-            foreach (string Line in File.ReadAllLines(FileLoc))
+            foreach (string Line in File.ReadAllLines(_ConfigFile))
             {
                 data = Line.Split('=');
                 for (int i = 0; i < data.Length; i++) data[i] = data[i].Trim();
@@ -53,7 +61,7 @@ namespace IBMiCmd
             }
         }
 
-        private static void printConfig()
+        private static void PrintConfig()
         {
             List<string> fileout = new List<string>();
             foreach (var key in _config.Keys)
@@ -63,7 +71,7 @@ namespace IBMiCmd
             File.WriteAllLines(_ConfigFile, fileout.ToArray());
         }
 
-        public static string getConfig(string key)
+        public static string GetConfig(string key)
         {
             if (_config.ContainsKey(key))
             {
@@ -75,7 +83,7 @@ namespace IBMiCmd
             }
         }
 
-        public static void setConfig(string key, string value)
+        public static void SetConfig(string key, string value)
         {
             if (_config.ContainsKey(key))
             {
@@ -86,10 +94,10 @@ namespace IBMiCmd
                 _config.Add(key, value);
             }
 
-            printConfig();
+            PrintConfig();
         }
 
-        public static void remConfig(string key)
+        public static void RemConfig(string key)
         {
             if (_config.ContainsKey(key))
             {
@@ -97,44 +105,64 @@ namespace IBMiCmd
             }
         }
 
-        public static void addOutput(string text)
+        public static void AddOutput(string text)
         {
             _output.Add(text);
         }
 
-        public static string[] getOutput()
+        public static string[] GetOutput()
         {
             string[] result = _output.ToArray();
             _output.Clear();
             return result;
         }
 
-        public static void flushOutput()
+        public static void FlushOutput()
         {
             _output.Clear();
         }
 
-        public static void runCommands(string[] list)
+        public static void RunCommands(string[] list)
         {
-            flushOutput();
-            string tempfile = Path.GetTempFileName() + ".ftp";
-            List<string> lines = new List<string>();
-
-            lines.Add("user " + _config["username"]);
-            lines.Add(_config["password"]);
-            lines.Add("bin");
-            foreach(string cmd in list)
+            try
             {
-                if (cmd.Trim() != "") lines.Add(cmd);
-            }
-            lines.Add("quit");
+                FlushOutput();
+                string tempfile = Path.GetTempFileName();
+                File.Move(tempfile, tempfile + ".ftp");
+                tempfile += ".ftp";
+                List<string> lines = new List<string>();
 
-            File.WriteAllLines(tempfile, lines.ToArray());
-            runFTP(tempfile);
+                lines.Add("user " + _config["username"]);
+                lines.Add(_config["password"]);
+                lines.Add("bin");
+                foreach (string cmd in list)
+                {
+                    if (cmd == null) continue;
+                    if (cmd.Trim() != "")
+                    {
+                        IBMiUtilities.DebugLog("Collecting command for ftp file: " + cmd);
+                        lines.Add(cmd);
+                    }
+                }
+#if DEBUG
+                lines.Add("QUOTE RCMD DSPJOBLOG");
+#endif
+                lines.Add("quit");
+
+                File.WriteAllLines(tempfile, lines.ToArray());
+                RunFTP(tempfile);
+                File.Delete(tempfile);
+
+            }
+            catch(Exception e) {
+                IBMiUtilities.Log(e.ToString());
+            }
         }
 
-        private static void runFTP(string FileLoc)
+        private static void RunFTP(string FileLoc)
         {
+            IBMiUtilities.DebugLog("Starting FTP of command file " + FileLoc);
+
             _notConnected = false;
             Process process = new Process();
             process.StartInfo.FileName = "cmd.exe";
@@ -145,12 +173,21 @@ namespace IBMiCmd
             process.StartInfo.RedirectStandardError = true;
 
             process.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
-            process.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);
+            process.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);        
 
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
             process.WaitForExit();
+
+#if DEBUG
+            foreach (string retMsg in _output)
+            {
+                IBMiUtilities.DebugLog(retMsg);
+            }
+#endif            
+
+            IBMiUtilities.DebugLog("FTP of command file " + FileLoc + " completed");
         }
 
         private static void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)

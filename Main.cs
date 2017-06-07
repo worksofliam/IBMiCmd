@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using NppPluginNET;
 using IBMiCmd.Forms;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace IBMiCmd
 {
@@ -15,34 +16,55 @@ namespace IBMiCmd
     {
         #region " Fields "
         internal const string PluginName = "IBMiCmd";
-        static string iniFilePath = null;
-        public static commandEntry commandWindow = null;
-        public static errorListing errorWindow = null;
-        public static cmdBindings bindsWindow = null;
-        static int idMyDlg = -1;
-        static Bitmap tbBmp = Properties.Resources.star;
-        static Bitmap tbBmp_tbTab = Properties.Resources.star_bmp;
-        static Icon tbIcon = null;
+        internal const string PluginDescription = "IBMiCmd v1.3.2.0 github.com/WorksOfBarry/IBMiCmd";
+
+        public static commandEntry CommandWindow { get; set; }
+        public static errorListing ErrorWindow { get; set; }
+        public static libraryList LiblWindow { get; set; }
+        public static cmdBindings BindsWindow { get; set; }
+
+        public static string ConfigDirectory { get; set; }
+        public static string FileCacheDirectory { get; set; }
+
+        private static int idMyDlg = -1;
+        private static Bitmap tbBmp = Properties.Resources.star;
+        private static Bitmap tbBmp_tbTab = Properties.Resources.star_bmp;
+        private static Icon tbIcon = null;
         #endregion
 
         #region " StartUp/CleanUp "
         internal static void CommandMenuInit()
         {
-            StringBuilder sbIniFilePath = new StringBuilder(Win32.MAX_PATH);
-            Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETPLUGINSCONFIGDIR, Win32.MAX_PATH, sbIniFilePath);
-            iniFilePath = sbIniFilePath.ToString();
-            if (!Directory.Exists(iniFilePath)) Directory.CreateDirectory(iniFilePath);
-
-            IBMi.loadConfig(iniFilePath + PluginName + ".cfg");
+            StringBuilder pluginsConfigDir = new StringBuilder(Win32.MAX_PATH);
+            Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETPLUGINSCONFIGDIR, Win32.MAX_PATH, pluginsConfigDir);
+            ConfigDirectory = $"{ pluginsConfigDir.ToString() }\\{ PluginName }\\";
+            FileCacheDirectory = $"{ConfigDirectory}cache\\";
             
-            PluginBase.SetCommand(0, "About IBMiCmd", myMenuFunction);
-            PluginBase.SetCommand(1, "IBM i Remote System Setup", remoteSetup);
-            PluginBase.SetCommand(2, "IBM i Command Entry", commandDialog);
-            PluginBase.SetCommand(3, "IBM i Error Listing", errorDialog);
-            PluginBase.SetCommand(4, "IBM i Command Bindings", bindsDialog);
-            PluginBase.SetCommand(5, "IBM i RPG Conversion", launchConversion, new ShortcutKey(true, false, false, Keys.F4));
-            PluginBase.SetCommand(6, "IBM i RPG File Conversion", launchFileConversion, new ShortcutKey(true, false, false, Keys.F5));
+            if (!Directory.Exists(ConfigDirectory)) Directory.CreateDirectory(ConfigDirectory);
+            if (!Directory.Exists(FileCacheDirectory)) Directory.CreateDirectory(FileCacheDirectory);
+
+            IBMiUtilities.CreateLog(ConfigDirectory + PluginName);
+            RPGParser.LoadFileCache();
+
+            IBMi.LoadConfig(ConfigDirectory + PluginName);
+            //if (IBMi.GetConfig("localDefintionsInstalled") == "false")
+            //{
+            //    IBMiNPPInstaller.InstallLocalDefinitions();
+            //}
+
+            PluginBase.SetCommand(0, "About IBMiCmd", About, new ShortcutKey(false, false, false, Keys.None));
+            PluginBase.SetCommand(1, "IBM i Remote System Setup", RemoteSetup);
+            PluginBase.SetCommand(2, "IBM i Command Entry", CommandDialog);
+            PluginBase.SetCommand(3, "IBM i Error Listing", ErrorDialog);
+            PluginBase.SetCommand(4, "IBM i Command Bindings", BindsDialog);
+            PluginBase.SetCommand(5, "IBM i RPG Conversion", LaunchConversion, new ShortcutKey(true, false, false, Keys.F4));
+            PluginBase.SetCommand(6, "IBM i RPG File Conversion", LaunchFileConversion, new ShortcutKey(true, false, false, Keys.F5));
+            PluginBase.SetCommand(7, "IBM i Refresh Definitions", BuildSourceContext, new ShortcutKey(true, false, false, Keys.F6));
+            PluginBase.SetCommand(8, "IBM i Auto Complete", AutoComplete, new ShortcutKey(false, true, false, Keys.Space));
+            PluginBase.SetCommand(9, "IBM i Library List", LiblDialog, new ShortcutKey(true, false, false, Keys.F7));
+            PluginBase.SetCommand(10, "IBM i Remote Install Plugin Server", RemoteInstall);
         }
+
         internal static void SetToolBarIcon()
         {
             
@@ -54,32 +76,62 @@ namespace IBMiCmd
         #endregion
 
         #region " Menu functions "
-        internal static void myMenuFunction()
+        internal static void About()
         {
-            MessageBox.Show("IBMiCmds, created by WorksOfBarry.");
+            MessageBox.Show($"IBMiCmd, created by WorksOfBarry. { Environment.NewLine} github.com/WorksOfBarry/IBMiCmd");
         }
 
-        internal static void launchConversion()
+        internal static void LaunchRBLD()
         {
-            rpgForm.curFileLine = (int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETCURRENTLINE, 0, 0);
+            DialogResult outp = MessageBox.Show("Confirm build of '" + IBMi.GetConfig("relicdir") + "' into " + IBMi.GetConfig("reliclib") + "?", "Relic Build", MessageBoxButtons.YesNo);
+            if (outp == DialogResult.Yes)
+            {
+                IBMiNPPInstaller.RebuildRelic();
+            }
+        }
+
+        internal static void LaunchConversion()
+        {
+            rpgForm.curFileLine = (int) Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETCURRENTLINE, 0, 0);
             new rpgForm().ShowDialog();
         }
-
-        internal static void launchFileConversion()
+        
+        internal static void LaunchFileConversion()
         {
             new rpgFileConvert().ShowDialog();
-        }
-
-        internal static void remoteSetup()
+                                                 
+        }        
+        
+        internal static void RemoteSetup()
         {
             new userSettings().ShowDialog();
         }
 
-        internal static void commandDialog()
+        internal static void RemoteInstall()
         {
-            if (commandWindow == null)
+            new installRemote().ShowDialog();
+            Main.CommandWindow.loadNewCommands();
+        }
+
+        internal static void LiblDialog()
+        {
+            new libraryList().ShowDialog();
+        }
+
+        internal static void BuildSourceContext()
+        {
+            RPGParser.LaunchFFDCollection();
+        }
+
+        internal static void AutoComplete() {
+            RPGAutoCompleter.ProvideSuggestions(RPGParser.dataStructures);
+        }
+
+        internal static void CommandDialog()
+        {
+            if (CommandWindow == null)
             {
-                commandWindow = new commandEntry();
+                CommandWindow = new commandEntry();
 
                 using (Bitmap newBmp = new Bitmap(16, 16))
                 {
@@ -95,7 +147,7 @@ namespace IBMiCmd
                 }
 
                 NppTbData _nppTbData = new NppTbData();
-                _nppTbData.hClient = commandWindow.Handle;
+                _nppTbData.hClient = CommandWindow.Handle;
                 _nppTbData.pszName = "Command Entry";
                 _nppTbData.dlgID = idMyDlg;
                 _nppTbData.uMask = NppTbMsg.DWS_DF_CONT_RIGHT | NppTbMsg.DWS_ICONTAB | NppTbMsg.DWS_ICONBAR;
@@ -108,15 +160,15 @@ namespace IBMiCmd
             }
             else
             {
-                Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, commandWindow.Handle);
+                Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, CommandWindow.Handle);
             }
         }
 
-        internal static void errorDialog()
+        internal static void ErrorDialog()
         {
-            if (errorWindow == null)
+            if (ErrorWindow == null)
             {
-                errorWindow = new errorListing();
+                ErrorWindow = new errorListing();
 
                 using (Bitmap newBmp = new Bitmap(16, 16))
                 {
@@ -132,7 +184,7 @@ namespace IBMiCmd
                 }
 
                 NppTbData _nppTbData = new NppTbData();
-                _nppTbData.hClient = errorWindow.Handle;
+                _nppTbData.hClient = ErrorWindow.Handle;
                 _nppTbData.pszName = "Error Listing";
                 _nppTbData.dlgID = idMyDlg;
                 _nppTbData.uMask = NppTbMsg.DWS_DF_CONT_RIGHT | NppTbMsg.DWS_ICONTAB | NppTbMsg.DWS_ICONBAR;
@@ -145,15 +197,15 @@ namespace IBMiCmd
             }
             else
             {
-                Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, errorWindow.Handle);
+                Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, ErrorWindow.Handle);
             }
         }
 
-        internal static void bindsDialog()
+        internal static void BindsDialog()
         {
-            if (bindsWindow == null)
+            if (BindsWindow == null)
             {
-                bindsWindow = new cmdBindings();
+                BindsWindow = new cmdBindings();
 
                 using (Bitmap newBmp = new Bitmap(16, 16))
                 {
@@ -169,7 +221,7 @@ namespace IBMiCmd
                 }
 
                 NppTbData _nppTbData = new NppTbData();
-                _nppTbData.hClient = bindsWindow.Handle;
+                _nppTbData.hClient = BindsWindow.Handle;
                 _nppTbData.pszName = "Command Bindings";
                 _nppTbData.dlgID = idMyDlg;
                 _nppTbData.uMask = NppTbMsg.DWS_DF_CONT_RIGHT | NppTbMsg.DWS_ICONTAB | NppTbMsg.DWS_ICONBAR;
@@ -180,11 +232,11 @@ namespace IBMiCmd
 
                 Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMREGASDCKDLG, 0, _ptrNppTbData);
 
-                bindsWindow.cmdBindings_Load();
+                BindsWindow.cmdBindings_Load();
             }
             else
             {
-                Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, bindsWindow.Handle);
+                Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, BindsWindow.Handle);
             }
         }
         #endregion
