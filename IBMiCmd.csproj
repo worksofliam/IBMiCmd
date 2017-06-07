@@ -150,7 +150,6 @@
       <DependentUpon>wrkBind.cs</DependentUpon>
     </Compile>
     <Compile Include="IBMi.cs" />
-<<<<<<< HEAD
     <Compile Include="IBMiCommandRender.cs" />
     <Compile Include="IBMiNPPInstaller.cs" />
     <Compile Include="IBMiUtilities.cs" />
@@ -162,10 +161,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\libraryList.Designer.cs" />
-    <Compile Include="listError.cs" />
-=======
     <Compile Include="LanguageTools\listError.cs" />
->>>>>>> a3e8ae38bd6063b0aa5a09a0e26928301f270928
     <Compile Include="Main.cs" />
     <Compile Include="NppPluginNETBase.cs" />
     <Compile Include="NppPluginNETHelper.cs" />
@@ -175,13 +171,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-<<<<<<< HEAD
-    <Compile Include="RPGAutoCompleter.cs" />
-    <Compile Include="RPGParser.cs" />
-    <Compile Include="RPGTools.cs" />
-=======
+    <Compile Include="LanguageTools\RPGAutoCompleter.cs" />
+    <Compile Include="LanguageTools\RPGParser.cs" />
     <Compile Include="LanguageTools\RPGFree.cs" />
->>>>>>> a3e8ae38bd6063b0aa5a09a0e26928301f270928
     <Compile Include="UnmanagedExports.cs" />
   </ItemGroup>
   <ItemGroup>
