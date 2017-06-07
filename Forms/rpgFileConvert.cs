@@ -1,14 +1,10 @@
 ﻿using NppPluginNET;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using IBMiCmd.LanguageTools;
 
 namespace IBMiCmd.Forms
 {
@@ -26,7 +22,7 @@ namespace IBMiCmd.Forms
             string[] lines = File.ReadAllLines(this._curFile);
             //string[] newLines = new string[lines.Length];
 
-            Boolean isPI = false, isPR = false, isDS = false, isParm = false;
+            Boolean isPI = false, isPR = false, isDS = false;
             string curLine = "", curLineStart = "", extraLine = "";
             for(int i = 0; i < lines.Length; i++)
             {
@@ -91,7 +87,6 @@ namespace IBMiCmd.Forms
                     AppendNewText(richTextBox2, lines[i].TrimEnd(), Color.Black);
                     AppendNewText(richTextBox1, lines[i].TrimEnd(), Color.Black);
                 }
-                //newLines[i] = (curLine != "" ? curLine : lines[i]);
             }
 
             this.Text = "RPG Conversion - " + this._curFile;

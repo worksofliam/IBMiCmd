@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
+using IBMiCmd.LanguageTools;
 
 namespace IBMiCmd.Forms
 {

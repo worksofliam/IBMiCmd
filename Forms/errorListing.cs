@@ -1,6 +1,7 @@
 ﻿using NppPluginNET;
 using System;
 using System.Windows.Forms;
+using IBMiCmd.LanguageTools;
 
 namespace IBMiCmd.Forms
 {

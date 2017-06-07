@@ -100,7 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DllExport\DllExportAttribute.cs" />
-    <Compile Include="ErrorHandle.cs" />
+    <Compile Include="LanguageTools\ErrorHandle.cs" />
     <Compile Include="Forms\cmdBindings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -150,7 +150,7 @@
       <DependentUpon>wrkBind.cs</DependentUpon>
     </Compile>
     <Compile Include="IBMi.cs" />
-    <Compile Include="listError.cs" />
+    <Compile Include="LanguageTools\listError.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="NppPluginNETBase.cs" />
     <Compile Include="NppPluginNETHelper.cs" />
@@ -160,7 +160,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="RPGTools.cs" />
+    <Compile Include="LanguageTools\RPGTools.cs" />
     <Compile Include="UnmanagedExports.cs" />
   </ItemGroup>
   <ItemGroup>
