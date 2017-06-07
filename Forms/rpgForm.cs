@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using NppPluginNET;
+using IBMiCmd.LanguageTools;
 
 namespace IBMiCmd.Forms
 {
@@ -28,7 +23,7 @@ namespace IBMiCmd.Forms
 
             fixedLine = getLine(curFileLine);
 
-            freeOut = RPGTools.getFree(fixedLine);
+            freeOut = RPGFree.getFree(fixedLine);
             if (freeOut != "")
             {
                 textBox1.Text = fixedLine;

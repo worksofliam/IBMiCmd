@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IBMiCmd
+namespace IBMiCmd.LanguageTools
 {
-    class RPGTools
+    class RPGFree
     {
         public static string getFree(string input)
         {
@@ -26,6 +26,10 @@ namespace IBMiCmd
 
             switch (Char.ToUpper(chars[6]))
             {
+                case 'H':
+                    keywords = input.Substring(7);
+                    output = "Ctl-Opt " + keywords.Trim() + ';';
+                    break;
                 case 'D':
                     len = input.Substring(33, 7).Trim();
                     type = input.Substring(40, 1).Trim();

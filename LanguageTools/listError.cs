@@ -1,4 +1,4 @@
-﻿namespace IBMiCmd
+﻿namespace IBMiCmd.LanguageTools
 {
     class lineError
     {
