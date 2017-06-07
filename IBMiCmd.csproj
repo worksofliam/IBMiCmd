@@ -56,7 +56,7 @@
     <OutputPath>bin\x86\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
@@ -153,14 +153,14 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\installRemote.Designer.cs">
-        <DependentUpon>installRemote.cs</DependentUpon>
+      <DependentUpon>installRemote.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\libraryList.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\libraryList.Designer.cs">
-        <DependentUpon>libraryList.cs</DependentUpon>
-    </Compile>    
+      <DependentUpon>libraryList.cs</DependentUpon>
+    </Compile>
     <Compile Include="IBMi.cs" />
     <Compile Include="IBMiCommandRender.cs" />
     <Compile Include="IBMiNPPInstaller.cs" />
@@ -206,10 +206,10 @@
       <DependentUpon>wrkBind.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\installRemote.resx">
-        <DependentUpon>installRemote.cs</DependentUpon>
+      <DependentUpon>installRemote.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\libraryList.resx">
-        <DependentUpon>libraryList.cs</DependentUpon>
+      <DependentUpon>libraryList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -61,7 +61,7 @@ namespace IBMiCmd.Forms
                 foreach (int fileid in ErrorHandle.getFileIDs())
                 {
                     curNode = new TreeNode(ErrorHandle.getFilePath(fileid));
-                    foreach (lineError error in ErrorHandle.getErrors(fileid))
+                    foreach (LineError error in ErrorHandle.getErrors(fileid))
                     {
                         if (error.getSev() >= 20)
                         {

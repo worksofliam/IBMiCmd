@@ -1,6 +1,6 @@
 ﻿namespace IBMiCmd.LanguageTools
 {
-    class lineError
+    class LineError
     {
         private int _sev;
         private int _line;
@@ -8,7 +8,7 @@
         private string _data = "";
         private string _errcode;
 
-        public lineError(int sev, int line, int col, string data, string errcode)
+        public LineError(int sev, int line, int col, string data, string errcode)
         {
             _sev = sev;
             _line = line;

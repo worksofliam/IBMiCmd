@@ -12,7 +12,7 @@ namespace IBMiCmd.LanguageTools
 
         private static int _FileID;
         private static Dictionary<int, string> _FileIDs;
-        private static Dictionary<int, List<lineError>> _Errors;
+        private static Dictionary<int, List<LineError>> _Errors;
         private static Dictionary<int, List<expRange>> _Expansions;
 
         public static void getErrors(string lib, string obj)
@@ -50,7 +50,7 @@ namespace IBMiCmd.LanguageTools
         public static void wrkErrors()
         {
             _FileIDs = new Dictionary<int, string>();
-            _Errors = new Dictionary<int, List<lineError>>();
+            _Errors = new Dictionary<int, List<LineError>>();
             _Expansions = new Dictionary<int, List<expRange>>();
 
             string err;
@@ -77,7 +77,7 @@ namespace IBMiCmd.LanguageTools
                         else
                         {
                             _FileIDs.Add(_FileID, pieces[5]);
-                            _Errors.Add(_FileID, new List<lineError>());
+                            _Errors.Add(_FileID, new List<LineError>());
                             _Expansions.Add(_FileID, new List<expRange>());
                         }
                         break;
@@ -108,7 +108,7 @@ namespace IBMiCmd.LanguageTools
                             linenum -= sqldiff;
                         }
 
-                        _Errors[_FileID].Add(new lineError(sev, linenum, column, err.Substring(65), err.Substring(48, 7)));
+                        _Errors[_FileID].Add(new LineError(sev, linenum, column, err.Substring(65), err.Substring(48, 7)));
                         break;
                 }
             }
@@ -124,7 +124,7 @@ namespace IBMiCmd.LanguageTools
             return _FileIDs[fileid];
         }
 
-        public static lineError[] getErrors(int fileid)
+        public static LineError[] getErrors(int fileid)
         {
             return _Errors[fileid].ToArray();
         }
