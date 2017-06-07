@@ -45,14 +45,41 @@ namespace IBMiCmd
             return cmd;
         }
 
+        internal static string[] RenderCommandDescriptionCollection(string command)
+        {
+            IBMiUtilities.DebugLog("RenderCommandDescriptionCollection");
+            string[] cmd = new string[5];
+            // Run commands on remote
+            int i = 0;
+            cmd[i] = "ASCII";
+            cmd[++i] = $"QUOTE RCMD CHGLIBL LIBL({ IBMi.GetConfig("datalibl").Replace(',', ' ')})  CURLIB({ IBMi.GetConfig("curlib") })";
+            cmd[++i] = $"QUOTE RCMD { IBMi.GetConfig("installlib") }/NPPRTVCMD {command}";
+            cmd[++i] = $"RECV /home/{ IBMi.GetConfig("username") }/{ command }.cdml { Main.FileCacheDirectory }{ command }.cdml";
+            cmd[++i] = $"QUOTE RCMD RMVLNK OBJLNK('/home/{ IBMi.GetConfig("username") }/{ sl.searchResult }.tmp')";
+
+            IBMiUtilities.DebugLog("RenderCommandDescriptionCollection - DONE!");
+            return cmd;
+        }
+
+        private static void UpdateFileCache(string file)
+        {
+            XmlSerializer xf = new XmlSerializer(typeof(DataStructure));
+            string cacheFile = $"{Main.FileCacheDirectory}{d.name.TrimEnd()}.ffd";
+            using (Stream stream = File.Open(cacheFile, FileMode.Create))
+            {
+                xf.Serialize(stream, d);
+            }
+        }
+
         internal static string[] RenderRemoteInstallScript(List<string> sourceFiles, string library)
         {
             // Make room for <upload, copy, delete, compile> for each file
-            string[] cmd = new string[sourceFiles.Count * 4 + 3];
+            string[] cmd = new string[sourceFiles.Count * 4 + 4];
             int i = 0;
             cmd[i++] = "ASCII";
             cmd[i++] = "QUOTE RCMD CRTPF FILE(QTEMP/NPPCLSRC)  RCDLEN(112) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy NPP plugin commands')";
             cmd[i++] = "QUOTE RCMD CRTPF FILE(QTEMP/NPPCMDSRC) RCDLEN(112) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy NPP plugin commands')";
+            cmd[i++] = "QUOTE RCMD CRTPF FILE(QTEMP/NPPRPGSRC) RCDLEN(240) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy NPP plugin commands')";
             foreach (string file in sourceFiles)
             {
                 string fileName = file.Substring(file.LastIndexOf("\\") + 1);
@@ -68,6 +95,10 @@ namespace IBMiCmd
                     case ".cmd":
                         sourceFile = "NPPCMDSRC";
                         crtCmd = $"CRTCMD CMD({library}/{member}) PGM({library}/{member}) SRCFILE(QTEMP/NPPCMDSRC) SRCMBR({member}) REPLACE(*YES) TEXT('{Main.PluginDescription}')";
+                        break;
+                    case ".rpgle":
+                        sourceFile = "NPPRPGSRC";
+                        crtCmd = $"CRTBNDRPG PGM({library}/{member}) SRCFILE(QTEMP/{sourceFile}) SRCMBR({member}) REPLACE(*YES) TEXT('{Main.PluginDescription}')";
                         break;
                     default:
                         continue;

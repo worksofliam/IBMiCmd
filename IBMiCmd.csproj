@@ -224,6 +224,14 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="IBMi\QCLSRC\NPPDSPFFD.clle" />
+    <None Include="IBMi\QCMDSRC\NPPDSPFFD.cmd" />
+    <None Include="IBMi\QCMDSRC\NPPRTVCMD.cmd" />
+    <None Include="IBMi\QRPGLESRC\NPPCTLOPT.rpgleinc" />
+    <None Include="IBMi\QRPGLESRC\NPPRTVCMD.rpgle" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildProjectDirectory)\DllExport\NppPlugin.DllExport.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
