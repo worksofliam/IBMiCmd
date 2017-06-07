@@ -64,14 +64,14 @@
             // acceptToolStripMenuItem
             // 
             this.acceptToolStripMenuItem.Name = "acceptToolStripMenuItem";
-            this.acceptToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
-            this.acceptToolStripMenuItem.Text = "Accept";
+            this.acceptToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.acceptToolStripMenuItem.Text = "Accept (No undo)";
             this.acceptToolStripMenuItem.Click += new System.EventHandler(this.acceptToolStripMenuItem_Click);
             // 
             // declineToolStripMenuItem
             // 
             this.declineToolStripMenuItem.Name = "declineToolStripMenuItem";
-            this.declineToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.declineToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.declineToolStripMenuItem.Text = "Decline";
             this.declineToolStripMenuItem.Click += new System.EventHandler(this.declineToolStripMenuItem_Click);
             // 
