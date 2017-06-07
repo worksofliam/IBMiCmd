@@ -160,7 +160,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="LanguageTools\RPGTools.cs" />
+    <Compile Include="LanguageTools\RPGFree.cs" />
     <Compile Include="UnmanagedExports.cs" />
   </ItemGroup>
   <ItemGroup>

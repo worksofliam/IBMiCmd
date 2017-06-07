@@ -26,7 +26,7 @@ namespace IBMiCmd.Forms
             string curLine = "", curLineStart = "", extraLine = "";
             for(int i = 0; i < lines.Length; i++)
             {
-                curLine = RPGTools.getFree(lines[i]);
+                curLine = RPGFree.getFree(lines[i]);
                 
                 if (curLine != "")
                 {

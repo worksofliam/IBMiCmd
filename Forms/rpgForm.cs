@@ -23,7 +23,7 @@ namespace IBMiCmd.Forms
 
             fixedLine = getLine(curFileLine);
 
-            freeOut = RPGTools.getFree(fixedLine);
+            freeOut = RPGFree.getFree(fixedLine);
             if (freeOut != "")
             {
                 textBox1.Text = fixedLine;

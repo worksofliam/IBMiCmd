@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IBMiCmd.LanguageTools
 {
-    class RPGTools
+    class RPGFree
     {
         public static string getFree(string input)
         {
