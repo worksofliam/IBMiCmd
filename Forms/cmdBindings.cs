@@ -144,7 +144,7 @@ namespace IBMiCmd.Forms
             new wrkBind().ShowDialog();
             if (editingCanceled == false)
             {
-                IBMi.GetConfig(editingBind, string.Join("|", editingBindCmds));
+                IBMi.SetConfig(editingBind, string.Join("|", editingBindCmds));
                 
                 if (bindings.Contains(editingBind))
                 {
@@ -156,7 +156,7 @@ namespace IBMiCmd.Forms
                     curNode.Tag = string.Join("|", editingBindCmds);
 
                     bindings.Add(editingBind);
-                    IBMi.GetConfig("binds", string.Join("|", bindings.ToArray()));
+                    IBMi.SetConfig("binds", string.Join("|", bindings.ToArray()));
                 }
             }
         }
