@@ -1,0 +1,11 @@
+﻿ctl-opt main(main) datfmt(*iso) 
+		datedit(*ymd-) 
+		timfmt(*iso) 
+		decedit('0,') 
+        alwnull(*usrctl) 
+		bnddir('QC2LE')                           
+        option(*srcstmt : *nodebugio :*noshowcpy : *nounref : *noexpdds)              
+        debug(*yes) 
+		langid(*jobrun) 
+        ccsid(*ucs2 : 13488)                                   
+		DftActGrp(*No) ActGrp(NPP);                               

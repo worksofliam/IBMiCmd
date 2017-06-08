@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using NppPluginNET;
+using IBMiCmd.Properties;
 
 namespace IBMiCmd.IBMiTools
 {
@@ -102,73 +103,54 @@ namespace IBMiCmd.IBMiTools
         private static List<string> GenerateRemoteSource()
         {
             List<string> tmpFiles = new List<string>();
-            string tmp = "";
 
-            tmp = Path.GetTempFileName();
-            File.Delete(tmp); 
-            tmpFiles.Add(GenerateNPPDspFfdPgm(tmp));
-
-            tmp = Path.GetTempFileName();
-            File.Delete(tmp);
-            tmpFiles.Add(GenerateNPPDspFfdCmd(tmp));
+            tmpFiles.Add(GenerateCtlOptCpy(Path.GetTempFileName()));
+            tmpFiles.Add(GenerateDspFfdPgm(Path.GetTempFileName()));
+            tmpFiles.Add(GenerateDspFfdCmd(Path.GetTempFileName()));
+            tmpFiles.Add(GenerateRtvCmdPgm(Path.GetTempFileName()));
+            tmpFiles.Add(GenerateRtvCmdCmd(Path.GetTempFileName()));
 
             return tmpFiles;
         }
 
-        private static string GenerateNPPDspFfdPgm(string path)
+        private static string GenerateCtlOptCpy(string path)
         {
-            List<string> src = new List<string>();
-            src.Add("PGM          PARM(&FILE) ");
-            src.Add("DCL          VAR(&FILE) TYPE(*CHAR) LEN(10)");
-            src.Add("DCL          VAR(&USER) TYPE(*CHAR) LEN(10)");
-            src.Add("             RTVJOBA    CURUSER(&USER)");
-            src.Add("             DLTF       FILE(QTEMP/&FILE)");
-            src.Add("             MONMSG     MSGID(CPF2105)");
-            src.Add("             CRTPF      FILE(QTEMP/&FILE) RCDLEN(1730) +");
-            src.Add("                          FILETYPE(*SRC) CCSID(*JOB) ");
-            src.Add("             DSPFFD     FILE(*LIBL/&FILE) OUTPUT(*OUTFILE) +");
-            src.Add("                          OUTFILE(QTEMP/TMP)");
-            src.Add("             CPYF       FROMFILE(QTEMP/TMP) TOFILE(QTEMP/&FILE) +");
-            src.Add("                          MBROPT(*REPLACE) FMTOPT(*CVTSRC)");
-            src.Add("             CPYTOSTMF    FROMMBR('/QSYS.LIB/QTEMP.LIB/' *CAT &FILE +");
-            src.Add("                         *TCAT '.FILE/' *CAT &FILE *TCAT '.MBR') +");
-            src.Add("                         TOSTMF('/HOME/' +");
-            src.Add("                         *CAT &USER *TCAT '/' *CAT &FILE *TCAT '.TMP') +");
-            src.Add("                         STMFOPT(*REPLACE) ");
-            src.Add("             DLTF       FILE(QTEMP/&FILE)");
-            src.Add("             DLTF       FILE(QTEMP/TMP)");
-            src.Add("ENDPGM");
-            
-            File.WriteAllLines(path + "-NPPDSPFFD.clp", src.ToArray());
-
-            return path + "-NPPDSPFFD.clp";
+            File.Delete(path);
+            path = $"{path}.CPY";
+            File.WriteAllText(path, Resources.CTLOPTCPY);
+            return path;
         }
 
-        private static string GenerateNPPDspFfdCmd(string path)
+        private static string GenerateDspFfdPgm(string path)
         {
-            List<string> src = new List<string>();
-            src.Add("            CMD        ALLOW(*ALL)");
-            src.Add("FILE:       PARM       KWD(FILE) TYPE(*CHAR) LEN(10)");
-            File.WriteAllLines(path + "-NPPDSPFFD.cmd", src.ToArray());
-            return path + "-NPPDSPFFD.cmd";
+            File.Delete(path);
+            path = $"{path}.CLP";
+            File.WriteAllText(path, Resources.DSPFFDCLP);
+            return path;
         }
 
-
-        private static string GenerateNPPRTVCMDPgm(string path)
+        private static string GenerateDspFfdCmd(string path)
         {
-            List<string> src = new List<string>();
-            
-            File.WriteAllLines(path + "-NPPRTVCMD.cmd", src.ToArray());
-            return path + "-NPPRTVCMD.rpgle";
+            File.Delete(path);
+            path = $"{path}.CMD";
+            File.WriteAllText(path, Resources.DSPFFDCMD);
+            return path;
         }
 
-        private static string GenerateNPPRTVCMDCmd(string path)
+        private static string GenerateRtvCmdPgm(string path)
         {
-            List<string> src = new List<string>();
-            src.Add("            CMD        ALLOW(*ALL)");
-            src.Add("CMD:        PARM       KWD(CMD) TYPE(*CHAR) LEN(20)");
-            File.WriteAllLines(path + "-NPPRTVCMD.cmd", src.ToArray());
-            return path + "-NPPRTVCMD.cmd";
+            File.Delete(path);
+            path = $"{path}.RPG";
+            File.WriteAllText(path, Resources.RTVCMDRPG);
+            return path;
+        }
+
+        private static string GenerateRtvCmdCmd(string path)
+        {
+            File.Delete(path);
+            path = $"{path}.CMD";
+            File.WriteAllText(path, Resources.RTVCMDCMD);
+            return path;
         }
     }
 }

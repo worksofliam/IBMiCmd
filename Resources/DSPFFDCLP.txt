@@ -1,4 +1,4 @@
-PGM          PARM(&FILE) 
+﻿PGM          PARM(&FILE) 
 DCL          VAR(&FILE) TYPE(*CHAR) LEN(10)
 DCL          VAR(&USER) TYPE(*CHAR) LEN(10)
              RTVJOBA    CURUSER(&USER)

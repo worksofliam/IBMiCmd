@@ -61,22 +61,40 @@ namespace IBMiCmd.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
+        ///   Looks up a localized string similar to ctl-opt main(main) datfmt(*iso) 
+        ///		datedit(*ymd-) 
+        ///		timfmt(*iso) 
+        ///		decedit(&apos;0,&apos;) 
+        ///        alwnull(*usrctl) 
+        ///		bnddir(&apos;QC2LE&apos;)                           
+        ///        option(*srcstmt : *nodebugio :*noshowcpy : *nounref : *noexpdds)              
+        ///        debug(*yes) 
+        ///		langid(*jobrun) 
+        ///        ccsid(*ucs2 : 13488)                                   
+        ///		DftActGrp(*No) ActGrp(NPP);                               .
         /// </summary>
-        internal static byte[] CTLOPTCPY {
+        internal static string CTLOPTCPY {
             get {
-                object obj = ResourceManager.GetObject("CTLOPTCPY", resourceCulture);
-                return ((byte[])(obj));
+                return ResourceManager.GetString("CTLOPTCPY", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
+        ///   Looks up a localized string similar to PGM          PARM(&amp;FILE) 
+        ///DCL          VAR(&amp;FILE) TYPE(*CHAR) LEN(10)
+        ///DCL          VAR(&amp;USER) TYPE(*CHAR) LEN(10)
+        ///             RTVJOBA    CURUSER(&amp;USER)
+        ///             DLTF       FILE(QTEMP/&amp;FILE)
+        ///             MONMSG     MSGID(CPF2105)
+        ///             CRTPF      FILE(QTEMP/&amp;FILE) RCDLEN(1730) +
+        ///                          FILETYPE(*SRC) CCSID(*JOB) 
+        ///             DSPFFD     FILE(*LIBL/&amp;FILE) OUTPUT(*OUTFILE) +
+        ///                          OUTFILE(QTEMP/TMP)
+        ///             CPYF       FROMFILE(QTEMP/TMP) TOFILE( [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static byte[] DSPFFDCLP {
+        internal static string DSPFFDCLP {
             get {
-                object obj = ResourceManager.GetObject("DSPFFDCLP", resourceCulture);
-                return ((byte[])(obj));
+                return ResourceManager.GetString("DSPFFDCLP", resourceCulture);
             }
         }
         
@@ -101,12 +119,32 @@ namespace IBMiCmd.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
+        ///   Looks up a localized string similar to **FREE
+        ////include QRPGLESRC.NPPCTLOPT
+        ///// Part of the IBMiCmd server features
+        /////
+        ///// Put command definition in the users IFS Folder in a file named as command.cdml
+        /////
+        ///// Uses system API https://www.ibm.com/support/knowledgecenter/ssw_ibm_i_73/apis/qcdrcmdd.htm
+        /////
+        ///
+        ///dcl-ds myPSDS psds;
+        ///    
+        ///end-ds
+        ///
+        ///dcl-proc main;
+        ///    dcl-pi *N;      
+        ///        command char(20);
+        ///    end-pi;
+        ///    
+        ///    dcl-ds RetreiveCDML_DestinationFormat qualified;
+        ///        BytesReturned  int(10);
+        ///        BytesAvailable int(10);
+        ///  [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static byte[] RTVCMDRPG {
+        internal static string RTVCMDRPG {
             get {
-                object obj = ResourceManager.GetObject("RTVCMDRPG", resourceCulture);
-                return ((byte[])(obj));
+                return ResourceManager.GetString("RTVCMDRPG", resourceCulture);
             }
         }
         

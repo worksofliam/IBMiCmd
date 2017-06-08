@@ -237,6 +237,24 @@
   <ItemGroup>
     <None Include="Resources\NPPRTVCMD.cmd.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\CTLOPTRPG.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DSPFFDCLP.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DSPFFDCMD.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\RTVCMDCMD.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\RTVCMDRPG.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\CTLOPTCPY.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildProjectDirectory)\DllExport\NppPlugin.DllExport.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
