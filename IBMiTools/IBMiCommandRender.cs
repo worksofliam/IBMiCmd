@@ -81,7 +81,7 @@ namespace IBMiCmd.IBMiTools
                         break;
                 }
 
-                cmd.Add($"SEND { file } /home/{ IBMi.GetConfig("username") }/{ fileName }");
+                cmd.Add($"SEND \"{ file }\" /home/{ IBMi.GetConfig("username") }/{ fileName }");
                 cmd.Add($"QUOTE RCMD CPYFRMSTMF FROMSTMF('/home/{ IBMi.GetConfig("username") }/{ fileName }') TOMBR('/QSYS.LIB/QTEMP.LIB/{ sourceFile }.FILE/{ member }.MBR')");
                 cmd.Add($"QUOTE RCMD RMVLNK OBJLNK('/home/{ IBMi.GetConfig("username") }/{ fileName }')");
                 if (crtCmd != null)
