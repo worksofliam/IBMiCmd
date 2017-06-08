@@ -36,10 +36,10 @@ namespace IBMiCmd.Forms
                         #region adding end-** blocks
                         if (curLine.Contains(" "))
                         {
-                            curLineStart = curLine.TrimStart().Split(' ')[0].ToUpper();
+                            curLineStart = curLine.TrimStart().Split(' ')[0].ToUpper().Trim();
                         }
 
-                        if (curLineStart != "DCL-PARM")
+                        if (curLineStart != "DCL-PARM" && curLineStart != "")
                         {
                             if (isPR)
                             {

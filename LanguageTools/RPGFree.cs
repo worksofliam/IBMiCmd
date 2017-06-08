@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System;   
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,11 +8,13 @@ namespace IBMiCmd.LanguageTools
 {
     class RPGFree
     {
+        private static string prevName = "";
         public static string getFree(string input)
         {
             input = ' ' + input.PadRight(80);
             char[] chars = input.ToCharArray();
 
+            string line = input.Substring(7).Trim();
             string name = input.Substring(7, 16).Trim();
             string len = "";
             string type = "";
@@ -35,6 +37,16 @@ namespace IBMiCmd.LanguageTools
                     type = input.Substring(40, 1).Trim();
                     decimals = input.Substring(41, 3).Trim();
                     field = input.Substring(24, 2).Trim().ToUpper();
+                    
+                    if (prevName != "")
+                    {
+                        name = prevName;
+                        prevName = "";
+                    }
+                    if (line.EndsWith("..."))
+                    {
+                        prevName = line.Substring(0, line.Length - 3);
+                    }
 
                     switch (type.ToUpper())
                     {
@@ -135,6 +147,7 @@ namespace IBMiCmd.LanguageTools
                             output = "  Dcl-Parm " + name + " " + type + " " + keywords + ';';
                             break;
                     }
+                    
                     break;
 
                 case 'P':
