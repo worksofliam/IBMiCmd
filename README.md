@@ -1,17 +1,15 @@
 # IBMiCmd
 
-x86 Notepad++ plugin for IBM i development.
-
-IBMiCmd (maybe referenced as IBMiCmds) is a Notepad++ plugin for ILE development on an IBM i.
+x86 Notepad++ plugin for IBM i development. IBMiCmd (maybe referenced as IBMiCmds) is a Notepad++ plugin for ILE development on an IBM i.
 
 [Check out the wiki](https://github.com/WorksOfBarry/IBMiCmd/wiki) for more info, feature list, installation tips and future goals.
 
-### Installation
+## Installation
 
 1. [See the releases](https://github.com/WorksOfBarry/IBMiCmd/releases) for IBMiCmd and download the latest version available.
 2. Drop the .dll into the Notepad++ plugins folder.
 
-#### Build tips
+## Build tips
 
 I had an issue building with VS 2017 which was related to the location of the `lib.exe` program on Windows. The location is defined in `DllExport\NppPlugin.DllExport.targets`.
 
