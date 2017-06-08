@@ -163,7 +163,7 @@
     </Compile>
     <Compile Include="IBMiTools\IBMi.cs" />
     <Compile Include="IBMiTools\IBMiCommandRender.cs" />
-    <Compile Include="IBMiTools\IBMiNPPInstaller.cs" />
+    <Compile Include="IBMiTools\IBMiCommandInstaller.cs" />
     <Compile Include="IBMiTools\IBMiUtilities.cs" />
     <Compile Include="LanguageTools\listError.cs" />
     <Compile Include="Main.cs" />
@@ -223,22 +223,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="IBMi\QCLSRC\NPPDSPFFD.clle" />
-    <None Include="IBMi\QCMDSRC\NPPDSPFFD.cmd" />
-    <None Include="IBMi\QCMDSRC\NPPRTVCMD.cmd" />
-    <None Include="IBMi\QRPGLESRC\NPPCTLOPT.rpgleinc" />
-    <None Include="IBMi\QRPGLESRC\NPPRTVCMD.rpgle" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\NPPDSPFFD.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\NPPRTVCMD.cmd.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\CTLOPTRPG.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\DSPFFDCLP.txt" />

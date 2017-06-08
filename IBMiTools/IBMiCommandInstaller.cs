@@ -10,7 +10,7 @@ using IBMiCmd.Properties;
 
 namespace IBMiCmd.IBMiTools
 {
-    class IBMiNPPInstaller
+    public class IBMiCommandInstaller
     {
 
         /// <summary>
@@ -100,16 +100,16 @@ namespace IBMiCmd.IBMiTools
         /// Generates source that provides extra functionality to plugin
         /// </summary>
         /// <returns></returns>
-        private static List<string> GenerateRemoteSource()
+        public static List<string> GenerateRemoteSource()
         {
-            List<string> tmpFiles = new List<string>();
-
-            tmpFiles.Add(GenerateCtlOptCpy(Path.GetTempFileName()));
-            tmpFiles.Add(GenerateDspFfdPgm(Path.GetTempFileName()));
-            tmpFiles.Add(GenerateDspFfdCmd(Path.GetTempFileName()));
-            tmpFiles.Add(GenerateRtvCmdPgm(Path.GetTempFileName()));
-            tmpFiles.Add(GenerateRtvCmdCmd(Path.GetTempFileName()));
-
+            List<string> tmpFiles = new List<string>
+            {
+                GenerateCtlOptCpy(Path.GetTempFileName()),
+                GenerateDspFfdPgm(Path.GetTempFileName()),
+                GenerateDspFfdCmd(Path.GetTempFileName()),
+                GenerateRtvCmdPgm(Path.GetTempFileName()),
+                GenerateRtvCmdCmd(Path.GetTempFileName())
+            };
             return tmpFiles;
         }
 
