@@ -10,21 +10,6 @@ namespace IBMiCmd
 {
     class IBMiCommandRender
     {
-        internal static string[] RenderRelicRebuildScript(string tmp)
-        {
-            string buildDir = IBMi.GetConfig("relicdir");
-            if (!buildDir.EndsWith("/"))
-            {
-                buildDir += '/';
-            }
-
-            return new string[] {
-                $"QUOTE RCMD CD '{ buildDir }'",
-                $"QUOTE RCMD RBLD { IBMi.GetConfig("reliclib") }",
-                "ASCII",
-                $"RECV { buildDir }RELICBLD.log \"{ tmp }\""
-            };
-        }
 
         internal static string[] RenderFFDCollectionScript(List<SourceLine> src, string[] tmp)
         {

@@ -78,16 +78,7 @@ namespace IBMiCmd
         #region " Menu functions "
         internal static void About()
         {
-            MessageBox.Show($"IBMiCmd, created by WorksOfBarry. { Environment.NewLine} github.com/WorksOfBarry/IBMiCmd");
-        }
-
-        internal static void LaunchRBLD()
-        {
-            DialogResult outp = MessageBox.Show("Confirm build of '" + IBMi.GetConfig("relicdir") + "' into " + IBMi.GetConfig("reliclib") + "?", "Relic Build", MessageBoxButtons.YesNo);
-            if (outp == DialogResult.Yes)
-            {
-                IBMiNPPInstaller.RebuildRelic();
-            }
+            MessageBox.Show($"IBMiCmd, created by Works Of Barry. { Environment.NewLine} github.com/WorksOfBarry/IBMiCmd");
         }
 
         internal static void LaunchConversion()
@@ -110,7 +101,6 @@ namespace IBMiCmd
         internal static void RemoteInstall()
         {
             new installRemote().ShowDialog();
-            Main.CommandWindow.loadNewCommands();
         }
 
         internal static void LiblDialog()

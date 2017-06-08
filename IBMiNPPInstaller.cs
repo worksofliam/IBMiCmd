@@ -11,30 +11,6 @@ namespace IBMiCmd
 {
     class IBMiNPPInstaller
     {
-        /// <summary>
-        /// TODO: ?
-        /// </summary>
-        internal static void RebuildRelic()
-        {
-            Thread gothread = new Thread((ThreadStart)delegate {
-                IBMiUtilities.DebugLog("RebuildRelic!");
-                string tmpFile = Path.GetTempFileName();
-                IBMi.AddOutput("Starting build of '" + IBMi.GetConfig("relicdir") + "' into " + IBMi.GetConfig("reliclib"));
-                if (Main.CommandWindow != null) Main.CommandWindow.loadNewCommands();
-                IBMi.RunCommands(IBMiCommandRender.RenderRelicRebuildScript(tmpFile));
-                IBMi.AddOutput("");
-                foreach (string line in File.ReadAllLines(tmpFile))
-                {
-                    IBMi.AddOutput($"> { line }");
-                }
-                IBMi.AddOutput("");
-                IBMi.AddOutput("End of build.");
-                File.Delete(tmpFile);
-                if (Main.CommandWindow != null) Main.CommandWindow.loadNewCommands();
-                IBMiUtilities.DebugLog("RebuildRelic - DONE!");
-            });
-            gothread.Start();
-        }
 
         /// <summary>
         /// Installs the remote objects that the plugin requires on the server
@@ -60,6 +36,8 @@ namespace IBMiCmd
                     IBMiUtilities.Log(e.ToString()); // TODO: Show error?
                 }
                 IBMiUtilities.DebugLog("InstallRemoteLib - DONE!");
+
+                if (Main.CommandWindow != null) Main.CommandWindow.loadNewCommands();
             });
             thread.Start();
         }

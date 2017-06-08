@@ -26,8 +26,6 @@ namespace IBMiCmd
                 _config.Add("system", "mysystem");
                 _config.Add("username", "myuser");
                 _config.Add("password", "mypass");
-                _config.Add("relicdir", "rpgapp");
-                _config.Add("reliclib", "#dev");
 				_config.Add("datalibl", "mylibl");
                 _config.Add("curlib", "mylib");
                 _config.Add("installlib", "qgpl");
@@ -135,6 +133,8 @@ namespace IBMiCmd
                 lines.Add("user " + _config["username"]);
                 lines.Add(_config["password"]);
                 lines.Add("bin");
+
+                lines.Add($"QUOTE RCMD CHGLIBL LIBL({ IBMi.GetConfig("datalibl").Replace(',', ' ')})  CURLIB({ IBMi.GetConfig("curlib") })");
                 foreach (string cmd in list)
                 {
                     if (cmd == null) continue;
