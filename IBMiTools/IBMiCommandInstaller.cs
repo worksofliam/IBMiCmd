@@ -116,7 +116,7 @@ namespace IBMiCmd.IBMiTools
         private static string GenerateCtlOptCpy(string path)
         {
             File.Delete(path);
-            path = $"{path}-ICCCTLOPT.CPY";
+            path = $"{path}-IICCTLOPT.CPY";
             File.WriteAllText(path, Resources.CTLOPTCPY);
             return path;
         }
@@ -124,7 +124,7 @@ namespace IBMiCmd.IBMiTools
         private static string GenerateDspFfdPgm(string path)
         {
             File.Delete(path);
-            path = $"{path}-ICCDSPFFD.CLP";
+            path = $"{path}-IICDSPFFD.CLP";
             File.WriteAllText(path, Resources.DSPFFDCLP);
             return path;
         }
@@ -132,7 +132,7 @@ namespace IBMiCmd.IBMiTools
         private static string GenerateDspFfdCmd(string path)
         {
             File.Delete(path);
-            path = $"{path}-ICCDSPFFD.CMD";
+            path = $"{path}-IICDSPFFD.CMD";
             File.WriteAllText(path, Resources.DSPFFDCMD);
             return path;
         }
@@ -140,7 +140,7 @@ namespace IBMiCmd.IBMiTools
         private static string GenerateRtvCmdPgm(string path)
         {
             File.Delete(path);
-            path = $"{path}-ICCRTVCMD.RPG";
+            path = $"{path}-IICRTVCMD.RPG";
             File.WriteAllText(path, Resources.RTVCMDRPG);
             return path;
         }
@@ -148,7 +148,7 @@ namespace IBMiCmd.IBMiTools
         private static string GenerateRtvCmdCmd(string path)
         {
             File.Delete(path);
-            path = $"{path}-ICCRTVCMD.CMD";
+            path = $"{path}-IICRTVCMD.CMD";
             File.WriteAllText(path, Resources.RTVCMDCMD);
             return path;
         }

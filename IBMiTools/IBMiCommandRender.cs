@@ -68,7 +68,7 @@ namespace IBMiCmd.IBMiTools
                 switch (fileName.Substring(fileName.Length - 4))
                 {
                     case ".CLP":
-                        sourceFile = Resources.RTVCMDCMD;
+                        sourceFile = "IICCLSRC";
                         crtCmd = getCompileCommandCL(library, member);
                         break;
                     case ".CMD":
@@ -112,7 +112,8 @@ namespace IBMiCmd.IBMiTools
             sb.Append($"COMMIT(*CHG) OBJTYPE(*PGM) OPTION(*XREF) RPGPPOPT(*LVL2) DLYPRP(*YES) ");
             sb.Append($"DATFMT(*ISO) TIMFMT(*ISO) REPLACE(*YES) ");
             sb.Append($"DBGVIEW(*SOURCE) USRPRF(*USER) LANGID(*JOBRUN) ");
-            sb.Append($"COMPILEOPT('DFTACTGRP(*NO) ACTGRP(*CALLER)')");
+            sb.Append($"COMPILEOPT('DFTACTGRP(*NO) ACTGRP(*CALLER)') ");
+            sb.Append($"TEXT('{Main.PluginDescription}')");
             return sb.ToString();
         }
     }
