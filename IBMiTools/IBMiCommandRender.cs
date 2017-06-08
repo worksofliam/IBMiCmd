@@ -53,7 +53,7 @@ namespace IBMiCmd.IBMiTools
             List<string> cmd = new List<string>
             {
                 "ASCII",
-                "QUOTE RCMD CRTPF FILE(QTEMP/IICCLSRC)  RCDLEN(112) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy IBMiCmd plugin')",
+                "QUOTE RCMD CRTPF FILE(QTEMP/IICCLSRC) RCDLEN(112) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy IBMiCmd plugin')",
                 "QUOTE RCMD CRTPF FILE(QTEMP/IICCMDSRC) RCDLEN(112) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy IBMiCmd plugin')",
                 "QUOTE RCMD CRTPF FILE(QTEMP/IICRPGSRC) RCDLEN(240) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy IBMiCmd plugin')"
             };
@@ -63,6 +63,7 @@ namespace IBMiCmd.IBMiTools
                 string fileName = file.Substring(file.LastIndexOf("\\") + 1);
                 string member = fileName.Substring(fileName.LastIndexOf("-") + 1, fileName.LastIndexOf(".") - (fileName.LastIndexOf("-") + 1));
                 string sourceFile = null, crtCmd = null;
+
 
                 switch (fileName.Substring(fileName.Length - 4))
                 {
