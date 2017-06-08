@@ -58,7 +58,7 @@ namespace IBMiCmd.IBMiTools
                         continue;
                 }
 
-                cmd[i++] = $"SEND { file } /home/{ IBMi.GetConfig("username") }/{ fileName }";
+                cmd[i++] = $"SEND \"{ file }\" /home/{ IBMi.GetConfig("username") }/{ fileName }";
                 cmd[i++] = $"QUOTE RCMD CPYFRMSTMF FROMSTMF('/home/{ IBMi.GetConfig("username") }/{ fileName }') TOMBR('/QSYS.LIB/QTEMP.LIB/{ sourceFile }.FILE/{ member }.MBR')";
                 cmd[i++] = $"QUOTE RCMD RMVLNK OBJLNK('/home/{ IBMi.GetConfig("username") }/{ fileName }')";
                 cmd[i++] = $"QUOTE RCMD { crtCmd }";
