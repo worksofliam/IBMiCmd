@@ -6,7 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Diagnostics;
 
-namespace IBMiCmd
+namespace IBMiCmd.IBMiTools
 {
     class IBMiCommandRender
     {

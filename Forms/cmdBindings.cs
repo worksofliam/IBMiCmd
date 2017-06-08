@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using IBMiCmd.LanguageTools;
+using IBMiCmd.IBMiTools;
 
 namespace IBMiCmd.Forms
 {

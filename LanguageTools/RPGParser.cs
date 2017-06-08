@@ -6,8 +6,8 @@ using NppPluginNET;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Text.RegularExpressions;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml.Serialization;
+using IBMiCmd.IBMiTools;
 
 namespace IBMiCmd
 {

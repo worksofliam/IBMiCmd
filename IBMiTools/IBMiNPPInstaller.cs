@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using NppPluginNET;
 
-namespace IBMiCmd
+namespace IBMiCmd.IBMiTools
 {
     class IBMiNPPInstaller
     {

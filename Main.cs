@@ -7,8 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using NppPluginNET;
 using IBMiCmd.Forms;
-using System.Threading;
-using System.Collections.Generic;
+using IBMiCmd.IBMiTools;
 
 namespace IBMiCmd
 {

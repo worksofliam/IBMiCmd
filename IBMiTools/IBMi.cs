@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using System.Threading;
 using NppPluginNET;
 
-namespace IBMiCmd
+namespace IBMiCmd.IBMiTools
 {
     class IBMi
     {

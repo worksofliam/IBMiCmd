@@ -161,10 +161,10 @@
     <Compile Include="Forms\libraryList.Designer.cs">
       <DependentUpon>libraryList.cs</DependentUpon>
     </Compile>
-    <Compile Include="IBMi.cs" />
-    <Compile Include="IBMiCommandRender.cs" />
-    <Compile Include="IBMiNPPInstaller.cs" />
-    <Compile Include="IBMiUtilities.cs" />
+    <Compile Include="IBMiTools\IBMi.cs" />
+    <Compile Include="IBMiTools\IBMiCommandRender.cs" />
+    <Compile Include="IBMiTools\IBMiNPPInstaller.cs" />
+    <Compile Include="IBMiTools\IBMiUtilities.cs" />
     <Compile Include="LanguageTools\listError.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="NppPluginNETBase.cs" />

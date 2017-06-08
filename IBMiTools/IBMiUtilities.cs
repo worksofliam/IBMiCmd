@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using System.IO;
 using System;
 
-namespace IBMiCmd
+namespace IBMiCmd.IBMiTools
 {
     public class IBMiUtilities
     {
