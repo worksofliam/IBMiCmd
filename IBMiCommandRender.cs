@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Xml.Serialization;
 
 namespace IBMiCmd
 {
@@ -55,20 +56,10 @@ namespace IBMiCmd
             cmd[++i] = $"QUOTE RCMD CHGLIBL LIBL({ IBMi.GetConfig("datalibl").Replace(',', ' ')})  CURLIB({ IBMi.GetConfig("curlib") })";
             cmd[++i] = $"QUOTE RCMD { IBMi.GetConfig("installlib") }/NPPRTVCMD {command}";
             cmd[++i] = $"RECV /home/{ IBMi.GetConfig("username") }/{ command }.cdml { Main.FileCacheDirectory }{ command }.cdml";
-            cmd[++i] = $"QUOTE RCMD RMVLNK OBJLNK('/home/{ IBMi.GetConfig("username") }/{ sl.searchResult }.tmp')";
+            cmd[++i] = $"QUOTE RCMD RMVLNK OBJLNK('/home/{ IBMi.GetConfig("username") }/{ command }.cdml')";
 
             IBMiUtilities.DebugLog("RenderCommandDescriptionCollection - DONE!");
             return cmd;
-        }
-
-        private static void UpdateFileCache(string file)
-        {
-            XmlSerializer xf = new XmlSerializer(typeof(DataStructure));
-            string cacheFile = $"{Main.FileCacheDirectory}{d.name.TrimEnd()}.ffd";
-            using (Stream stream = File.Open(cacheFile, FileMode.Create))
-            {
-                xf.Serialize(stream, d);
-            }
         }
 
         internal static string[] RenderRemoteInstallScript(List<string> sourceFiles, string library)
