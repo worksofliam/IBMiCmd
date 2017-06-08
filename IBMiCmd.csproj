@@ -231,7 +231,12 @@
     <None Include="IBMi\QRPGLESRC\NPPCTLOPT.rpgleinc" />
     <None Include="IBMi\QRPGLESRC\NPPRTVCMD.rpgle" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\NPPDSPFFD.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NPPRTVCMD.cmd.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildProjectDirectory)\DllExport\NppPlugin.DllExport.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

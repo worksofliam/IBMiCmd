@@ -6,6 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Xml.Serialization;
+using IBMiCmd.Properties;
 
 namespace IBMiCmd.IBMiTools
 {
@@ -22,7 +23,7 @@ namespace IBMiCmd.IBMiTools
             cmd[i++] = $"QUOTE RCMD CHGLIBL LIBL({ IBMi.GetConfig("datalibl").Replace(',', ' ')})  CURLIB({ IBMi.GetConfig("curlib") })";
             foreach (SourceLine sl in src)
             {
-                cmd[i++] = $"QUOTE RCMD {IBMi.GetConfig("installlib")}/NPPDSPFFD {sl.searchResult}";
+                cmd[i++] = $"QUOTE RCMD { IBMi.GetConfig("installlib") }/NPPDSPFFD { sl.searchResult }";
                 cmd[i++] = $"RECV /home/{ IBMi.GetConfig("username") }/{ sl.searchResult }.tmp \"{ tmp[t++] }\"";
                 cmd[i++] = $"QUOTE RCMD RMVLNK OBJLNK('/home/{ IBMi.GetConfig("username") }/{ sl.searchResult }.tmp')";
             }
@@ -65,16 +66,16 @@ namespace IBMiCmd.IBMiTools
                 switch (fileName.Substring(fileName.Length - 4))
                 {
                     case ".clp":
-                        sourceFile = "NPPCLSRC";
-                        crtCmd = $"CRTCLPGM PGM({library}/{member}) SRCFILE(QTEMP/NPPCLSRC) SRCMBR({member}) REPLACE(*YES) TEXT('{Main.PluginDescription}')";
+                        sourceFile = Resources.RTVCMDCMD.;
+                        crtCmd = getCompileCommandCL(library, member);
                         break;
                     case ".cmd":
                         sourceFile = "NPPCMDSRC";
-                        crtCmd = $"CRTCMD CMD({library}/{member}) PGM({library}/{member}) SRCFILE(QTEMP/NPPCMDSRC) SRCMBR({member}) REPLACE(*YES) TEXT('{Main.PluginDescription}')";
+                        crtCmd = getCompileCommandCmd(library, member);
                         break;
                     case ".rpgle":
                         sourceFile = "NPPRPGSRC";
-                        crtCmd = $"CRTBNDRPG PGM({library}/{member}) SRCFILE(QTEMP/{sourceFile}) SRCMBR({member}) REPLACE(*YES) TEXT('{Main.PluginDescription}')";
+                        crtCmd = getCompileCommandRpg(library, member);
                         break;
                     default:
                         continue;
@@ -86,6 +87,26 @@ namespace IBMiCmd.IBMiTools
                 cmd[i++] = $"QUOTE RCMD { crtCmd }";
             }
             return cmd;
+        }
+
+        private static string getCompileCommandCL(string library, string member)
+        {
+            return $"CRTCLPGM PGM({library}/{member}) SRCFILE(QTEMP/NPPCLSRC) SRCMBR({member}) REPLACE(*YES) TEXT('{Main.PluginDescription}')"; 
+        }
+
+        private static string getCompileCommandCmd(string library, string member)
+        {
+            return $"CRTCMD CMD({library}/{member}) PGM({library}/{member}) SRCFILE(QTEMP/NPPCMDSRC) SRCMBR({member}) REPLACE(*YES) TEXT('{Main.PluginDescription}')";
+        }
+
+        private static string getCompileCommandRpg(string library, string member)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append($"CRTSQLRPGI OBJ({library}/{member}) SRCFILE(QTEMP/NPPRPGSRC) ");
+            sb.Append($"COMMIT(*CHG) OBJTYPE(*PGM) OPTION(*XREF) RPGPPOPT(*LVL2) DLYPRP(*YES) ");
+            sb.Append($"DATFMT(*ISO) TIMFMT(*ISO) REPLACE(*YES) ");
+            sb.Append($"DBGVIEW(*SOURCE) USRPRF(*USER) LANGID(*JOBRUN)");
+            return sb.ToString();
         }
     }
 }

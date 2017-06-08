@@ -61,6 +61,56 @@ namespace IBMiCmd.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] CTLOPTCPY {
+            get {
+                object obj = ResourceManager.GetObject("CTLOPTCPY", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] DSPFFDCLP {
+            get {
+                object obj = ResourceManager.GetObject("DSPFFDCLP", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to             CMD        ALLOW(*ALL)
+        ///FILE:       PARM       KWD(FILE) TYPE(*CHAR) LEN(10).
+        /// </summary>
+        internal static string DSPFFDCMD {
+            get {
+                return ResourceManager.GetString("DSPFFDCMD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to             CMD        ALLOW(*ALL)
+        ///CMD:        PARM       KWD(CMD) TYPE(*CHAR) LEN(20).
+        /// </summary>
+        internal static string RTVCMDCMD {
+            get {
+                return ResourceManager.GetString("RTVCMDCMD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] RTVCMDRPG {
+            get {
+                object obj = ResourceManager.GetObject("RTVCMDRPG", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap star {
