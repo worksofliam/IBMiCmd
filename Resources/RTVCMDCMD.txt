@@ -1,2 +1,3 @@
 ﻿            CMD        ALLOW(*ALL)
-CMD:        PARM       KWD(CMD) TYPE(*CHAR) LEN(20)
+			PARM       KWD(CMD) TYPE(*CHAR) LEN(10) 
+			PARM       KWD(LIB) TYPE(*CHAR) LEN(10) DFT(QSYS)

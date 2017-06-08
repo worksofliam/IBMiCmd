@@ -59,7 +59,7 @@ namespace IBMiCmd.IBMiTools
             foreach (string file in sourceFiles)
             {
                 string fileName = file.Substring(file.LastIndexOf("\\") + 1);
-                string member = fileName.Substring(0, file.Length-4);
+                string member = fileName.Substring(0, fileName.Length-4);
                 string sourceFile = null, crtCmd = null;
 
                 switch (fileName.Substring(fileName.Length - 4))
@@ -108,7 +108,8 @@ namespace IBMiCmd.IBMiTools
             sb.Append($"CRTSQLRPGI OBJ({library}/{member}) SRCFILE(QTEMP/IICRPGSRC) ");
             sb.Append($"COMMIT(*CHG) OBJTYPE(*PGM) OPTION(*XREF) RPGPPOPT(*LVL2) DLYPRP(*YES) ");
             sb.Append($"DATFMT(*ISO) TIMFMT(*ISO) REPLACE(*YES) ");
-            sb.Append($"DBGVIEW(*SOURCE) USRPRF(*USER) LANGID(*JOBRUN)");
+            sb.Append($"DBGVIEW(*SOURCE) USRPRF(*USER) LANGID(*JOBRUN) ");
+            sb.Append($"COMPILEOPT('DFTACTGRP(*NO) ACTGRP(*CALLER)')");
             return sb.ToString();
         }
     }

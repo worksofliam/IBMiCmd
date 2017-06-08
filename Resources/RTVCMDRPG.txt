@@ -1,5 +1,5 @@
 ﻿**FREE
-/include QRPGLESRC.NPPCTLOPT
+/include QTEMP/IICRPGSRC,IICCTLOPT
 // Part of the IBMiCmd server features
 //
 // Put command definition in the users IFS Folder in a file named as command.cdml
@@ -8,64 +8,68 @@
 //
 
 dcl-ds myPSDS psds;
-    
-end-ds
+   currentUser char(10) pos(358); 
+end-ds;
 
 dcl-proc main;
-    dcl-pi *N;      
-        command char(20);
+    dcl-pi *N;  
+        command char(10);    
+        library char(10);        
     end-pi;
     
-    dcl-ds RetreiveCDML_DestinationFormat qualified;
+    dcl-ds Data qualified;
         BytesReturned  int(10);
         BytesAvailable int(10);
-        CommandSource  char(30000);
+        CommandSource  varChar(30000);
     end-ds;
-    dcl-ds APIError qualified;
-        BytesProvided  int(10);
-        BytesAvailable int(10);
-        ExceptionID    char(7);
-        Reserved       char(1);
-        ExceptionData  char(30000);
+    dcl-ds APIError qualified inz;
+        BytesProvided  int(10) inz(%size(APIError));
+        BytesAvailable int(10) inz;
+        ExceptionID    char(7) inz;
+        Reserved       char(1) inz(x'00');
+        ExceptionData  char(30000) inz;
     end-ds;
     dcl-ds PathName qualified inz;  
         CCSID                       int(10);
         CountryOrRegionID           char(2);
         LanguageID                  char(3);
-        *N                          char(3);
+        *N                          char(3) inz(x'000000');
         PathTypeIndicator           int(10);
         LengthOfPathName            int(10);
         PathNameDelimiterCharacter  char(2);
-        *N                          char(10);
+        *N                          char(10) inz(x'00000000000000000000');
         Path                        char(150);
     end-ds;
     
     dcl-c FORMAT_STREAM_FILE 'DEST0200';
-    dcl-c RECEIVER_FORMAT 'CMDD0100';
+    dcl-c RECEIVER_FORMAT    'CMDD0100';
     
     dcl-pr RetreiveCDML extpgm('QCDRCMDD');
-        QualifiedCommandName    char(20);
-        OutputFile              likeds(PathName);
-        DestinationFormat       char(8);
-        Data                    likeds(RetreiveCDML_DestinationFormat);
-        ReceiverFormat          char(8);
+        QualifiedCommandName    char(20) const;
+        OutputFile              likeds(PathName) const;
+        DestinationFormat       char(8) const;
+        Data                    likeds(Data);
+        ReceiverFormat          char(8) const;
         Error                   likeds(APIError);
     end-pr;
     
-	dcl-s delimiter char(2) inz('/'); 
+    dcl-s delimiter char(1) inz('/'); 
     dcl-s outputFilePath char(150) inz;
+    dcl-s qualifiedCommand char(20);
     
-    outputFilePath = delimiter + 'home' delimiter + %trimR(currentUser) + delimiter + trimR(command) + '.cdml';
+    qualifiedCommand = command + library;
+       
+    outputFilePath = delimiter + 'home' + delimiter + %trimR(currentUser) + delimiter + %trimR(command) + '.cdml';
     
-	PathName.CCSID = 1208;
-	PathName.CountryOrRegionID = 'GB';
-	PathName.LanguageID = 'EN';
-	PathName.PathTypeIndicator = TODO;
+	PathName.CCSID = 0;
+	PathName.CountryOrRegionID = x'0000';
+	PathName.LanguageID = x'000000';
+	PathName.PathTypeIndicator = 0;
 	PathName.LengthOfPathName = %len(%trimR(outputFilePath));
 	PathName.PathNameDelimiterCharacter = delimiter; 
 	PathName.Path = %trimR(outputFilePath) + x'00';
 
-    callp RetreiveCDML( command : PathName : FORMAT_STREAM_FILE : Data : RECEIVER_FORMAT : APIError );
+    callp RetreiveCDML( qualifiedCommand : PathName : FORMAT_STREAM_FILE : Data : RECEIVER_FORMAT : APIError );
      
     return;
     
