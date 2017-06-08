@@ -51,16 +51,15 @@ namespace IBMiCmd.IBMiTools
         internal static string[] RenderRemoteInstallScript(List<string> sourceFiles, string library)
         {
             // Make room for <upload, copy, delete, compile> for each file
-            string[] cmd = new string[sourceFiles.Count * 4 + 4];
-            int i = 0;
-            cmd[i++] = "ASCII";
-            cmd[i++] = "QUOTE RCMD CRTPF FILE(QTEMP/IICCLSRC)  RCDLEN(112) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy IBMiCmd plugin')";
-            cmd[i++] = "QUOTE RCMD CRTPF FILE(QTEMP/IICCMDSRC) RCDLEN(112) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy IBMiCmd plugin')";
-            cmd[i++] = "QUOTE RCMD CRTPF FILE(QTEMP/IICRPGSRC) RCDLEN(240) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy IBMiCmd plugin')";
+            List<string> cmd = new List<string>();
+            cmd.Add("ASCII");
+            cmd.Add("QUOTE RCMD CRTPF FILE(QTEMP/IICCLSRC)  RCDLEN(112) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy IBMiCmd plugin')");
+            cmd.Add("QUOTE RCMD CRTPF FILE(QTEMP/IICCMDSRC) RCDLEN(112) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy IBMiCmd plugin')");
+            cmd.Add("QUOTE RCMD CRTPF FILE(QTEMP/IICRPGSRC) RCDLEN(240) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy IBMiCmd plugin')");
             foreach (string file in sourceFiles)
             {
                 string fileName = file.Substring(file.LastIndexOf("\\") + 1);
-                string member = fileName.Substring(1, file.Length-4);
+                string member = fileName.Substring(0, file.Length-4);
                 string sourceFile = null, crtCmd = null;
 
                 switch (fileName.Substring(fileName.Length - 4))
@@ -82,12 +81,15 @@ namespace IBMiCmd.IBMiTools
                         break;
                 }
 
-                cmd[i++] = $"SEND { file } /home/{ IBMi.GetConfig("username") }/{ fileName }";
-                cmd[i++] = $"QUOTE RCMD CPYFRMSTMF FROMSTMF('/home/{ IBMi.GetConfig("username") }/{ fileName }') TOMBR('/QSYS.LIB/QTEMP.LIB/{ sourceFile }.FILE/{ member }.MBR')";
-                cmd[i++] = $"QUOTE RCMD RMVLNK OBJLNK('/home/{ IBMi.GetConfig("username") }/{ fileName }')";
-                cmd[i++] = $"QUOTE RCMD { crtCmd }";
+                cmd.Add($"SEND { file } /home/{ IBMi.GetConfig("username") }/{ fileName }");
+                cmd.Add($"QUOTE RCMD CPYFRMSTMF FROMSTMF('/home/{ IBMi.GetConfig("username") }/{ fileName }') TOMBR('/QSYS.LIB/QTEMP.LIB/{ sourceFile }.FILE/{ member }.MBR')");
+                cmd.Add($"QUOTE RCMD RMVLNK OBJLNK('/home/{ IBMi.GetConfig("username") }/{ fileName }')");
+                if (crtCmd != null)
+                {
+                    cmd.Add($"QUOTE RCMD { crtCmd }");
+                }                
             }
-            return cmd;
+            return cmd.ToArray();
         }
 
         private static string getCompileCommandCL(string library, string member)
