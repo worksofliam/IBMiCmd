@@ -41,7 +41,7 @@ namespace IBMiCmd.IBMiTools
             cmd[i] = "ASCII";
             cmd[++i] = $"QUOTE RCMD CHGLIBL LIBL({ IBMi.GetConfig("datalibl").Replace(',', ' ')})  CURLIB({ IBMi.GetConfig("curlib") })";
             cmd[++i] = $"QUOTE RCMD { IBMi.GetConfig("installlib") }/IICRTVCMD {command}";
-            cmd[++i] = $"RECV /home/{ IBMi.GetConfig("username") }/{ command }.cdml { Main.FileCacheDirectory }{ command }.cdml";
+            cmd[++i] = $"RECV /home/{ IBMi.GetConfig("username") }/{ command }.cdml \"{ Main.FileCacheDirectory }{ command }.cdml\"";
             cmd[++i] = $"QUOTE RCMD RMVLNK OBJLNK('/home/{ IBMi.GetConfig("username") }/{ command }.cdml')";
 
             IBMiUtilities.DebugLog("RenderCommandDescriptionCollection - DONE!");
@@ -50,16 +50,18 @@ namespace IBMiCmd.IBMiTools
 
         internal static string[] RenderRemoteInstallScript(List<string> sourceFiles, string library)
         {
-            // Make room for <upload, copy, delete, compile> for each file
-            List<string> cmd = new List<string>();
-            cmd.Add("ASCII");
-            cmd.Add("QUOTE RCMD CRTPF FILE(QTEMP/IICCLSRC)  RCDLEN(112) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy IBMiCmd plugin')");
-            cmd.Add("QUOTE RCMD CRTPF FILE(QTEMP/IICCMDSRC) RCDLEN(112) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy IBMiCmd plugin')");
-            cmd.Add("QUOTE RCMD CRTPF FILE(QTEMP/IICRPGSRC) RCDLEN(240) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy IBMiCmd plugin')");
+            List<string> cmd = new List<string>
+            {
+                "ASCII",
+                "QUOTE RCMD CRTPF FILE(QTEMP/IICCLSRC)  RCDLEN(112) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy IBMiCmd plugin')",
+                "QUOTE RCMD CRTPF FILE(QTEMP/IICCMDSRC) RCDLEN(112) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy IBMiCmd plugin')",
+                "QUOTE RCMD CRTPF FILE(QTEMP/IICRPGSRC) RCDLEN(240) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy IBMiCmd plugin')"
+            };
             foreach (string file in sourceFiles)
             {
+                IBMiUtilities.DebugLog($"RenderRemoteInstallScript processsing {file}");
                 string fileName = file.Substring(file.LastIndexOf("\\") + 1);
-                string member = fileName.Substring(0, fileName.Length-4);
+                string member = fileName.Substring(fileName.LastIndexOf("-") + 1, fileName.LastIndexOf(".") - (fileName.LastIndexOf("-") + 1));
                 string sourceFile = null, crtCmd = null;
 
                 switch (fileName.Substring(fileName.Length - 4))

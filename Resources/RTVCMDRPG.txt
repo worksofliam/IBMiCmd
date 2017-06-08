@@ -1,5 +1,6 @@
 ﻿**FREE
 /include QTEMP/IICRPGSRC,IICCTLOPT
+
 // Part of the IBMiCmd server features
 //
 // Put command definition in the users IFS Folder in a file named as command.cdml
