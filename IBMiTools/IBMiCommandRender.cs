@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Xml.Serialization;
 
 namespace IBMiCmd.IBMiTools
 {
@@ -30,14 +31,31 @@ namespace IBMiCmd.IBMiTools
             return cmd;
         }
 
+        internal static string[] RenderCommandDescriptionCollection(string command)
+        {
+            IBMiUtilities.DebugLog("RenderCommandDescriptionCollection");
+            string[] cmd = new string[5];
+            // Run commands on remote
+            int i = 0;
+            cmd[i] = "ASCII";
+            cmd[++i] = $"QUOTE RCMD CHGLIBL LIBL({ IBMi.GetConfig("datalibl").Replace(',', ' ')})  CURLIB({ IBMi.GetConfig("curlib") })";
+            cmd[++i] = $"QUOTE RCMD { IBMi.GetConfig("installlib") }/NPPRTVCMD {command}";
+            cmd[++i] = $"RECV /home/{ IBMi.GetConfig("username") }/{ command }.cdml { Main.FileCacheDirectory }{ command }.cdml";
+            cmd[++i] = $"QUOTE RCMD RMVLNK OBJLNK('/home/{ IBMi.GetConfig("username") }/{ command }.cdml')";
+
+            IBMiUtilities.DebugLog("RenderCommandDescriptionCollection - DONE!");
+            return cmd;
+        }
+
         internal static string[] RenderRemoteInstallScript(List<string> sourceFiles, string library)
         {
             // Make room for <upload, copy, delete, compile> for each file
-            string[] cmd = new string[sourceFiles.Count * 4 + 3];
+            string[] cmd = new string[sourceFiles.Count * 4 + 4];
             int i = 0;
             cmd[i++] = "ASCII";
             cmd[i++] = "QUOTE RCMD CRTPF FILE(QTEMP/NPPCLSRC)  RCDLEN(112) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy NPP plugin commands')";
             cmd[i++] = "QUOTE RCMD CRTPF FILE(QTEMP/NPPCMDSRC) RCDLEN(112) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy NPP plugin commands')";
+            cmd[i++] = "QUOTE RCMD CRTPF FILE(QTEMP/NPPRPGSRC) RCDLEN(240) FILETYPE(*SRC) MAXMBRS(*NOMAX) TEXT('Deploy NPP plugin commands')";
             foreach (string file in sourceFiles)
             {
                 string fileName = file.Substring(file.LastIndexOf("\\") + 1);
@@ -53,6 +71,10 @@ namespace IBMiCmd.IBMiTools
                     case ".cmd":
                         sourceFile = "NPPCMDSRC";
                         crtCmd = $"CRTCMD CMD({library}/{member}) PGM({library}/{member}) SRCFILE(QTEMP/NPPCMDSRC) SRCMBR({member}) REPLACE(*YES) TEXT('{Main.PluginDescription}')";
+                        break;
+                    case ".rpgle":
+                        sourceFile = "NPPRPGSRC";
+                        crtCmd = $"CRTBNDRPG PGM({library}/{member}) SRCFILE(QTEMP/{sourceFile}) SRCMBR({member}) REPLACE(*YES) TEXT('{Main.PluginDescription}')";
                         break;
                     default:
                         continue;

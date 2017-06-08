@@ -152,5 +152,23 @@ namespace IBMiCmd.IBMiTools
             File.WriteAllLines(path + "-NPPDSPFFD.cmd", src.ToArray());
             return path + "-NPPDSPFFD.cmd";
         }
+
+
+        private static string GenerateNPPRTVCMDPgm(string path)
+        {
+            List<string> src = new List<string>();
+            
+            File.WriteAllLines(path + "-NPPRTVCMD.cmd", src.ToArray());
+            return path + "-NPPRTVCMD.rpgle";
+        }
+
+        private static string GenerateNPPRTVCMDCmd(string path)
+        {
+            List<string> src = new List<string>();
+            src.Add("            CMD        ALLOW(*ALL)");
+            src.Add("CMD:        PARM       KWD(CMD) TYPE(*CHAR) LEN(20)");
+            File.WriteAllLines(path + "-NPPRTVCMD.cmd", src.ToArray());
+            return path + "-NPPRTVCMD.cmd";
+        }
     }
 }
