@@ -42,7 +42,7 @@ namespace IBMiCmd.Forms
                 return;
             }
 
-            IBMiNPPInstaller.InstallRemoteLib(installLibrary);
+            IBMiCommandInstaller.InstallRemoteLib(installLibrary);
 
             this.Close();
         }
