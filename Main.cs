@@ -51,17 +51,23 @@ namespace IBMiCmd
             //    IBMiNPPInstaller.InstallLocalDefinitions();
             //}
 
-            PluginBase.SetCommand(0, "About IBMiCmd", About, new ShortcutKey(false, false, false, Keys.None));
-            PluginBase.SetCommand(1, "IBM i Remote System Setup", RemoteSetup);
-            PluginBase.SetCommand(2, "IBM i Command Entry", CommandDialog);
-            PluginBase.SetCommand(3, "IBM i Error Listing", ErrorDialog);
-            PluginBase.SetCommand(4, "IBM i Command Bindings", BindsDialog);
-            PluginBase.SetCommand(5, "IBM i RPG Conversion", LaunchConversion, new ShortcutKey(true, false, false, Keys.F4));
-            PluginBase.SetCommand(6, "IBM i RPG File Conversion", LaunchFileConversion, new ShortcutKey(true, false, false, Keys.F5));
-            PluginBase.SetCommand(7, "IBM i Refresh Definitions", BuildSourceContext, new ShortcutKey(true, false, false, Keys.F6));
-            PluginBase.SetCommand(8, "IBM i Auto Complete", AutoComplete, new ShortcutKey(false, true, false, Keys.Space));
-            PluginBase.SetCommand(9, "IBM i Library List", LiblDialog, new ShortcutKey(true, false, false, Keys.F7));
-            PluginBase.SetCommand(10, "IBM i Remote Install Plugin Server", RemoteInstall);
+            int itemOrder = 0;
+
+            PluginBase.SetCommand(itemOrder++, "About IBMiCmd", About, new ShortcutKey(false, false, false, Keys.None));
+            PluginBase.SetCommand(itemOrder++, "-SEPARATOR-", null);
+            PluginBase.SetCommand(itemOrder++, "IBM i Remote System Setup", RemoteSetup);
+            PluginBase.SetCommand(itemOrder++, "IBM i Library List", LiblDialog, new ShortcutKey(true, false, false, Keys.F7));
+            PluginBase.SetCommand(itemOrder++, "IBM i Remote Install Plugin Server", RemoteInstall);
+            PluginBase.SetCommand(itemOrder++, "-SEPARATOR-", null);
+            PluginBase.SetCommand(itemOrder++, "IBM i Command Entry", CommandDialog);
+            PluginBase.SetCommand(itemOrder++, "IBM i Error Listing", ErrorDialog);
+            PluginBase.SetCommand(itemOrder++, "IBM i Command Bindings", BindsDialog);
+            PluginBase.SetCommand(itemOrder++, "-SEPARATOR-", null);
+            PluginBase.SetCommand(itemOrder++, "IBM i RPG Conversion", LaunchConversion, new ShortcutKey(true, false, false, Keys.F4));
+            PluginBase.SetCommand(itemOrder++, "IBM i RPG File Conversion", LaunchFileConversion, new ShortcutKey(true, false, false, Keys.F5));
+            PluginBase.SetCommand(itemOrder++, "-SEPARATOR-", null);
+            PluginBase.SetCommand(itemOrder++, "IBM i Refresh Definitions", BuildSourceContext, new ShortcutKey(true, false, false, Keys.F6));
+            PluginBase.SetCommand(itemOrder++, "IBM i Auto Complete", AutoComplete, new ShortcutKey(false, true, false, Keys.Space));
         }
 
         internal static void SetToolBarIcon()
