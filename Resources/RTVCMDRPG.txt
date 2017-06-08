@@ -44,6 +44,10 @@ dcl-proc main;
     
     dcl-c FORMAT_STREAM_FILE 'DEST0200';
     dcl-c RECEIVER_FORMAT    'CMDD0100';
+	dcl-c USE_JOB_CCSID 0;
+	dcl-c CHAR_STRING_1_CHAR_DELIMITER 0;
+	dcl-c USE_JOB_COUNTRY x'0000';
+	dcl-c USE_JOB_LANGUAGE x'000000';
     
     dcl-pr RetreiveCDML extpgm('QCDRCMDD');
         QualifiedCommandName    char(20) const;
@@ -61,14 +65,14 @@ dcl-proc main;
     qualifiedCommand = command + library;
        
     outputFilePath = delimiter + 'home' + delimiter + %trimR(currentUser) + delimiter + %trimR(command) + '.cdml';
-    
-	PathName.CCSID = 0;
-	PathName.CountryOrRegionID = x'0000';
-	PathName.LanguageID = x'000000';
-	PathName.PathTypeIndicator = 0;
-	PathName.LengthOfPathName = %len(%trimR(outputFilePath));
-	PathName.PathNameDelimiterCharacter = delimiter; 
-	PathName.Path = %trimR(outputFilePath) + x'00';
+	
+    PathName.CCSID             = USE_JOB_CCSID;
+    PathName.CountryOrRegionID = USE_JOB_COUNTRY;
+    PathName.LanguageID        = USE_JOB_LANGUAGE;
+    PathName.PathTypeIndicator = CHAR_STRING_1_CHAR_DELIMITER;
+    PathName.LengthOfPathName  = %len(%trimR(outputFilePath));
+    PathName.PathNameDelimiterCharacter = delimiter; 
+    PathName.Path              = %trimR(outputFilePath) + x'00';
 
     callp RetreiveCDML( qualifiedCommand : PathName : FORMAT_STREAM_FILE : Data : RECEIVER_FORMAT : APIError );
      
