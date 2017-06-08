@@ -1,8 +1,4 @@
-﻿using System;   
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace IBMiCmd.LanguageTools
 {
@@ -14,8 +10,8 @@ namespace IBMiCmd.LanguageTools
             input = ' ' + input.PadRight(80);
             char[] chars = input.ToCharArray();
 
-            string line = input.Substring(7).Trim();
-            string name = input.Substring(7, 16).Trim();
+            string line = input.Substring(8).Trim();
+            string name = input.Substring(8, 16).Trim();
             string len = "";
             string type = "";
             string decimals = "";
@@ -25,6 +21,17 @@ namespace IBMiCmd.LanguageTools
 
             string factor1 = "", factor2 = "", result = "", opcode = "", extended = "";
             string ind1, ind2, ind3;
+            
+            switch (chars[7])
+            {
+                case '/':
+                    line = line.ToUpper();
+                    if (line == "FREE" || line == "END-FREE") return "*BLANK";
+                    break;
+                case '*':
+                    if (line == "") return "*BLANK";
+                    break;
+            }
 
             switch (Char.ToUpper(chars[6]))
             {
@@ -37,7 +44,7 @@ namespace IBMiCmd.LanguageTools
                     type = input.Substring(40, 1).Trim();
                     decimals = input.Substring(41, 3).Trim();
                     field = input.Substring(24, 2).Trim().ToUpper();
-                    
+
                     if (prevName != "")
                     {
                         name = prevName;
@@ -46,6 +53,7 @@ namespace IBMiCmd.LanguageTools
                     if (line.EndsWith("..."))
                     {
                         prevName = line.Substring(0, line.Length - 3);
+                        return "*BLANK";
                     }
 
                     switch (type.ToUpper())
@@ -147,10 +155,22 @@ namespace IBMiCmd.LanguageTools
                             output = "  Dcl-Parm " + name + " " + type + " " + keywords + ';';
                             break;
                     }
-                    
+
                     break;
 
                 case 'P':
+
+                    if (prevName != "")
+                    {
+                        name = prevName;
+                        prevName = "";
+                    }
+                    if (line.EndsWith("..."))
+                    {
+                        prevName = line.Substring(0, line.Length - 3);
+                        return "*BLANK";
+                    }
+
                     switch (Char.ToUpper(chars[24]))
                     {
                         case 'B':

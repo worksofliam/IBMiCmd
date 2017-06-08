@@ -31,7 +31,8 @@ namespace IBMiCmd.Forms
                 {
                     curLine = RPGFree.getFree(lines[i]);
 
-                    if (curLine != "")
+                    if (curLine == "*BLANK") { }
+                    else if (curLine != "")
                     {
                         #region adding end-** blocks
                         if (curLine.Contains(" "))
@@ -64,6 +65,7 @@ namespace IBMiCmd.Forms
                             if (extraLine != "")
                             {
                                 AppendNewText(richTextBox2, extraLine, Color.Green);
+                                AppendNewText(richTextBox2, "", Color.Black);
                             }
                         }
 
