@@ -26,9 +26,10 @@ namespace IBMiCmd.IBMiTools
                 _config.Add("system", "mysystem");
                 _config.Add("username", "myuser");
                 _config.Add("password", "mypass");
-				_config.Add("datalibl", "mylibl");
-                _config.Add("curlib", "mylib");
-                _config.Add("installlib", "qgpl");
+				_config.Add("datalibl", "QSYSTOOLS");
+                _config.Add("curlib", "QSYSTOOLS");
+                _config.Add("installlib", "QGPL");
+                _config.Add("debug", "false");
 
                 _config.Add("localDefintionsInstalled", "false");
 

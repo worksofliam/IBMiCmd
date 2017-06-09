@@ -35,16 +35,19 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(393, 11);
+            this.textBox1.Location = new System.Drawing.Point(545, 10);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 20);
             this.textBox1.TabIndex = 0;
             // 
             // richTextBox1
             // 
+            this.richTextBox1.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.richTextBox1.Location = new System.Drawing.Point(12, 38);
+            this.richTextBox1.MaximumSize = new System.Drawing.Size(633, 231);
+            this.richTextBox1.MinimumSize = new System.Drawing.Size(633, 231);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(482, 147);
+            this.richTextBox1.Size = new System.Drawing.Size(633, 231);
             this.richTextBox1.TabIndex = 1;
             this.richTextBox1.Text = "";
             // 
@@ -62,13 +65,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(506, 197);
+            this.ClientSize = new System.Drawing.Size(657, 281);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.textBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(522, 236);
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(328, 236);
             this.Name = "wrkBind";
