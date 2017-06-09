@@ -141,6 +141,9 @@ namespace IBMiCmd.LanguageTools
 
                     switch (field)
                     {
+                        case "C":
+                            output = "Dcl-C " + name + " " + keywords + ';';
+                            break;
                         case "S":
                             output = "Dcl-S " + name + " " + type + " " + keywords + ';';
                             break;
