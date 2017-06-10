@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using System.Threading;
 using IBMiCmd.IBMiTools;
 using NppPluginNET;
 
@@ -12,9 +11,8 @@ namespace IBMiCmd.LanguageTools
         /// Uses information about position of the cursor and cached CL commands
         /// Provides a window where the user can enter parameters for a CL command
         /// </summary>
-        internal static void ProvideCommandHelp()
+        internal static void PromptCommand()
         {
-            IBMiUtilities.DebugLog($"ProvideCommandHelp");
             IntPtr curScintilla = PluginBase.GetCurrentScintilla();
 
             int curLine = (int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETCURRENTLINE, 0, 0);
@@ -49,19 +47,15 @@ namespace IBMiCmd.LanguageTools
             //        break;
             //}
 
-
-            IBMiUtilities.DebugLog($"ProvideCommandHelp - {lookupString.ToUpper()}");
             if (lookupString == "") return;
 
             GetCommandHelp(lookupString.ToUpper());
-            IBMiUtilities.DebugLog($"ProvideCommandHelp End");
         }
 
         private static void GetCommandHelp(string c)
         {
-            IBMiUtilities.DebugLog($"GetCommandHelp");
             bool cacheHit = false;
-            CLCommand command = new CLCommand();
+            CLCommand command = new CLCommand("");
             foreach (CLCommand cmd in CLParser.CLCommands)
             {
                 if (cmd.Equals(c))
@@ -74,17 +68,14 @@ namespace IBMiCmd.LanguageTools
 
             if (cacheHit)
             {
-                IBMiUtilities.DebugLog($"Cache hit for {c}");
                 //DisplayCommandHelp(command);
             }
             else
             {
-                IBMiUtilities.DebugLog($"Cache miss for {c}");
                 //DisplayLoadingScreen();
                 FetchCommandDefinition(c);
                 //DisplayCommandHelp(CLParser.CLCommands[CLParser.CLCommands.Count - 1]);
             }
-            IBMiUtilities.DebugLog($"GetCommandHelp End");
         }
 
         private static void DisplayLoadingScreen()
@@ -97,25 +88,19 @@ namespace IBMiCmd.LanguageTools
             throw new NotImplementedException();
         }
 
-        private static void FetchCommandDefinition(string command)
+        internal static void FetchCommandDefinition(string command)
         {
-            Thread thread = new Thread((ThreadStart)delegate
-            {
-                IBMiUtilities.DebugLog($"FetchCommandDefinition");
-                // Receive command description via IICRTVCMD
-                IBMi.RunCommands(IBMiCommandRender.RenderCommandDescriptionCollection(command));
+            // Receive command description via IICRTVCMD
+            IBMi.RunCommands(IBMiCommandRender.RenderCommandDescriptionCollection(command));
 
-                try
-                {
-                    CLParser.LoadCMD(command);
-                }
-                catch (Exception e)
-                {
-                    IBMiUtilities.Log(e.ToString()); // TODO: Show error?
-                }
-                IBMiUtilities.DebugLog($"FetchCommandDefinition End");
-            });
-            thread.Start();
+            try
+            {
+                CLParser.LoadCMD(command);
+            }
+            catch (Exception e)
+            {
+                IBMiUtilities.Log(e.ToString()); // TODO: Show error?
+            }
         }
     }
 }

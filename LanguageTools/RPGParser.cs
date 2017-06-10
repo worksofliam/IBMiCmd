@@ -141,7 +141,7 @@ namespace IBMiCmd
 
         /// <summary>
         /// Executes remote commands on the configured server to collect data on externally
-        /// referenced tables that is then put into both memory and file cache
+        /// referenced tables that is then put into both memory and the file cache
         /// </summary>
         internal static void LaunchFFDCollection()
         {
@@ -156,7 +156,7 @@ namespace IBMiCmd
                     tmp[i] = Path.GetTempFileName();
                 }
 
-                // Receive record formats via remote command NPPDSPFFD
+                // Receive record formats via remote command IICDSPFFD
                 IBMi.RunCommands(IBMiCommandRender.RenderFFDCollectionScript(src, tmp)); // Get all record formats to local temp files
 
                 // Load Context & Cleanup temp files

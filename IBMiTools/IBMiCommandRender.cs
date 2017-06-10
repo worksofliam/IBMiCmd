@@ -32,7 +32,7 @@ namespace IBMiCmd.IBMiTools
             // Run commands on remote
             int i = 0;
             cmd[i++] = "ASCII";
-            cmd[i++] = $"QUOTE RCMD CHGLIBL LIBL({ IBMi.GetConfig("datalibl").Replace(',', ' ')})  CURLIB({ IBMi.GetConfig("curlib") })";
+            cmd[i++] = $"QUOTE RCMD CHGLIBL LIBL({ IBMi.GetConfig("datalibl").Replace(',', ' ')}) CURLIB({ IBMi.GetConfig("curlib") })";
             cmd[i++] = $"QUOTE RCMD { IBMi.GetConfig("installlib") }/IICRTVCMD {command}";
             cmd[i++] = $"RECV /home/{ IBMi.GetConfig("username") }/{ command }.cdml \"{ Main.FileCacheDirectory }{ command }.cdml\"";
             cmd[i] = $"QUOTE RCMD RMVLNK OBJLNK('/home/{ IBMi.GetConfig("username") }/{ command }.cdml')";
@@ -56,7 +56,6 @@ namespace IBMiCmd.IBMiTools
                 string fileName = file.Substring(file.LastIndexOf("\\") + 1);
                 string member = fileName.Substring(fileName.LastIndexOf("-") + 1, fileName.LastIndexOf(".") - (fileName.LastIndexOf("-") + 1));
                 string sourceFile = null, crtCmd = null;
-
 
                 switch (fileName.Substring(fileName.Length - 4))
                 {
