@@ -5,9 +5,10 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using NppPluginNET;
 using IBMiCmd.Forms;
 using IBMiCmd.IBMiTools;
+using IBMiCmd.LanguageTools;
+using NppPluginNET;
 
 namespace IBMiCmd
 {
@@ -38,12 +39,13 @@ namespace IBMiCmd
             Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETPLUGINSCONFIGDIR, Win32.MAX_PATH, pluginsConfigDir);
             ConfigDirectory = $"{ pluginsConfigDir.ToString() }\\{ PluginName }\\";
             FileCacheDirectory = $"{ConfigDirectory}cache\\";
-            
+
             if (!Directory.Exists(ConfigDirectory)) Directory.CreateDirectory(ConfigDirectory);
             if (!Directory.Exists(FileCacheDirectory)) Directory.CreateDirectory(FileCacheDirectory);
 
             IBMiUtilities.CreateLog(ConfigDirectory + PluginName);
             RPGParser.LoadFileCache();
+            CLParser.LoadFileCache();
 
             IBMi.LoadConfig(ConfigDirectory + PluginName);
             //if (IBMi.GetConfig("localDefintionsInstalled") == "false")
@@ -51,33 +53,34 @@ namespace IBMiCmd
             //    IBMiNPPInstaller.InstallLocalDefinitions();
             //}
 
-            bool DebugMode = (IBMi.GetConfig("debug") == "true");
+            bool ExperimentalFeatures = (IBMi.GetConfig("experimental") == "true");
             int ItemOrder = 0;
 
             PluginBase.SetCommand(ItemOrder++, "About IBMiCmd", About, new ShortcutKey(false, false, false, Keys.None));
             PluginBase.SetCommand(ItemOrder++, "-SEPARATOR-", null);
-            PluginBase.SetCommand(ItemOrder++, "IBM i Remote System Setup", RemoteSetup);
-            PluginBase.SetCommand(ItemOrder++, "IBM i Library List", LiblDialog, new ShortcutKey(true, false, false, Keys.F7));
-            if (DebugMode) PluginBase.SetCommand(ItemOrder++, "IBM i Remote Install Plugin Server", RemoteInstall);
+            PluginBase.SetCommand(ItemOrder++, "Remote System Setup", RemoteSetup);
+            PluginBase.SetCommand(ItemOrder++, "Library List", LiblDialog, new ShortcutKey(true, false, false, Keys.F7));
+            if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Remote Install Plugin Server", RemoteInstall);
             PluginBase.SetCommand(ItemOrder++, "-SEPARATOR-", null);
-            PluginBase.SetCommand(ItemOrder++, "IBM i Command Entry", CommandDialog);
-            PluginBase.SetCommand(ItemOrder++, "IBM i Error Listing", ErrorDialog);
-            PluginBase.SetCommand(ItemOrder++, "IBM i Command Bindings", BindsDialog);
+            PluginBase.SetCommand(ItemOrder++, "Command Entry", CommandDialog);
+            PluginBase.SetCommand(ItemOrder++, "Error Listing", ErrorDialog);
+            PluginBase.SetCommand(ItemOrder++, "Command Bindings", BindsDialog);
             PluginBase.SetCommand(ItemOrder++, "-SEPARATOR-", null);
-            PluginBase.SetCommand(ItemOrder++, "IBM i RPG Conversion", LaunchConversion, new ShortcutKey(true, false, false, Keys.F4));
-            PluginBase.SetCommand(ItemOrder++, "IBM i RPG File Conversion", LaunchFileConversion, new ShortcutKey(true, false, false, Keys.F5));
+            PluginBase.SetCommand(ItemOrder++, "RPG Line Conversion", LaunchConversion, new ShortcutKey(true, false, false, Keys.F5));
+            PluginBase.SetCommand(ItemOrder++, "RPG File Conversion", LaunchFileConversion, new ShortcutKey(true, false, false, Keys.F6));
             PluginBase.SetCommand(ItemOrder++, "-SEPARATOR-", null);
-            if (DebugMode) PluginBase.SetCommand(ItemOrder++, "IBM i Refresh Definitions", BuildSourceContext, new ShortcutKey(true, false, false, Keys.F6));
-            if (DebugMode) PluginBase.SetCommand(ItemOrder++, "IBM i Auto Complete", AutoComplete, new ShortcutKey(false, true, false, Keys.Space));
+            if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Refresh Extname Definitions", BuildSourceContext);
+            if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Extname Content Assist", AutoComplete, new ShortcutKey(false, true, false, Keys.Space));
+            if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Prompt CL Command", PromptCommand, new ShortcutKey(false, false, false, Keys.F4));
         }
 
         internal static void SetToolBarIcon()
         {
-            
+
         }
         internal static void PluginCleanUp()
         {
-            
+
         }
         #endregion
 
@@ -89,16 +92,16 @@ namespace IBMiCmd
 
         internal static void LaunchConversion()
         {
-            rpgForm.curFileLine = (int) Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETCURRENTLINE, 0, 0);
+            rpgForm.curFileLine = (int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETCURRENTLINE, 0, 0);
             new rpgForm().ShowDialog();
         }
-        
+
         internal static void LaunchFileConversion()
         {
             new rpgFileConvert().ShowDialog();
-                                                 
-        }        
-        
+
+        }
+
         internal static void RemoteSetup()
         {
             new userSettings().ShowDialog();
@@ -119,8 +122,23 @@ namespace IBMiCmd
             RPGParser.LaunchFFDCollection();
         }
 
-        internal static void AutoComplete() {
+        internal static void AutoComplete()
+        {
             RPGAutoCompleter.ProvideSuggestions(RPGParser.dataStructures);
+        }
+
+        internal static void PromptCommand()
+        {
+            IBMiUtilities.DebugLog("PromptCommand");
+            try
+            {
+                CLCommandPrompter.ProvideCommandHelp();
+            }
+            catch (Exception e)
+            {
+                IBMiUtilities.Log(e.ToString());
+            }
+            IBMiUtilities.DebugLog("PromptCommand End");
         }
 
         internal static void CommandDialog()

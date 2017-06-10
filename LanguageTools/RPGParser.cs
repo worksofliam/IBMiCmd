@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
-using NppPluginNET;
 using System.Runtime.InteropServices;
-using System.Threading;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Xml.Serialization;
 using IBMiCmd.IBMiTools;
+using NppPluginNET;
 
 namespace IBMiCmd
 {
@@ -39,19 +39,22 @@ namespace IBMiCmd
         public List<DataColumn> fields;
         public List<DataStructure> dataStructures;
 
-        public DataStructure(string name) {
+        public DataStructure(string name)
+        {
             this.name = name;
             this.recordFormat = null;
             this.fields = new List<DataColumn>();
             this.dataStructures = null;
         }
 
-        public bool Contains(String n) {
+        public bool Contains(String n)
+        {
             return this.name == n;
         }
     }
 
-    public enum MatchType {
+    public enum MatchType
+    {
         NONE,
         VARIABLE,
         STRUCT_FIELD
@@ -63,26 +66,26 @@ namespace IBMiCmd
         public static List<DataStructure> dataStructures { get; set; }
 
         ///  DSPFFD Format 
-        private const int DSPFFD_FILE_NAME                      = 46;
-        private const int DSPFFD_FILE_NAME_LEN                  = 10;
-        private const int DSPFFD_FIELD_NAME                     = 129;
-        private const int DSPFFD_FIELD_NAME_LEN                 = 10;
-        private const int DSPFFD_RECORD_FORMAT                  = 56;
-        private const int DSPFFD_RECORD_FORMAT_LEN              = 13;
-        private const int DSPFFD_FIELD_ALIAS                    = 781;
-        private const int DSPFFD_FIELD_ALIAS_LEN                = 258;
-        private const int DSPFFD_FIELD_BYTE_SIZE                = 159;
-        private const int DSPFFD_FIELD_BYTE_SIZE_LEN            = 5;
-        private const int DSPFFD_FIELD_NO_OF_DIGITS             = 164;
-        private const int DSPFFD_FIELD_NO_OF_DIGITS_LEN         = 2;
-        private const int DSPFFD_FIELD_NO_OF_DECMIALS           = 166;
-        private const int DSPFFD_FIELD_NO_OF_DECMIALS_LEN       = 2;
-        private const int DSPFFD_FIELD_GRAHPIC_CHAR_COUNT       = 586;
-        private const int DSPFFD_FIELD_GRAHPIC_CHAR_COUNT_LEN   = 5;
-        private const int DSPFFD_FIELD_TYPE                     = 321;
-        private const int DSPFFD_FIELD_TYPE_LEN                 = 1;
-        private const int DSPFFD_FIELD_CCSID                    = 491;
-        private const int DSPFFD_FIELD_CCSID_LEN                = 3;
+        private const int DSPFFD_FILE_NAME = 46;
+        private const int DSPFFD_FILE_NAME_LEN = 10;
+        private const int DSPFFD_FIELD_NAME = 129;
+        private const int DSPFFD_FIELD_NAME_LEN = 10;
+        private const int DSPFFD_RECORD_FORMAT = 56;
+        private const int DSPFFD_RECORD_FORMAT_LEN = 13;
+        private const int DSPFFD_FIELD_ALIAS = 781;
+        private const int DSPFFD_FIELD_ALIAS_LEN = 258;
+        private const int DSPFFD_FIELD_BYTE_SIZE = 159;
+        private const int DSPFFD_FIELD_BYTE_SIZE_LEN = 5;
+        private const int DSPFFD_FIELD_NO_OF_DIGITS = 164;
+        private const int DSPFFD_FIELD_NO_OF_DIGITS_LEN = 2;
+        private const int DSPFFD_FIELD_NO_OF_DECMIALS = 166;
+        private const int DSPFFD_FIELD_NO_OF_DECMIALS_LEN = 2;
+        private const int DSPFFD_FIELD_GRAHPIC_CHAR_COUNT = 586;
+        private const int DSPFFD_FIELD_GRAHPIC_CHAR_COUNT_LEN = 5;
+        private const int DSPFFD_FIELD_TYPE = 321;
+        private const int DSPFFD_FIELD_TYPE_LEN = 1;
+        private const int DSPFFD_FIELD_CCSID = 491;
+        private const int DSPFFD_FIELD_CCSID_LEN = 3;
         //        private const int DSPFFD_FILE_NAME_LEN = 10;
 
         public static string GetVariableAtColumn(string curLine, int curPos, out MatchType type)
@@ -102,12 +105,12 @@ namespace IBMiCmd
                         else
                         {
                             sb.Append(curLine[i]);
-                        }                        
-                    }                    
+                        }
+                    }
                 }
             }
             else
-            {                
+            {
                 for (int i = curPos; i >= 0; i--)
                 {
                     if (i == curPos && curLine[i] == ' ') return "";
@@ -142,7 +145,8 @@ namespace IBMiCmd
         /// </summary>
         internal static void LaunchFFDCollection()
         {
-            Thread thread = new Thread((ThreadStart) delegate {
+            Thread thread = new Thread((ThreadStart)delegate
+            {
                 List<SourceLine> src = ParseCurrentFileForExtName();
                 if (src.Count == 0) return;
                 // Generate temporary files to receive data
@@ -181,13 +185,14 @@ namespace IBMiCmd
         /// </summary>
         /// <param name="f">File with DSPFFD output</param>
         /// <param name="srcLine">source line with extName</param>
-        internal static void LoadFFD(string f, SourceLine srcLine) {
-            if (f == null || f == "") return; 
+        internal static void LoadFFD(string f, SourceLine srcLine)
+        {
+            if (f == null || f == "") return;
             if (dataStructures == null) dataStructures = new List<DataStructure>();
 
             bool firstLine = true;
             bool exists = false;
-            DataStructure d = new DataStructure();  
+            DataStructure d = new DataStructure();
             int i = 0;
             foreach (string l in File.ReadAllLines(f))
             {
@@ -238,7 +243,7 @@ namespace IBMiCmd
 
         private static int FFDParseColumnLength(string l, SourceLine srcLine)
         {
-           return int.Parse(l.Substring(DSPFFD_FIELD_BYTE_SIZE, DSPFFD_FIELD_BYTE_SIZE_LEN));
+            return int.Parse(l.Substring(DSPFFD_FIELD_BYTE_SIZE, DSPFFD_FIELD_BYTE_SIZE_LEN));
         }
 
         private static string FFDParseColumnType(string l, SourceLine srcLine)
@@ -246,11 +251,13 @@ namespace IBMiCmd
             int length = 0, ccsid = 37;
 
             string type = l.Substring(DSPFFD_FIELD_TYPE, DSPFFD_FIELD_TYPE_LEN);
-            try { 
+            try
+            {
                 length = int.Parse(l.Substring(DSPFFD_FIELD_BYTE_SIZE, DSPFFD_FIELD_BYTE_SIZE_LEN).Replace('0', ' '));
                 //ccsid = int.Parse(l.Substring(DSPFFD_FIELD_CCSID, DSPFFD_FIELD_CCSID_LEN)); TODO, how to extract packed numerics
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 IBMiUtilities.Log($"Tried to parse {l.Substring(DSPFFD_FIELD_BYTE_SIZE, DSPFFD_FIELD_BYTE_SIZE_LEN)} and {l.Substring(DSPFFD_FIELD_CCSID, DSPFFD_FIELD_CCSID_LEN)} to integer. {e.ToString()}");
             }
 
@@ -293,7 +300,7 @@ namespace IBMiCmd
                 case "Z":
                     return "timestamp";
                 case "G":
-                    return "graphic";                    
+                    return "graphic";
                 case "1":
                     switch (ccsid)
                     {
@@ -346,11 +353,10 @@ namespace IBMiCmd
         {
             XmlSerializer xf = new XmlSerializer(typeof(DataStructure));
             dataStructures = new List<DataStructure>();
-            foreach(string file in Directory.GetFiles(Main.FileCacheDirectory))
+            foreach (string file in Directory.GetFiles(Main.FileCacheDirectory))
             {
                 if (!file.EndsWith(".ffd"))
                 {
-                    IBMiUtilities.Log($"{file} does not match the plugin cache format");
                     continue;
                 }
 
@@ -358,14 +364,14 @@ namespace IBMiCmd
                 {
                     try
                     {
-                        dataStructures.Add((DataStructure) xf.Deserialize(stream));
+                        dataStructures.Add((DataStructure)xf.Deserialize(stream));
                     }
                     catch (Exception e)
                     {
                         IBMiUtilities.Log($"{file} could not be loaded..");
                         IBMiUtilities.Log(e.ToString());
                     }
-                }           
+                }
             }
         }
 
@@ -405,7 +411,7 @@ namespace IBMiCmd
             const short END_OF_FILE = 0;
             int line = 0;
             List<SourceLine> lines = new List<SourceLine>();
-            IntPtr curScintilla = PluginBase.GetCurrentScintilla();            
+            IntPtr curScintilla = PluginBase.GetCurrentScintilla();
 
             while (true)
             {

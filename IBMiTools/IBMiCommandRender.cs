@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.IO;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using System.Xml.Serialization;
-using IBMiCmd.Properties;
 
 namespace IBMiCmd.IBMiTools
 {
@@ -27,7 +20,7 @@ namespace IBMiCmd.IBMiTools
                 cmd[i++] = $"RECV /home/{ IBMi.GetConfig("username") }/{ sl.searchResult }.tmp \"{ tmp[t++] }\"";
                 cmd[i++] = $"QUOTE RCMD RMVLNK OBJLNK('/home/{ IBMi.GetConfig("username") }/{ sl.searchResult }.tmp')";
             }
-            
+
             IBMiUtilities.DebugLog("RenderFFDCollectionScript - DONE!");
             return cmd;
         }
@@ -38,11 +31,11 @@ namespace IBMiCmd.IBMiTools
             string[] cmd = new string[5];
             // Run commands on remote
             int i = 0;
-            cmd[i] = "ASCII";
-            cmd[++i] = $"QUOTE RCMD CHGLIBL LIBL({ IBMi.GetConfig("datalibl").Replace(',', ' ')})  CURLIB({ IBMi.GetConfig("curlib") })";
-            cmd[++i] = $"QUOTE RCMD { IBMi.GetConfig("installlib") }/IICRTVCMD {command}";
-            cmd[++i] = $"RECV /home/{ IBMi.GetConfig("username") }/{ command }.cdml \"{ Main.FileCacheDirectory }{ command }.cdml\"";
-            cmd[++i] = $"QUOTE RCMD RMVLNK OBJLNK('/home/{ IBMi.GetConfig("username") }/{ command }.cdml')";
+            cmd[i++] = "ASCII";
+            cmd[i++] = $"QUOTE RCMD CHGLIBL LIBL({ IBMi.GetConfig("datalibl").Replace(',', ' ')})  CURLIB({ IBMi.GetConfig("curlib") })";
+            cmd[i++] = $"QUOTE RCMD { IBMi.GetConfig("installlib") }/IICRTVCMD {command}";
+            cmd[i++] = $"RECV /home/{ IBMi.GetConfig("username") }/{ command }.cdml \"{ Main.FileCacheDirectory }{ command }.cdml\"";
+            cmd[i] = $"QUOTE RCMD RMVLNK OBJLNK('/home/{ IBMi.GetConfig("username") }/{ command }.cdml')";
 
             IBMiUtilities.DebugLog("RenderCommandDescriptionCollection - DONE!");
             return cmd;
@@ -90,14 +83,14 @@ namespace IBMiCmd.IBMiTools
                 if (crtCmd != null)
                 {
                     cmd.Add($"QUOTE RCMD { crtCmd }");
-                }                
+                }
             }
             return cmd.ToArray();
         }
 
         private static string getCompileCommandCL(string library, string member)
         {
-            return $"CRTCLPGM PGM({library}/{member}) SRCFILE(QTEMP/IICCLSRC) SRCMBR({member}) REPLACE(*YES) TEXT('{Main.PluginDescription}')"; 
+            return $"CRTCLPGM PGM({library}/{member}) SRCFILE(QTEMP/IICCLSRC) SRCMBR({member}) REPLACE(*YES) TEXT('{Main.PluginDescription}')";
         }
 
         private static string getCompileCommandCmd(string library, string member)

@@ -100,6 +100,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DllExport\DllExportAttribute.cs" />
+    <Compile Include="LanguageTools\CLCommandPrompter.cs" />
+    <Compile Include="LanguageTools\CLParser.cs" />
     <Compile Include="LanguageTools\ErrorHandle.cs" />
     <Compile Include="Forms\cmdBindings.cs">
       <SubType>Form</SubType>
