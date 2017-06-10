@@ -1,4 +1,6 @@
-# IBMiCmd
+![](http://i.imgur.com/SOYrw4B.png)
+
+***
 
 x86 Notepad++ plugin for IBM i development. IBMiCmd (maybe referenced as IBMiCmds) is a Notepad++ plugin for ILE development on an IBM i.
 

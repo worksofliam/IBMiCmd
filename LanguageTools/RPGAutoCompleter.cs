@@ -28,7 +28,8 @@ namespace IBMiCmd
             int linePosition = cursorPosition - lineOffsetPosition;
             if (linePosition == 0) return;
 
-            string lookupString = RPGParser.GetVariableAtColumn(sb.ToString(), linePosition, out MatchType typeOfMatch);
+            MatchType typeOfMatch;
+            string lookupString = RPGParser.GetVariableAtColumn(sb.ToString(), linePosition, out typeOfMatch);
 
             if (lookupString == "") return;
 
