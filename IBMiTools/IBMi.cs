@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.IO;
 using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
-using System.Threading;
-using NppPluginNET;
 
 namespace IBMiCmd.IBMiTools
 {
@@ -16,7 +13,7 @@ namespace IBMiCmd.IBMiTools
         private static Boolean _notConnected = false;
         private static Dictionary<string, string> _config = new Dictionary<string, string>();
         private static List<string> _output = new List<string>();
-        
+
         public static void LoadConfig(string FileLoc)
         {
             _ConfigFile = FileLoc + ".cfg";
@@ -26,10 +23,10 @@ namespace IBMiCmd.IBMiTools
                 _config.Add("system", "mysystem");
                 _config.Add("username", "myuser");
                 _config.Add("password", "mypass");
-				_config.Add("datalibl", "QSYSTOOLS");
+                _config.Add("datalibl", "QSYSTOOLS");
                 _config.Add("curlib", "QSYSTOOLS");
                 _config.Add("installlib", "QGPL");
-                _config.Add("debug", "false");
+                _config.Add("experimental", "false");
 
                 _config.Add("localDefintionsInstalled", "false");
 
@@ -38,7 +35,7 @@ namespace IBMiCmd.IBMiTools
                 _config.Add("RELIC", "CRTBNDRPG OBJ(#MYUSER/RELIC) SRCSTMF('RelicPackageManager/QSOURCE/RELIC.SQLRPGLE') OPTION(*EVENTF) REPLACE(*YES) COMMIT(*NONE)");
                 _config.Add("BUILD", "CD '/home/MYUSER'|CRTBNDRPG PGM(#MYUSER/BUILD) SRCSTMF('RelicPackageManager/QSOURCE/BUILD.SQLRPGLE') OPTION(*EVENTF) REPLACE(*YES)|ERRORS #MYUSER BUILD");
 
-				PrintConfig();
+                PrintConfig();
 
                 MessageBox.Show("Thanks for using IBMiCmds. You will now be prompted to enter in a Remote System.");
                 Main.RemoteSetup();
@@ -155,7 +152,8 @@ namespace IBMiCmd.IBMiTools
                 File.Delete(tempfile);
 
             }
-            catch(Exception e) {
+            catch (Exception e)
+            {
                 IBMiUtilities.Log(e.ToString());
             }
         }
@@ -174,7 +172,7 @@ namespace IBMiCmd.IBMiTools
             process.StartInfo.RedirectStandardError = true;
 
             process.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
-            process.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);        
+            process.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);
 
             process.Start();
             process.BeginOutputReadLine();
