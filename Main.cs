@@ -71,7 +71,7 @@ namespace IBMiCmd
             PluginBase.SetCommand(ItemOrder++, "-SEPARATOR-", null);
             if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Refresh Extname Definitions", BuildSourceContext);
             if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Extname Content Assist", AutoComplete, new ShortcutKey(false, true, false, Keys.Space));
-            if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Prompt CL Command", PromptCommand, new ShortcutKey(false, true, false, Keys.F4));
+            if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Prompt CL Command", PromptCommand, new ShortcutKey(true, false, false, Keys.F4));
         }
 
         internal static void SetToolBarIcon()
