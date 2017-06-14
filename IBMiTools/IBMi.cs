@@ -11,6 +11,7 @@ namespace IBMiCmd.IBMiTools
         public static string _ConfigFile { get; set; }
 
         private static Boolean _notConnected = false;
+        private static Boolean _failed = false;
         private static Dictionary<string, string> _config = new Dictionary<string, string>();
         private static List<string> _output = new List<string>();
 
@@ -118,8 +119,9 @@ namespace IBMiCmd.IBMiTools
             _output.Clear();
         }
 
-        public static void RunCommands(string[] list)
+        public static Boolean RunCommands(string[] list)
         {
+            Boolean result = true;
             try
             {
                 FlushOutput();
@@ -148,7 +150,7 @@ namespace IBMiCmd.IBMiTools
                 lines.Add("quit");
 
                 File.WriteAllLines(tempfile, lines.ToArray());
-                RunFTP(tempfile);
+                result = RunFTP(tempfile);
                 File.Delete(tempfile);
 
             }
@@ -156,13 +158,16 @@ namespace IBMiCmd.IBMiTools
             {
                 IBMiUtilities.Log(e.ToString());
             }
+
+            return result;
         }
 
-        private static void RunFTP(string FileLoc)
+        private static Boolean RunFTP(string FileLoc)
         {
             IBMiUtilities.DebugLog("Starting FTP of command file " + FileLoc);
 
             _notConnected = false;
+            _failed = false;
             Process process = new Process();
             process.StartInfo.FileName = "cmd.exe";
             process.StartInfo.Arguments = "/c FTP -n -s:\"" + FileLoc + "\" " + _config["system"];
@@ -187,6 +192,7 @@ namespace IBMiCmd.IBMiTools
 #endif            
 
             IBMiUtilities.DebugLog("FTP of command file " + FileLoc + " completed");
+            return _failed || _notConnected;
         }
 
         private static void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
@@ -207,7 +213,10 @@ namespace IBMiCmd.IBMiTools
                         switch (outLine.Data.Substring(0, 3))
                         {
                             case "250":
+                                _output.Add("> " + outLine.Data.Substring(4));
+                                break;
                             case "550":
+                                _failed = true;
                                 _output.Add("> " + outLine.Data.Substring(4));
                                 break;
                         }
