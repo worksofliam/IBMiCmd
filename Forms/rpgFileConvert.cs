@@ -30,44 +30,49 @@ namespace IBMiCmd.Forms
                 for (int i = 0; i < lines.Length; i++)
                 {
                     curLine = RPGFree.getFree(lines[i]);
+                    
+                    if (curLine.Contains(" "))
+                    {
+                        curLineStart = curLine.TrimStart().Split(' ')[0].ToUpper().Trim();
+                    } 
+                    else
+                    {
+                        curLineStart = "*linestart";
+                    }
+
+                    if (curLineStart != "DCL-PARM")
+                    {
+                        if (isPR)
+                        {
+                            extraLine = "".PadLeft(7) + "End-Pr;";
+                            isPR = false;
+                        }
+                        else if (isPI)
+                        {
+                            extraLine = "".PadLeft(7) + "End-Pi;";
+                            isPI = false;
+                        }
+                        else if (isDS)
+                        {
+                            extraLine = "".PadLeft(7) + "End-Ds;";
+                            isDS = false;
+                        }
+                        else
+                        {
+                            extraLine = "";
+                        }
+
+                        if (extraLine != "")
+                        {
+                            AppendNewText(richTextBox2, extraLine, Color.Green);
+                            AppendNewText(richTextBox2, "", Color.Black);
+                        }
+                    }
 
                     if (curLine == "*BLANK") { }
                     else if (curLine != "")
                     {
                         #region adding end-** blocks
-                        if (curLine.Contains(" "))
-                        {
-                            curLineStart = curLine.TrimStart().Split(' ')[0].ToUpper().Trim();
-                        }
-
-                        if (curLineStart != "DCL-PARM" && curLineStart != "")
-                        {
-                            if (isPR)
-                            {
-                                extraLine = "".PadLeft(7) + "End-Pr;";
-                                isPR = false;
-                            }
-                            else if (isPI)
-                            {
-                                extraLine = "".PadLeft(7) + "End-Pi;";
-                                isPI = false;
-                            }
-                            else if (isDS)
-                            {
-                                extraLine = "".PadLeft(7) + "End-Ds;";
-                                isDS = false;
-                            }
-                            else
-                            {
-                                extraLine = "";
-                            }
-
-                            if (extraLine != "")
-                            {
-                                AppendNewText(richTextBox2, extraLine, Color.Green);
-                                AppendNewText(richTextBox2, "", Color.Black);
-                            }
-                        }
 
                         switch (curLineStart)
                         {

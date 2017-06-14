@@ -25,12 +25,17 @@ namespace IBMiCmd.LanguageTools
             switch (chars[7])
             {
                 case '/':
-                    line = line.ToUpper();
-                    if (line == "FREE" || line == "END-FREE") return "*BLANK";
-                    break;
+                    if (line.ToUpper() == "FREE" || line.ToUpper() == "END-FREE") return "*BLANK";
+                    return "".PadLeft(6) + "/" + line;
                 case '*':
-                    if (line == "") return "*BLANK";
-                    break;
+                    if (line == "")
+                    {
+                        return "*BLANK";
+                    }
+                    else
+                    {
+                        return "".PadLeft(6) + "*" + line;
+                    }
             }
 
             switch (Char.ToUpper(chars[6]))
@@ -155,7 +160,14 @@ namespace IBMiCmd.LanguageTools
                             break;
                         case "":
                             if (name == "") name = "*N";
-                            output = "  Dcl-Parm " + name + " " + type + " " + keywords + ';';
+                            if (name == "*N" && type == "")
+                            {
+                                output = "//ABOVE VARIABLE KEYWORD ADITION: " + keywords;
+                            }
+                            else
+                            {
+                                output = "  Dcl-Parm " + name + " " + type + " " + keywords + ';';
+                            }
                             break;
                     }
 
