@@ -65,6 +65,7 @@ namespace IBMiCmd
             PluginBase.SetCommand(ItemOrder++, "Command Entry", CommandDialog);
             PluginBase.SetCommand(ItemOrder++, "Error Listing", ErrorDialog);
             PluginBase.SetCommand(ItemOrder++, "Command Bindings", BindsDialog);
+            PluginBase.SetCommand(ItemOrder++, "Open Source Member", OpenMember, new ShortcutKey(true, false, true, Keys.A));
             PluginBase.SetCommand(ItemOrder++, "-SEPARATOR-", null);
             PluginBase.SetCommand(ItemOrder++, "RPG Line Conversion", LaunchConversion, new ShortcutKey(true, false, false, Keys.F5));
             PluginBase.SetCommand(ItemOrder++, "RPG File Conversion", LaunchFileConversion, new ShortcutKey(true, false, false, Keys.F6));
@@ -88,6 +89,11 @@ namespace IBMiCmd
         internal static void About()
         {
             MessageBox.Show($"IBMiCmd, created by Works Of Barry. { Environment.NewLine} github.com/WorksOfBarry/IBMiCmd");
+        }
+
+        internal static void OpenMember()
+        {
+            new openMember().ShowDialog();
         }
 
         internal static void LaunchConversion()
