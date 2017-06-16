@@ -63,8 +63,10 @@ namespace IBMiCmd.Forms
 
         private string DownloadMember(string Lib, string Obj, string Mbr)
         {
-            string filetemp = Path.GetTempFileName();
+            string filetemp = Path.GetTempPath() + Mbr + "." + Obj;
             List<string> commands = new List<string>();
+
+            if (!File.Exists(filetemp)) File.Create(filetemp).Close();
 
             Lib = Lib.ToUpper();
             Obj = Obj.ToUpper();
