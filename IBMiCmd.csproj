@@ -173,7 +173,8 @@
     <Compile Include="IBMiTools\IBMiCommandRender.cs" />
     <Compile Include="IBMiTools\IBMiCommandInstaller.cs" />
     <Compile Include="IBMiTools\IBMiUtilities.cs" />
-    <Compile Include="LanguageTools\listError.cs" />
+    <Compile Include="LanguageTools\ListError.cs" />
+    <Compile Include="LanguageTools\OpenMember.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="NppPluginNETBase.cs" />
     <Compile Include="NppPluginNETHelper.cs" />

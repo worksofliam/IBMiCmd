@@ -215,6 +215,7 @@ namespace IBMiCmd.IBMiTools
                             case "250":
                                 _output.Add("> " + outLine.Data.Substring(4));
                                 break;
+                            case "426":
                             case "550":
                                 _failed = true;
                                 _output.Add("> " + outLine.Data.Substring(4));

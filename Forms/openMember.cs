@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using IBMiCmd.IBMiTools;
+using IBMiCmd.LanguageTools;
 using NppPluginNET;
 using System.IO;
 using System.Threading;
@@ -16,15 +17,23 @@ namespace IBMiCmd.Forms
 {
     public partial class openMember : Form
     {
+        private Boolean isReadonly;
         public openMember()
         {
             InitializeComponent();
             textBox4.Text = IBMi.GetConfig("system");
+            checkBox1.Checked = true;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            this.isReadonly = checkBox1.Checked;
+            textBox1.Text = textBox1.Text.ToUpper();
+            textBox2.Text = textBox2.Text.ToUpper();
+            textBox3.Text = textBox3.Text.ToUpper();
+
             if (textBox1.Text == "*CURLIB") textBox1.Text = IBMi.GetConfig("curlib");
+
             if (!IBMiUtilities.IsValidQSYSObjectName(textBox1.Text))
             {
                 MessageBox.Show("Library name is not valid.");
@@ -46,13 +55,16 @@ namespace IBMiCmd.Forms
             if (resultFile != "")
             {
                 //Open File
-                OpenFileReadOnly(resultFile);
+                OpenFile(resultFile, this.isReadonly);
+                if (!this.isReadonly)
+                    OpenMembers.AddMember(resultFile, textBox1.Text, textBox2.Text, textBox3.Text);
+
                 this.Close();
             }
             else
             {
-                MessageBox.Show("Unable to download member " + textBox3.Text + ". Please check it exists.");
                 if (Main.CommandWindow != null) Main.CommandWindow.loadNewCommands();
+                MessageBox.Show("Unable to download member " + textBox3.Text + ". Please check it exists and that you have access to the remote system.");
             }
         }
 
@@ -86,10 +98,10 @@ namespace IBMiCmd.Forms
             }
         }
 
-        private void OpenFileReadOnly(string Path)
+        private static void OpenFile(string Path, Boolean ReadOnly)
         {
             Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DOOPEN, 0, Path);
-            Win32.SendMessage(PluginBase.GetCurrentScintilla(), SciMsg.SCI_SETREADONLY, 1, 0);
+            if (ReadOnly) Win32.SendMessage(PluginBase.GetCurrentScintilla(), SciMsg.SCI_SETREADONLY, 1, 0);
         }
     }
 }
