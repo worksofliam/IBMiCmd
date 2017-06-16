@@ -54,8 +54,7 @@ namespace IBMiCmd.Forms
         private static void setLine(string value)
         {
             //Hopefully is still selected?
-            IntPtr curScintilla = PluginBase.GetCurrentScintilla();
-            Win32.SendMessage(curScintilla, SciMsg.SCI_REPLACESEL, 0, value);
+            Win32.SendMessage(PluginBase.GetCurrentScintilla(), SciMsg.SCI_REPLACESEL, 0, value);
         }
 
         private void button1_Click(object sender, EventArgs e)
