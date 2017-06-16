@@ -65,7 +65,9 @@ namespace IBMiCmd
             PluginBase.SetCommand(ItemOrder++, "Command Entry", CommandDialog);
             PluginBase.SetCommand(ItemOrder++, "Error Listing", ErrorDialog);
             PluginBase.SetCommand(ItemOrder++, "Command Bindings", BindsDialog);
+            PluginBase.SetCommand(ItemOrder++, "-SEPARATOR-", null);
             PluginBase.SetCommand(ItemOrder++, "Open Source Member", OpenMember, new ShortcutKey(true, false, true, Keys.A));
+            PluginBase.SetCommand(ItemOrder++, "Upload Source Member", UploadMember, new ShortcutKey(true, false, true, Keys.X));
             PluginBase.SetCommand(ItemOrder++, "-SEPARATOR-", null);
             PluginBase.SetCommand(ItemOrder++, "RPG Line Conversion", LaunchConversion, new ShortcutKey(true, false, false, Keys.F5));
             PluginBase.SetCommand(ItemOrder++, "RPG File Conversion", LaunchFileConversion, new ShortcutKey(true, false, false, Keys.F6));
@@ -94,6 +96,11 @@ namespace IBMiCmd
         internal static void OpenMember()
         {
             new openMember().ShowDialog();
+        }
+
+        internal static void UploadMember()
+        {
+            new uploadMember().ShowDialog();
         }
 
         internal static void LaunchConversion()

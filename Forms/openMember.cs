@@ -57,7 +57,7 @@ namespace IBMiCmd.Forms
                 //Open File
                 OpenFile(resultFile, this.isReadonly);
                 if (!this.isReadonly)
-                    OpenMembers.AddMember(resultFile, textBox1.Text, textBox2.Text, textBox3.Text);
+                    OpenMembers.AddMember(textBox4.Text, resultFile, textBox1.Text, textBox2.Text, textBox3.Text);
 
                 this.Close();
             }
