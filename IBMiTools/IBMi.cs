@@ -23,7 +23,7 @@ namespace IBMiCmd.IBMiTools
             {
                 _config.Add("system", "mysystem");
                 _config.Add("username", "myuser");
-                _config.Add("password", "mypass");
+                _config.Add("password", "mybase64pass");
                 _config.Add("datalibl", "QSYSTOOLS");
                 _config.Add("curlib", "QSYSTOOLS");
                 _config.Add("installlib", "QGPL");
@@ -131,7 +131,7 @@ namespace IBMiCmd.IBMiTools
                 List<string> lines = new List<string>();
 
                 lines.Add("user " + _config["username"]);
-                lines.Add(_config["password"]);
+                lines.Add(Base64Decode(_config["password"]));
                 lines.Add("bin");
 
                 lines.Add($"QUOTE RCMD CHGLIBL LIBL({ IBMi.GetConfig("datalibl").Replace(',', ' ')})  CURLIB({ IBMi.GetConfig("curlib") })");
@@ -157,6 +157,7 @@ namespace IBMiCmd.IBMiTools
             catch (Exception e)
             {
                 IBMiUtilities.Log(e.ToString());
+                MessageBox.Show(e.ToString());
             }
 
             return result;
@@ -216,14 +217,28 @@ namespace IBMiCmd.IBMiTools
                                 _output.Add("> " + outLine.Data.Substring(4));
                                 break;
                             case "426":
+                            case "530":
                             case "550":
                                 _failed = true;
                                 _output.Add("> " + outLine.Data.Substring(4));
                                 break;
                         }
+                        if (GetConfig("experimental") == "true") _output.Add("* " + outLine.Data);
                     }
                 }
             }
+        }
+
+        public static string Base64Encode(string plainText)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+
+        public static string Base64Decode(string base64EncodedData)
+        {
+            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
     }
 }

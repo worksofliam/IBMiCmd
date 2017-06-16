@@ -51,6 +51,7 @@ namespace IBMiCmd.Forms
             }
             
             string resultFile = DownloadMember(textBox1.Text, textBox2.Text, textBox3.Text);
+            if (Main.CommandWindow != null) Main.CommandWindow.loadNewCommands();
 
             if (resultFile != "")
             {
@@ -63,7 +64,6 @@ namespace IBMiCmd.Forms
             }
             else
             {
-                if (Main.CommandWindow != null) Main.CommandWindow.loadNewCommands();
                 MessageBox.Show("Unable to download member " + textBox3.Text + ". Please check it exists and that you have access to the remote system.");
             }
         }
