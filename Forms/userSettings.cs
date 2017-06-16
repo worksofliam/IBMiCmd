@@ -43,7 +43,7 @@ namespace IBMiCmd.Forms
 
             IBMi.SetConfig("system", textBox1.Text);
             IBMi.SetConfig("username", textBox2.Text);
-            IBMi.SetConfig("password", IBMi.Base64Encode(textBox3.Text));
+            IBMi.SetConfig("password", textBox3.Text);
 
             this.Close();
         }

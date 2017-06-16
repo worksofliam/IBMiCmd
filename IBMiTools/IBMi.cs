@@ -131,7 +131,7 @@ namespace IBMiCmd.IBMiTools
                 List<string> lines = new List<string>();
 
                 lines.Add("user " + _config["username"]);
-                lines.Add(Base64Decode(_config["password"]));
+                lines.Add(_config["password"]);
                 lines.Add("bin");
 
                 lines.Add($"QUOTE RCMD CHGLIBL LIBL({ IBMi.GetConfig("datalibl").Replace(',', ' ')})  CURLIB({ IBMi.GetConfig("curlib") })");
@@ -227,18 +227,6 @@ namespace IBMiCmd.IBMiTools
                     }
                 }
             }
-        }
-
-        public static string Base64Encode(string plainText)
-        {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
-            return System.Convert.ToBase64String(plainTextBytes);
-        }
-
-        public static string Base64Decode(string base64EncodedData)
-        {
-            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
-            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
     }
 }
