@@ -101,8 +101,17 @@ namespace IBMiCmd
 
             if (Member != null)
             {
-                MessageBox.Show(Member.GetLibrary() + "/" + Member.GetObject() + "." + Member.GetMember());
-                MessageBox.Show(Member.GetLibrary());
+                string Lib = (Member.GetLibrary() == "*CURLIB" ? IBMi.GetConfig("curlib") : Member.GetLibrary());
+                string FileLoc = IBMiUtilities.DownloadMember(Lib, Member.GetObject(), Member.GetMember());
+
+                if (FileLoc != "")
+                {
+                    NppFunctions.OpenFile(FileLoc, true);
+                }
+                else
+                {
+                    MessageBox.Show("Unable to download member " + Lib + "/" + Member.GetObject() + "." + Member.GetMember() + ". Please check it exists and that you have access to the remote system.");
+                }
             }
             else
             {
