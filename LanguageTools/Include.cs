@@ -19,43 +19,51 @@ namespace IBMiCmd.LanguageTools
                 Member = HandleRPG(UpperInclude);
 
             //if (Include.StartsWith("#"))
-                //Member = HandleC(Include);
+            //Member = HandleC(Include);
 
             return Member;
         }
 
         private static OpenMember HandleRPG(string Copy)
         {
-            string lib, obj, mbr;
-            string[] data = Copy.Split(' ');
-            string[] pieces;
-
-            if (data.Length != 2) return null;
-
-            pieces = data[1].Split(',');
-            if (pieces.Length == 2)
+            if (Copy.StartsWith("/COPY") || Copy.StartsWith("/INCLUDE"))
             {
-                mbr = pieces[1];
-                obj = pieces[0];
-                pieces = pieces[0].Split('/');
+
+                string lib, obj, mbr;
+                string[] data = Copy.Split(' ');
+                string[] pieces;
+
+                if (data.Length != 2) return null;
+
+                pieces = data[1].Split(',');
                 if (pieces.Length == 2)
                 {
-                    obj = pieces[1];
-                    lib = pieces[0];
+                    mbr = pieces[1];
+                    obj = pieces[0];
+                    pieces = pieces[0].Split('/');
+                    if (pieces.Length == 2)
+                    {
+                        obj = pieces[1];
+                        lib = pieces[0];
+                    }
+                    else
+                    {
+                        lib = "*CURLIB";
+                    }
                 }
                 else
                 {
+                    mbr = data[1];
+                    obj = "QRPGLESRC";
                     lib = "*CURLIB";
                 }
+
+                return new OpenMember("", "", lib, obj, mbr);
             }
             else
             {
-                mbr = data[1];
-                obj = "QRPGLESRC";
-                lib = "*CURLIB";
+                return null;
             }
-
-            return new OpenMember("", "", lib, obj, mbr);
         }
     }
 }
