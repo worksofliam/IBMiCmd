@@ -68,6 +68,7 @@ namespace IBMiCmd
             PluginBase.SetCommand(ItemOrder++, "-SEPARATOR-", null);
             PluginBase.SetCommand(ItemOrder++, "Open Source Member", OpenMember, new ShortcutKey(true, false, true, Keys.A));
             PluginBase.SetCommand(ItemOrder++, "Upload Source Member", UploadMember, new ShortcutKey(true, false, true, Keys.X));
+            PluginBase.SetCommand(ItemOrder++, "Open Include/Copy", OpenInclude, new ShortcutKey(true, false, false, Keys.F12));
             PluginBase.SetCommand(ItemOrder++, "-SEPARATOR-", null);
             PluginBase.SetCommand(ItemOrder++, "RPG Line Conversion", LaunchConversion, new ShortcutKey(true, false, false, Keys.F5));
             PluginBase.SetCommand(ItemOrder++, "RPG File Conversion", LaunchFileConversion, new ShortcutKey(true, false, false, Keys.F6));
@@ -93,6 +94,22 @@ namespace IBMiCmd
             MessageBox.Show($"IBMiCmd, created by Works Of Barry. { Environment.NewLine} github.com/WorksOfBarry/IBMiCmd");
         }
 
+        internal static void OpenInclude()
+        {
+            string LineNum = NppFunctions.getLine(NppFunctions.GetLineNumber());
+            OpenMember Member = Include.HandleInclude(LineNum);
+
+            if (Member != null)
+            {
+                MessageBox.Show(Member.GetLibrary() + "/" + Member.GetObject() + "." + Member.GetMember());
+                MessageBox.Show(Member.GetLibrary());
+            }
+            else
+            {
+                MessageBox.Show("Unable to parse out member.");
+            }
+        }
+
         internal static void OpenMember()
         {
             new openMember().ShowDialog();
@@ -105,7 +122,6 @@ namespace IBMiCmd
 
         internal static void LaunchConversion()
         {
-            rpgForm.curFileLine = (int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETCURRENTLINE, 0, 0);
             new rpgForm().ShowDialog();
         }
 

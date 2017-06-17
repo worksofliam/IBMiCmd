@@ -20,8 +20,8 @@ namespace IBMiCmd.Forms
         private void rpgForm_Load(object sender, EventArgs e)
         {
             string freeOut = "", fixedLine = "";
-
-            fixedLine = getLine(curFileLine);
+            
+            fixedLine = NppFunctions.getLine(NppFunctions.GetLineNumber());
 
             freeOut = RPGFree.getFree(fixedLine);
             if (freeOut != "")
@@ -36,30 +36,10 @@ namespace IBMiCmd.Forms
             }
             
         }
-        
-        private static string getLine(int line)
-        {
-            IntPtr curScintilla = PluginBase.GetCurrentScintilla();
-            int lineLength = (int)Win32.SendMessage(curScintilla, SciMsg.SCI_LINELENGTH, line, 0);
-            StringBuilder sb = new StringBuilder(lineLength);
-            Win32.SendMessage(curScintilla, SciMsg.SCI_GETLINE, line, sb);
-
-            line = (int)Win32.SendMessage(curScintilla, SciMsg.SCI_POSITIONFROMLINE, line, 0);
-            lineLength--;
-            Win32.SendMessage(curScintilla, SciMsg.SCI_SETSELECTION, line, line+lineLength);
-
-            return sb.ToString().Substring(0, lineLength);
-        }
-
-        private static void setLine(string value)
-        {
-            //Hopefully is still selected?
-            Win32.SendMessage(PluginBase.GetCurrentScintilla(), SciMsg.SCI_REPLACESEL, 0, value);
-        }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            setLine(textBox2.Text);
+            NppFunctions.setLine(textBox2.Text);
             this.Close();
         }
 

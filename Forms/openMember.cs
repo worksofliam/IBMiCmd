@@ -50,13 +50,13 @@ namespace IBMiCmd.Forms
                 return;
             }
             
-            string resultFile = DownloadMember(textBox1.Text, textBox2.Text, textBox3.Text);
+            string resultFile = IBMiUtilities.DownloadMember(textBox1.Text, textBox2.Text, textBox3.Text);
             if (Main.CommandWindow != null) Main.CommandWindow.loadNewCommands();
 
             if (resultFile != "")
             {
                 //Open File
-                OpenFile(resultFile, this.isReadonly);
+                NppFunctions.OpenFile(resultFile, this.isReadonly);
                 if (!this.isReadonly)
                     OpenMembers.AddMember(textBox4.Text, resultFile, textBox1.Text, textBox2.Text, textBox3.Text);
 
@@ -71,37 +71,6 @@ namespace IBMiCmd.Forms
         private void button2_Click(object sender, EventArgs e)
         {
             this.Close();
-        }
-
-        private string DownloadMember(string Lib, string Obj, string Mbr)
-        {
-            string filetemp = Path.GetTempPath() + Mbr + "." + Obj;
-            List<string> commands = new List<string>();
-
-            if (!File.Exists(filetemp)) File.Create(filetemp).Close();
-
-            Lib = Lib.ToUpper();
-            Obj = Obj.ToUpper();
-            Mbr = Mbr.ToUpper();
-
-            commands.Add("ASCII");
-            commands.Add("cd /QSYS.lib");
-            commands.Add("recv " + Lib + ".lib/" + Obj + ".file/" + Mbr + ".mbr \"" + filetemp + "\"");
-
-            if (IBMi.RunCommands(commands.ToArray()) == false)
-            {
-                return filetemp;
-            }
-            else
-            {
-                return "";
-            }
-        }
-
-        private static void OpenFile(string Path, Boolean ReadOnly)
-        {
-            Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DOOPEN, 0, Path);
-            if (ReadOnly) Win32.SendMessage(PluginBase.GetCurrentScintilla(), SciMsg.SCI_SETREADONLY, 1, 0);
         }
     }
 }

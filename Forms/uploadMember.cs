@@ -51,7 +51,7 @@ namespace IBMiCmd.Forms
 
             if (result == DialogResult.OK)
             {
-                bool UploadResult = UploadMember(this._Member.GetLocalFile(), this._Member.GetLibrary(), this._Member.GetObject(), this._Member.GetMember());
+                bool UploadResult = IBMiUtilities.UploadMember(this._Member.GetLocalFile(), this._Member.GetLibrary(), this._Member.GetObject(), this._Member.GetMember());
 
                 if (UploadResult)
                 {
@@ -63,22 +63,6 @@ namespace IBMiCmd.Forms
                     MessageBox.Show("Failed to save " + this._Member.GetMember() + ". Please check the Command Entry output.");
                 }
             }
-        }
-
-        private bool UploadMember(string Local, string Lib, string Obj, string Mbr)
-        {
-            List<string> commands = new List<string>();
-
-            Lib = Lib.ToUpper();
-            Obj = Obj.ToUpper();
-            Mbr = Mbr.ToUpper();
-
-            commands.Add("ASCII");
-            commands.Add("cd /QSYS.lib");
-            commands.Add("put \"" + Local + "\" " + Lib + ".lib/" + Obj + ".file/" + Mbr + ".mbr");
-
-            //Returns true if successful
-            return !IBMi.RunCommands(commands.ToArray());
         }
 
         private void uploadMember_Shown(object sender, EventArgs e)
