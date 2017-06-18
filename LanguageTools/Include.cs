@@ -15,11 +15,18 @@ namespace IBMiCmd.LanguageTools
             Include = Include.Trim();
             UpperInclude = Include.ToUpper();
 
-            if (UpperInclude.StartsWith("/"))
-                Member = HandleRPG(UpperInclude);
+            try
+            {
+                if (UpperInclude.StartsWith("/"))
+                    Member = HandleRPG(UpperInclude);
 
-            //if (Include.StartsWith("#"))
-            //Member = HandleC(Include);
+                //if (Include.StartsWith("#"))
+                //Member = HandleC(Include);
+            }
+            catch
+            {
+                Member = null;
+            }
 
             return Member;
         }
