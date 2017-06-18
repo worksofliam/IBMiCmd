@@ -9,6 +9,7 @@ using IBMiCmd.Forms;
 using IBMiCmd.IBMiTools;
 using IBMiCmd.LanguageTools;
 using NppPluginNET;
+using System.Threading;
 
 namespace IBMiCmd
 {
@@ -96,27 +97,31 @@ namespace IBMiCmd
 
         internal static void OpenInclude()
         {
-            string LineNum = NppFunctions.getLine(NppFunctions.GetLineNumber());
-            OpenMember Member = Include.HandleInclude(LineNum);
+            Thread gothread = new Thread((ThreadStart)delegate { 
+                string LineNum = NppFunctions.getLine(NppFunctions.GetLineNumber());
+                OpenMember Member = Include.HandleInclude(LineNum);
 
-            if (Member != null)
-            {
-                string Lib = (Member.GetLibrary() == "*CURLIB" ? IBMi.GetConfig("curlib") : Member.GetLibrary());
-                string FileLoc = IBMiUtilities.DownloadMember(Lib, Member.GetObject(), Member.GetMember());
-
-                if (FileLoc != "")
+                if (Member != null)
                 {
-                    NppFunctions.OpenFile(FileLoc, true);
+                    string FileLoc = "";
+                
+                    FileLoc = IBMiUtilities.DownloadMember(Member.GetLibrary(), Member.GetObject(), Member.GetMember());
+
+                    if (FileLoc != "")
+                    {
+                        NppFunctions.OpenFile(FileLoc, true);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Unable to download member " + Member.GetLibrary() + "/" + Member.GetObject() + "." + Member.GetMember() + ". Please check it exists and that you have access to the remote system.");
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Unable to download member " + Lib + "/" + Member.GetObject() + "." + Member.GetMember() + ". Please check it exists and that you have access to the remote system.");
+                    MessageBox.Show("Unable to parse out member.");
                 }
-            }
-            else
-            {
-                MessageBox.Show("Unable to parse out member.");
-            }
+            });
+            gothread.Start();
         }
 
         internal static void OpenMember()

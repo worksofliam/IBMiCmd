@@ -44,7 +44,7 @@ namespace IBMiCmd.Forms
                 MessageBox.Show("Object name is not valid.");
                 return;
             }
-            if (textBox3.Text.Trim() == "")
+            if (!IBMiUtilities.IsValidQSYSObjectName(textBox3.Text))
             {
                 MessageBox.Show("Member name is not valid.");
                 return;

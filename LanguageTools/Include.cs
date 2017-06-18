@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using IBMiCmd.IBMiTools;
 
 namespace IBMiCmd.LanguageTools
 {
@@ -35,12 +36,12 @@ namespace IBMiCmd.LanguageTools
         {
             if (Copy.StartsWith("/COPY") || Copy.StartsWith("/INCLUDE"))
             {
-
                 string lib, obj, mbr;
                 string[] data = Copy.Split(' ');
                 string[] pieces;
 
                 if (data.Length != 2) return null;
+                data[1] = data[1].Trim();
 
                 pieces = data[1].Split(',');
                 if (pieces.Length == 2)
@@ -64,8 +65,16 @@ namespace IBMiCmd.LanguageTools
                     obj = "QRPGLESRC";
                     lib = "*CURLIB";
                 }
+                
+                if (lib == "*CURLIB") lib = IBMi.GetConfig("curlib");
 
-                return new OpenMember("", "", lib, obj, mbr);
+                if (IBMiUtilities.IsValidQSYSObjectName(lib) && IBMiUtilities.IsValidQSYSObjectName(obj) && IBMiUtilities.IsValidQSYSObjectName(mbr)) {
+                    return new OpenMember("", "", lib, obj, mbr);
+                }
+                else
+                {
+                    return null;
+                }
             }
             else
             {
