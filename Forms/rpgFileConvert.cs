@@ -69,7 +69,10 @@ namespace IBMiCmd.Forms
                         }
                     }
 
-                    if (curLine == "*BLANK") { }
+                    if (curLine == "*BLANK")
+                    {
+                        AppendNewText(richTextBox1, lines[i].TrimEnd(), Color.Red);
+                    }
                     else if (curLine != "")
                     {
                         #region adding end-** blocks
