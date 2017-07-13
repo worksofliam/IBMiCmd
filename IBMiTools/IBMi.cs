@@ -10,18 +10,18 @@ namespace IBMiCmd.IBMiTools
     {
         public static string _ConfigFile { get; set; }
 
-        private static Boolean _notConnected = false;
-        private static Boolean _failed = false;
+        private static Boolean _NotConnected = false;
+        private static Boolean _Failed = false;
         private static Dictionary<string, string> _config = new Dictionary<string, string>();
         private static List<string> _output = new List<string>();
 
-        public static void LoadConfig(string FileLoc)
+        public static void LoadConfig(string FileLoc, string System = "mysystem")
         {
             _ConfigFile = FileLoc + ".cfg";
             string[] data;
             if (!File.Exists(_ConfigFile))
             {
-                _config.Add("system", "mysystem");
+                _config.Add("system", System);
                 _config.Add("username", "myuser");
                 _config.Add("password", "mybase64pass");
                 _config.Add("datalibl", "QSYSTOOLS");
@@ -38,7 +38,7 @@ namespace IBMiCmd.IBMiTools
 
                 PrintConfig();
 
-                MessageBox.Show("Thanks for using IBMiCmds. You will now be prompted to enter in a Remote System.");
+                MessageBox.Show("You will now be prompted to enter in a Remote System.");
                 Main.RemoteSetup();
             }
 
@@ -167,8 +167,8 @@ namespace IBMiCmd.IBMiTools
         {
             IBMiUtilities.DebugLog("Starting FTP of command file " + FileLoc);
 
-            _notConnected = false;
-            _failed = false;
+            _NotConnected = false;
+            _Failed = false;
             Process process = new Process();
             process.StartInfo.FileName = "cmd.exe";
             process.StartInfo.Arguments = "/c FTP -n -s:\"" + FileLoc + "\" " + _config["system"];
@@ -193,7 +193,7 @@ namespace IBMiCmd.IBMiTools
 #endif            
 
             IBMiUtilities.DebugLog("FTP of command file " + FileLoc + " completed");
-            return _failed || _notConnected;
+            return _Failed || _NotConnected;
         }
 
         private static void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
@@ -206,8 +206,8 @@ namespace IBMiCmd.IBMiTools
                 {
                     if (outLine.Data.Trim() == "Not connected.")
                     {
-                        if (!_notConnected) _output.Add("Not connected to " + _config["system"]);
-                        _notConnected = true;
+                        if (!_NotConnected) _output.Add("Not connected to " + _config["system"]);
+                        _NotConnected = true;
                     }
                     else
                     {
@@ -219,7 +219,7 @@ namespace IBMiCmd.IBMiTools
                             case "426":
                             case "530":
                             case "550":
-                                _failed = true;
+                                _Failed = true;
                                 _output.Add("> " + outLine.Data.Substring(4));
                                 break;
                         }

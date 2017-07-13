@@ -15,6 +15,7 @@ namespace IBMiCmd.Forms
             InitializeComponent();
         }
 
+        public static string lastSystem = "";
         public static string editingBind = "";
         public static string[] editingBindCmds;
         public static bool editingCanceled = true;
@@ -37,6 +38,8 @@ namespace IBMiCmd.Forms
                 curNode = treeView1.Nodes.Add(bind);
                 curNode.Tag = IBMi.GetConfig(bind);
             }
+
+            toolStripLabel1.Text = IBMi.GetConfig("system");
         }
 
         private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)

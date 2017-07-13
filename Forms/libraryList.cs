@@ -21,6 +21,7 @@ namespace IBMiCmd.Forms
 
 		private void libraryList_Load(object sender, EventArgs e)
 		{
+            this.Text = "Library List for " + IBMi.GetConfig("system");
 			textBox1.Text = IBMi.GetConfig("datalibl");
             textBox2.Text = IBMi.GetConfig("curlib");
         }

@@ -100,11 +100,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DllExport\DllExportAttribute.cs" />
+    <Compile Include="Forms\newConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\newConfig.Designer.cs">
+      <DependentUpon>newConfig.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\openMember.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\openMember.Designer.cs">
       <DependentUpon>openMember.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\selectConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\selectConfig.Designer.cs">
+      <DependentUpon>selectConfig.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\uploadMember.cs">
       <SubType>Form</SubType>
@@ -112,6 +124,7 @@
     <Compile Include="Forms\uploadMember.Designer.cs">
       <DependentUpon>uploadMember.cs</DependentUpon>
     </Compile>
+    <Compile Include="IBMiTools\Config.cs" />
     <Compile Include="LanguageTools\CLCommandPrompter.cs" />
     <Compile Include="LanguageTools\CLParser.cs" />
     <Compile Include="LanguageTools\ErrorHandle.cs" />
@@ -207,6 +220,9 @@
     <EmbeddedResource Include="Forms\errorListing.resx">
       <DependentUpon>errorListing.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\newConfig.resx">
+      <DependentUpon>newConfig.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\openMember.resx">
       <DependentUpon>openMember.cs</DependentUpon>
     </EmbeddedResource>
@@ -218,6 +234,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\rpgForm.resx">
       <DependentUpon>rpgForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\selectConfig.resx">
+      <DependentUpon>selectConfig.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\uploadMember.resx">
       <DependentUpon>uploadMember.cs</DependentUpon>

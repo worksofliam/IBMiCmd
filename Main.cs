@@ -25,6 +25,7 @@ namespace IBMiCmd
         public static cmdBindings BindsWindow { get; set; }
 
         public static string ConfigDirectory { get; set; }
+        public static string SystemsDirectory { get; set; }
         public static string FileCacheDirectory { get; set; }
 
         private static int idMyDlg = -1;
@@ -39,16 +40,25 @@ namespace IBMiCmd
             StringBuilder pluginsConfigDir = new StringBuilder(Win32.MAX_PATH);
             Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETPLUGINSCONFIGDIR, Win32.MAX_PATH, pluginsConfigDir);
             ConfigDirectory = $"{ pluginsConfigDir.ToString() }\\{ PluginName }\\";
+            SystemsDirectory = $"{ConfigDirectory}systems\\";
             FileCacheDirectory = $"{ConfigDirectory}cache\\";
 
             if (!Directory.Exists(ConfigDirectory)) Directory.CreateDirectory(ConfigDirectory);
+            if (!Directory.Exists(SystemsDirectory)) Directory.CreateDirectory(SystemsDirectory);
             if (!Directory.Exists(FileCacheDirectory)) Directory.CreateDirectory(FileCacheDirectory);
 
             IBMiUtilities.CreateLog(ConfigDirectory + PluginName);
             RPGParser.LoadFileCache();
             CLParser.LoadFileCache();
 
-            IBMi.LoadConfig(ConfigDirectory + PluginName);
+            LoadConfigSelect();
+            if (Config.GetConfigs().Length == 0) return;
+            if (IBMi._ConfigFile == "" || IBMi._ConfigFile == null)
+            {
+                string UseConfig = Config.GetConfigs()[0];
+                MessageBox.Show("No config selected. Defaulted to " + UseConfig + ".");
+                Config.SwitchToConfig(UseConfig);
+            }
             //if (IBMi.GetConfig("localDefintionsInstalled") == "false")
             //{
             //    IBMiNPPInstaller.InstallLocalDefinitions();
@@ -59,6 +69,7 @@ namespace IBMiCmd
 
             PluginBase.SetCommand(ItemOrder++, "About IBMiCmd", About, new ShortcutKey(false, false, false, Keys.None));
             PluginBase.SetCommand(ItemOrder++, "-SEPARATOR-", null);
+            PluginBase.SetCommand(ItemOrder++, "Select Remote System", LoadConfigSelect);
             PluginBase.SetCommand(ItemOrder++, "Remote System Setup", RemoteSetup);
             PluginBase.SetCommand(ItemOrder++, "Library List", LiblDialog, new ShortcutKey(true, false, false, Keys.F7));
             if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Remote Install Plugin Server", RemoteInstall);
@@ -93,6 +104,11 @@ namespace IBMiCmd
         internal static void About()
         {
             MessageBox.Show($"IBMiCmd, created by Works Of Barry. { Environment.NewLine} github.com/WorksOfBarry/IBMiCmd");
+        }
+
+        internal static void LoadConfigSelect()
+        {
+            new selectConfig().ShowDialog();
         }
 
         internal static void OpenInclude()

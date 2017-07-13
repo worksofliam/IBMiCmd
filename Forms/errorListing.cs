@@ -2,7 +2,7 @@
 using System;
 using System.Windows.Forms;
 using IBMiCmd.LanguageTools;
-using System.Collections.Generic;
+using IBMiCmd.IBMiTools;
 using System.IO;
 
 namespace IBMiCmd.Forms
@@ -140,7 +140,7 @@ namespace IBMiCmd.Forms
                 }
 
                 toolStripStatusLabel1.Text = "Total errors: " + totalErrors.ToString();
-                toolStripStatusLabel2.Text = ErrorHandle.doName();
+                toolStripStatusLabel2.Text = IBMi.GetConfig("system") + ":" + ErrorHandle.doName();
                 toolStripStatusLabel3.Text = DateTime.Now.ToString("h:mm:ss tt");
             });
         }
