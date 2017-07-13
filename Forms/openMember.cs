@@ -64,7 +64,7 @@ namespace IBMiCmd.Forms
             }
             else
             {
-                MessageBox.Show("Unable to download member " + textBox1.Text + "/" + textBox1.Text + "." + textBox3.Text + ". Please check it exists and that you have access to the remote system.");
+                MessageBox.Show("Unable to download member " + textBox1.Text + "/" + textBox2.Text + "." + textBox3.Text + ". Please check it exists and that you have access to the remote system.");
             }
         }
 

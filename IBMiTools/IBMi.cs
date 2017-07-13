@@ -17,6 +17,7 @@ namespace IBMiCmd.IBMiTools
 
         public static void LoadConfig(string FileLoc, string System = "mysystem")
         {
+            _config.Clear();
             _ConfigFile = FileLoc + ".cfg";
             string[] data;
             if (!File.Exists(_ConfigFile))
@@ -41,6 +42,8 @@ namespace IBMiCmd.IBMiTools
                 MessageBox.Show("You will now be prompted to enter in a Remote System.");
                 Main.RemoteSetup();
             }
+
+            _config.Clear();
 
             foreach (string Line in File.ReadAllLines(_ConfigFile))
             {
