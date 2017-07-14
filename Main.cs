@@ -23,6 +23,7 @@ namespace IBMiCmd
         public static errorListing ErrorWindow { get; set; }
         public static libraryList LiblWindow { get; set; }
         public static cmdBindings BindsWindow { get; set; }
+        public static selectMember MemberListWindow { get; set; }
 
         public static string ConfigDirectory { get; set; }
         public static string SystemsDirectory { get; set; }
@@ -78,6 +79,7 @@ namespace IBMiCmd
             PluginBase.SetCommand(ItemOrder++, "Error Listing", ErrorDialog);
             PluginBase.SetCommand(ItemOrder++, "Command Bindings", BindsDialog);
             PluginBase.SetCommand(ItemOrder++, "-SEPARATOR-", null);
+            PluginBase.SetCommand(ItemOrder++, "Member Listing", MemberListing);
             PluginBase.SetCommand(ItemOrder++, "Open Source Member", OpenMember, new ShortcutKey(true, false, true, Keys.A));
             PluginBase.SetCommand(ItemOrder++, "Upload Source Member", UploadMember, new ShortcutKey(true, false, true, Keys.X));
             PluginBase.SetCommand(ItemOrder++, "Open Include/Copy", OpenInclude, new ShortcutKey(true, false, false, Keys.F12));
@@ -138,6 +140,43 @@ namespace IBMiCmd
                 }
             });
             gothread.Start();
+        }
+
+        internal static void MemberListing()
+        {
+            if (MemberListWindow == null)
+            {
+                MemberListWindow = new selectMember();
+
+                using (Bitmap newBmp = new Bitmap(16, 16))
+                {
+                    Graphics g = Graphics.FromImage(newBmp);
+                    ColorMap[] colorMap = new ColorMap[1];
+                    colorMap[0] = new ColorMap();
+                    colorMap[0].OldColor = Color.Fuchsia;
+                    colorMap[0].NewColor = Color.FromKnownColor(KnownColor.Blue);
+                    ImageAttributes attr = new ImageAttributes();
+                    attr.SetRemapTable(colorMap);
+                    g.DrawImage(tbBmp_tbTab, new Rectangle(0, 0, 16, 16), 0, 0, 16, 16, GraphicsUnit.Pixel, attr);
+                    tbIcon = Icon.FromHandle(newBmp.GetHicon());
+                }
+
+                NppTbData _nppTbData = new NppTbData();
+                _nppTbData.hClient = MemberListWindow.Handle;
+                _nppTbData.pszName = "Member Listing";
+                _nppTbData.dlgID = idMyDlg;
+                _nppTbData.uMask = NppTbMsg.DWS_DF_CONT_RIGHT | NppTbMsg.DWS_ICONTAB | NppTbMsg.DWS_ICONBAR;
+                _nppTbData.hIconTab = (uint)tbIcon.Handle;
+                _nppTbData.pszModuleName = PluginName;
+                IntPtr _ptrNppTbData = Marshal.AllocHGlobal(Marshal.SizeOf(_nppTbData));
+                Marshal.StructureToPtr(_nppTbData, _ptrNppTbData, false);
+
+                Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMREGASDCKDLG, 0, _ptrNppTbData);
+            }
+            else
+            {
+                Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, MemberListWindow.Handle);
+            }
         }
 
         internal static void OpenMember()

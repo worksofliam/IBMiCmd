@@ -15,6 +15,9 @@ namespace IBMiCmd.IBMiTools
         private static Dictionary<string, string> _config = new Dictionary<string, string>();
         private static List<string> _output = new List<string>();
 
+        private static Boolean _getList = false;
+        private static List<string> _list = new List<string>();
+
         public static void LoadConfig(string FileLoc, string System = "mysystem")
         {
             _config.Clear();
@@ -24,7 +27,7 @@ namespace IBMiCmd.IBMiTools
             {
                 _config.Add("system", System);
                 _config.Add("username", "myuser");
-                _config.Add("password", "mybase64pass");
+                _config.Add("password", "mypass");
                 _config.Add("datalibl", "SYSTOOLS");
                 _config.Add("curlib", "SYSTOOLS");
                 _config.Add("installlib", "QGPL");
@@ -105,6 +108,11 @@ namespace IBMiCmd.IBMiTools
             }
         }
 
+        public static string[] GetListing()
+        {
+            return _list.ToArray();
+        }
+
         public static void AddOutput(string text)
         {
             _output.Add(text);
@@ -143,6 +151,7 @@ namespace IBMiCmd.IBMiTools
                     if (cmd == null) continue;
                     if (cmd.Trim() != "")
                     {
+                        AddOutput("> " + cmd);
                         IBMiUtilities.DebugLog("Collecting command for ftp file: " + cmd);
                         lines.Add(cmd);
                     }
@@ -170,8 +179,10 @@ namespace IBMiCmd.IBMiTools
         {
             IBMiUtilities.DebugLog("Starting FTP of command file " + FileLoc);
 
+            _list.Clear();
             _NotConnected = false;
             _Failed = false;
+
             Process process = new Process();
             process.StartInfo.FileName = "cmd.exe";
             process.StartInfo.Arguments = "/c FTP -n -s:\"" + FileLoc + "\" " + _config["system"];
@@ -201,8 +212,6 @@ namespace IBMiCmd.IBMiTools
 
         private static void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
         {
-            //* Do your stuff with the output (write to console/log/StringBuilder)
-            //Console.WriteLine(outLine.Data);
             if (outLine.Data != null)
             {
                 if (outLine.Data.Length >= 5)
@@ -216,7 +225,11 @@ namespace IBMiCmd.IBMiTools
                     {
                         switch (outLine.Data.Substring(0, 3))
                         {
+                            case "125":
+                                _getList = true;
+                                break;
                             case "250":
+                                _getList = false;
                                 _output.Add("> " + outLine.Data.Substring(4));
                                 break;
                             case "426":
@@ -224,6 +237,9 @@ namespace IBMiCmd.IBMiTools
                             case "550":
                                 _Failed = true;
                                 _output.Add("> " + outLine.Data.Substring(4));
+                                break;
+                            default:
+                                if (_getList) _list.Add(outLine.Data);
                                 break;
                         }
                         if (GetConfig("experimental") == "true") _output.Add("* " + outLine.Data);

@@ -118,6 +118,12 @@
     <Compile Include="Forms\selectConfig.Designer.cs">
       <DependentUpon>selectConfig.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\selectMember.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\selectMember.Designer.cs">
+      <DependentUpon>selectMember.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\uploadMember.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -237,6 +243,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\selectConfig.resx">
       <DependentUpon>selectConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\selectMember.resx">
+      <DependentUpon>selectMember.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\uploadMember.resx">
       <DependentUpon>uploadMember.cs</DependentUpon>

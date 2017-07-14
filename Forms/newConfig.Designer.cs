@@ -36,11 +36,11 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(112, 13);
+            this.textBox1.Location = new System.Drawing.Point(120, 13);
             this.textBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBox1.MaxLength = 64;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(315, 26);
+            this.textBox1.Size = new System.Drawing.Size(307, 26);
             this.textBox1.TabIndex = 6;
             // 
             // label2
@@ -49,9 +49,9 @@
             this.label2.Location = new System.Drawing.Point(13, 16);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(91, 20);
+            this.label2.Size = new System.Drawing.Size(99, 20);
             this.label2.TabIndex = 5;
-            this.label2.Text = "Host name:";
+            this.label2.Text = "Config name";
             // 
             // button2
             // 
@@ -74,6 +74,7 @@
             // 
             // newConfig
             // 
+            this.AcceptButton = this.button1;
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(440, 93);

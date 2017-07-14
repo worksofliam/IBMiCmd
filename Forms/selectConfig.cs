@@ -39,6 +39,8 @@ namespace IBMiCmd.Forms
                 Config.SwitchToConfig(listView1.SelectedItems[0].Text);
 
                 if (Main.BindsWindow != null) Main.BindsWindow.cmdBindings_Load();
+                if (Main.MemberListWindow != null) Main.MemberListWindow.UpdateSystemName();
+
                 IBMi.AddOutput("Switched to " + listView1.SelectedItems[0].Text + ".");
                 this.Close();
             }

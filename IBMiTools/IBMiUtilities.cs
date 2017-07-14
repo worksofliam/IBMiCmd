@@ -21,6 +21,26 @@ namespace IBMiCmd.IBMiTools
             return Regex.Match(s, "^[a-zA-Z#][\\w#]{0,9}$").Success;
         }
 
+        public static string[] GetMemberList(string Lib, string Obj)
+        {
+            List<string> commands = new List<string>();
+
+            Lib = Lib.ToUpper();
+            Obj = Obj.ToUpper();
+            
+            commands.Add("cd /QSYS.lib/" + Lib + ".lib/" + Obj + ".file");
+            commands.Add("ls");
+
+            if (IBMi.RunCommands(commands.ToArray()) == false)
+            {
+                return IBMi.GetListing();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public static string DownloadMember(string Lib, string Obj, string Mbr)
         {
             string filetemp = Path.GetTempPath() + Mbr + "." + Obj;
