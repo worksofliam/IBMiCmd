@@ -65,7 +65,7 @@ namespace IBMiCmd.Forms
             gothread.Start();
         }
 
-        private void OpenMember(string Lib, string Obj, string Mbr)
+        private void OpenMember(string Lib, string Obj, string Mbr, Boolean Editing)
         {
             Thread gothread = new Thread((ThreadStart)delegate {
                 string resultFile = IBMiUtilities.DownloadMember(Lib, Obj, Mbr);
@@ -73,7 +73,9 @@ namespace IBMiCmd.Forms
 
                 if (resultFile != "")
                 {
-                    NppFunctions.OpenFile(resultFile, true);
+                    NppFunctions.OpenFile(resultFile, !Editing);
+                    if (Editing)
+                        OpenMembers.AddMember(IBMi.GetConfig("system"), resultFile, Lib, Obj, Mbr);
                 }
                 else
                 {
@@ -101,6 +103,7 @@ namespace IBMiCmd.Forms
 
         private void listView1_DoubleClick(object sender, EventArgs e)
         {
+            //Browse
             if (listView1.SelectedItems.Count == 1)
             {
                 ListViewItem selection = listView1.SelectedItems[0];
@@ -109,7 +112,18 @@ namespace IBMiCmd.Forms
                 {
                     string[] path = tag.Split('.');
 
-                    OpenMember(path[0], path[1], selection.Text);
+                    OpenMember(path[0], path[1], selection.Text, false);
+                }
+            }
+        }
+
+        private void listView1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (listView1.FocusedItem.Bounds.Contains(e.Location) == true)
+                {
+                    contextMenuStrip1.Show(Cursor.Position);
                 }
             }
         }
@@ -127,6 +141,38 @@ namespace IBMiCmd.Forms
             if (e.KeyCode == Keys.Enter)
             {
                 toolStripButton1.PerformClick();
+            }
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            //Edit
+            if (listView1.SelectedItems.Count == 1)
+            {
+                ListViewItem selection = listView1.SelectedItems[0];
+                string tag = (string)selection.Tag;
+                if (tag != "")
+                {
+                    string[] path = tag.Split('.');
+
+                    OpenMember(path[0], path[1], selection.Text, true);
+                }
+            }
+        }
+
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            //Browse
+            if (listView1.SelectedItems.Count == 1)
+            {
+                ListViewItem selection = listView1.SelectedItems[0];
+                string tag = (string)selection.Tag;
+                if (tag != "")
+                {
+                    string[] path = tag.Split('.');
+
+                    OpenMember(path[0], path[1], selection.Text, false);
+                }
             }
         }
     }
