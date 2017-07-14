@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Threading;
 using System.IO;
 using IBMiCmd.IBMiTools;
+using IBMiCmd.LanguageTools;
 
 namespace IBMiCmd.Forms
 {
@@ -63,6 +64,24 @@ namespace IBMiCmd.Forms
             });
             gothread.Start();
         }
+
+        private void OpenMember(string Lib, string Obj, string Mbr)
+        {
+            Thread gothread = new Thread((ThreadStart)delegate {
+                string resultFile = IBMiUtilities.DownloadMember(Lib, Obj, Mbr);
+                if (Main.CommandWindow != null) Main.CommandWindow.loadNewCommands();
+
+                if (resultFile != "")
+                {
+                    NppFunctions.OpenFile(resultFile, true);
+                }
+                else
+                {
+                    MessageBox.Show("Unable to download member " + Lib + "/" + Obj + "." + Mbr + ". Please check it exists and that you have access to the remote system.");
+                }
+            });
+            gothread.Start();
+        }
  
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
@@ -78,6 +97,21 @@ namespace IBMiCmd.Forms
             }
 
             UpdateListing(toolStripTextBox1.Text, toolStripTextBox2.Text);
+        }
+
+        private void listView1_DoubleClick(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems.Count == 1)
+            {
+                ListViewItem selection = listView1.SelectedItems[0];
+                string tag = (string)selection.Tag;
+                if (tag != "")
+                {
+                    string[] path = tag.Split('.');
+
+                    OpenMember(path[0], path[1], selection.Text);
+                }
+            }
         }
     }
 }
