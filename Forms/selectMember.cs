@@ -61,6 +61,8 @@ namespace IBMiCmd.Forms
                     listView1.Items.Add(new ListViewItem("No members found!", 1));
                     if (Main.CommandWindow != null) Main.CommandWindow.loadNewCommands();
                 }
+
+                toolStripLabel2.Text = members.Length.ToString() + " member" + (members.Length == 1 ? "" : "s");
             });
             gothread.Start();
         }
