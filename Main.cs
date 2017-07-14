@@ -52,13 +52,20 @@ namespace IBMiCmd
             RPGParser.LoadFileCache();
             CLParser.LoadFileCache();
 
-            LoadConfigSelect();
-            if (Config.GetConfigs().Length == 0) return;
-            if (IBMi._ConfigFile == "" || IBMi._ConfigFile == null)
+            if (File.Exists(ConfigDirectory + "dftcfg"))
             {
-                string UseConfig = Config.GetConfigs()[0];
-                MessageBox.Show("No config selected. Defaulted to " + UseConfig + ".");
-                Config.SwitchToConfig(UseConfig);
+                Config.SwitchToConfig(File.ReadAllText(ConfigDirectory + "dftcfg"));
+            }
+            else
+            {
+                LoadConfigSelect();
+                if (Config.GetConfigs().Length == 0) return;
+                if (IBMi._ConfigFile == "" || IBMi._ConfigFile == null)
+                {
+                    string UseConfig = Config.GetConfigs()[0];
+                    MessageBox.Show("No config selected. Defaulted to " + UseConfig + ".");
+                    Config.SwitchToConfig(UseConfig);
+                }
             }
             //if (IBMi.GetConfig("localDefintionsInstalled") == "false")
             //{

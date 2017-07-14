@@ -9,9 +9,10 @@ namespace IBMiCmd.IBMiTools
 {
     class Config
     {
-        public static void SwitchToConfig(string System)
+        public static void SwitchToConfig(string Config)
         {
-            IBMi.LoadConfig(Main.SystemsDirectory + System, System);
+            IBMi.LoadConfig(Main.SystemsDirectory + Config, Config);
+            File.WriteAllText(Main.ConfigDirectory + "dftcfg", Config);
         }
 
         public static string[] GetConfigs()

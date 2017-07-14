@@ -32,5 +32,10 @@ namespace IBMiCmd.Forms
                 MessageBox.Show("You must enter a host name to continue with configuration creation.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }

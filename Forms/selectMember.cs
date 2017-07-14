@@ -113,5 +113,21 @@ namespace IBMiCmd.Forms
                 }
             }
         }
+
+        private void toolStripTextBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Tab)
+            {
+                toolStripTextBox2.Focus();
+            }
+        }
+
+        private void toolStripTextBox2_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                toolStripButton1.PerformClick();
+            }
+        }
     }
 }
