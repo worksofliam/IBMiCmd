@@ -28,7 +28,8 @@ namespace IBMiCmd.Forms
                 int line, col;
 
                 line = int.Parse(data[0]) - 1;
-                col = int.Parse(data[1]) - 1;
+                col = int.Parse(data[1]);
+                if (col > 0) col--;
 
                 onSelectError(e.Node.Parent.Text, line, col);
             }
