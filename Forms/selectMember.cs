@@ -55,14 +55,16 @@ namespace IBMiCmd.Forms
                     }
 
                     listView1.Items.AddRange(curItems.ToArray());
+
+                    toolStripLabel2.Text = members.Length.ToString() + " member" + (members.Length == 1 ? "" : "s");
                 }
                 else
                 {
                     listView1.Items.Add(new ListViewItem("No members found!", 1));
                     if (Main.CommandWindow != null) Main.CommandWindow.loadNewCommands();
-                }
 
-                toolStripLabel2.Text = members.Length.ToString() + " member" + (members.Length == 1 ? "" : "s");
+                    toolStripLabel2.Text = "0 members";
+                }
             });
             gothread.Start();
         }

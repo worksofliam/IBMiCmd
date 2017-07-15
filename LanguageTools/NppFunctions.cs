@@ -65,6 +65,23 @@ namespace IBMiCmd.LanguageTools
                 Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, Main.ErrorWindow.Handle);
             }
         }
+        
+        public static void SwitchToFile(string name, int line, int col)
+        {
+            int pos = 0;
+            IntPtr curScintilla = PluginBase.nppData._nppHandle;
+            Win32.SendMessage(curScintilla, NppMsg.NPPM_SWITCHTOFILE, 0, name);
+
+            curScintilla = PluginBase.GetCurrentScintilla();
+            Win32.SendMessage(curScintilla, SciMsg.SCI_ENSUREVISIBLE, line, 0);
+            if (line >= 0)
+            {
+                pos = (int)Win32.SendMessage(curScintilla, SciMsg.SCI_POSITIONFROMLINE, line, 0);
+                pos += col;
+                Win32.SendMessage(curScintilla, SciMsg.SCI_GOTOPOS, pos, 0);
+                Win32.SendMessage(curScintilla, SciMsg.SCI_GRABFOCUS, 0, 0);
+            }
+        }
 
         public static void HandleTrigger(SCNotification Notification)
         {
