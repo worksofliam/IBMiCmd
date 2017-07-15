@@ -9,6 +9,11 @@ namespace IBMiCmd.LanguageTools
     class OpenMembers
     {
         private static Dictionary<string, OpenMember> _Members = new Dictionary<string, OpenMember>();
+        
+        public static string[] GetLocals()
+        {
+            return _Members.Keys.ToArray();
+        }
 
         public static void AddMember(string System, string Local, string Lib, string Obj, string Mbr)
         {

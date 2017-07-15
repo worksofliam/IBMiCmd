@@ -36,7 +36,7 @@ namespace IBMiCmd.Forms
 
         private void onSelectError(string File, int Line, int Col)
         {
-            string[] OpenFiles = GetOpenFiles();
+            string[] OpenFiles = NppFunctions.GetOpenFiles();
             string[] files = new string[2];
 
             //Compare by file name and extension first
@@ -66,18 +66,6 @@ namespace IBMiCmd.Forms
             }
 
             MessageBox.Show("Unable to open error. Please open the source manually first and then try again.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private static string[] GetOpenFiles()
-        {
-            int nbFile = (int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETNBOPENFILES, 0, 0);
-            using (ClikeStringArray cStrArray = new ClikeStringArray(nbFile, Win32.MAX_PATH))
-            {
-                if (Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETOPENFILENAMES, cStrArray.NativePointer, nbFile) != IntPtr.Zero)
-                    return cStrArray.ManagedStringsUnicode.ToArray();
-                else
-                    return null;
-            }
         }
 
         private static void SwitchToFile(string name, int line, int col)

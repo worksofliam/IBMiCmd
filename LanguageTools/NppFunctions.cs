@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Threading;
 using NppPluginNET;
 using IBMiCmd.IBMiTools;
-using System.Threading;
 
 namespace IBMiCmd.LanguageTools
 {
@@ -35,12 +36,23 @@ namespace IBMiCmd.LanguageTools
 
             return sb.ToString().Substring(0, lineLength);
         }
-
-
+        
         public static void SetLine(string value)
         {
             //Hopefully is still selected?
             Win32.SendMessage(PluginBase.GetCurrentScintilla(), SciMsg.SCI_REPLACESEL, 0, value);
+        }
+        
+        public static string[] GetOpenFiles()
+        {
+            int nbFile = (int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETNBOPENFILES, 0, 0);
+            using (ClikeStringArray cStrArray = new ClikeStringArray(nbFile, Win32.MAX_PATH))
+            {
+                if (Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETOPENFILENAMES, cStrArray.NativePointer, nbFile) != IntPtr.Zero)
+                    return cStrArray.ManagedStringsUnicode.ToArray();
+                else
+                    return null;
+            }
         }
 
         public static void HandleTrigger(SCNotification Notification)
@@ -75,7 +87,11 @@ namespace IBMiCmd.LanguageTools
 
                 case (uint)NppMsg.NPPN_FILEBEFORECLOSE:
                     Win32.SendMessage(Notification.nmhdr.hwndFrom, NppMsg.NPPM_GETFULLCURRENTPATH, 0, path);
-                    OpenMembers.RemoveMember(path.ToString());
+                    if (OpenMembers.Contains(path.ToString()))
+                    {
+                        OpenMembers.RemoveMember(path.ToString());
+                        File.Delete(path.ToString());
+                    }
                     break;
             }
         }
