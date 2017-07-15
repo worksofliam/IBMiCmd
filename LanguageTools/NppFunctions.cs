@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NppPluginNET;
+using IBMiCmd.IBMiTools;
+using System.Threading;
 
 namespace IBMiCmd.LanguageTools
 {
@@ -20,7 +22,7 @@ namespace IBMiCmd.LanguageTools
             return (int)Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETCURRENTLINE, 0, 0);
         }
 
-        public static string getLine(int line)
+        public static string GetLine(int line)
         {
             IntPtr curScintilla = PluginBase.GetCurrentScintilla();
             int lineLength = (int)Win32.SendMessage(curScintilla, SciMsg.SCI_LINELENGTH, line, 0);
@@ -35,10 +37,47 @@ namespace IBMiCmd.LanguageTools
         }
 
 
-        public static void setLine(string value)
+        public static void SetLine(string value)
         {
             //Hopefully is still selected?
             Win32.SendMessage(PluginBase.GetCurrentScintilla(), SciMsg.SCI_REPLACESEL, 0, value);
+        }
+
+        public static void HandleTrigger(SCNotification Notification)
+        {
+            StringBuilder path = new StringBuilder(Win32.MAX_PATH);
+            OpenMember member;
+            switch (Notification.nmhdr.code)
+            {
+                case (uint)NppMsg.NPPN_FILESAVED:
+                    Win32.SendMessage(Notification.nmhdr.hwndFrom, NppMsg.NPPM_GETFULLCURRENTPATH, 0, path);
+                    member = OpenMembers.GetMember(path.ToString());
+                    if (member != null)
+                    {
+                        Thread gothread = new Thread((ThreadStart)delegate {  
+                            if (member.GetSystemName() == IBMi.GetConfig("system"))
+                            {
+                                bool UploadResult = IBMiUtilities.UploadMember(member.GetLocalFile(), member.GetLibrary(), member.GetObject(), member.GetMember());
+                                if (UploadResult == false)
+                                {
+                                    IBMi.AddOutput("Failed to upload source to member!");
+                                }
+                            }
+                            else
+                            {
+                                IBMi.AddOutput("Cannot save to member as not connected to correct system.");
+                            }
+                            if (Main.CommandWindow != null) Main.CommandWindow.loadNewCommands();
+                        });
+                        gothread.Start();
+                    }
+                    break;
+
+                case (uint)NppMsg.NPPN_FILEBEFORECLOSE:
+                    Win32.SendMessage(Notification.nmhdr.hwndFrom, NppMsg.NPPM_GETFULLCURRENTPATH, 0, path);
+                    OpenMembers.RemoveMember(path.ToString());
+                    break;
+            }
         }
     }
 }

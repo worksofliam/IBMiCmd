@@ -56,6 +56,8 @@ namespace IBMiCmd
                 Main.PluginCleanUp();
                 Marshal.FreeHGlobal(_ptrPluginName);
             }
+
+            LanguageTools.NppFunctions.HandleTrigger(nc);
         }
     }
 }

@@ -12,9 +12,17 @@ namespace IBMiCmd.LanguageTools
 
         public static void AddMember(string System, string Local, string Lib, string Obj, string Mbr)
         {
-            if (!Contains(Local))
+            if (Contains(Local))
+                RemoveMember(Local);
+
+            _Members.Add(Local, new OpenMember(System, Local, Lib, Obj, Mbr));
+        }
+
+        public static void RemoveMember(String Local)
+        {
+            if (Contains(Local))
             {
-                _Members.Add(Local, new OpenMember(System, Local, Lib, Obj, Mbr));
+                _Members.Remove(Local);
             }
         }
 
@@ -25,7 +33,14 @@ namespace IBMiCmd.LanguageTools
 
         public static OpenMember GetMember(String Local)
         {
-            return _Members[Local];
+            if (Contains(Local))
+            {
+                return _Members[Local];
+            } 
+            else
+            {
+                return null;
+            }
         }
     }
 

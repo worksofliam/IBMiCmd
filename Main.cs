@@ -88,7 +88,7 @@ namespace IBMiCmd
             PluginBase.SetCommand(ItemOrder++, "-SEPARATOR-", null);
             PluginBase.SetCommand(ItemOrder++, "Member Listing", MemberListing);
             PluginBase.SetCommand(ItemOrder++, "Open Source Member", OpenMember, new ShortcutKey(true, false, true, Keys.A));
-            PluginBase.SetCommand(ItemOrder++, "Upload Source Member", UploadMember, new ShortcutKey(true, false, true, Keys.X));
+            //PluginBase.SetCommand(ItemOrder++, "Upload Source Member", UploadMember, new ShortcutKey(true, false, true, Keys.X));
             PluginBase.SetCommand(ItemOrder++, "Open Include/Copy", OpenInclude, new ShortcutKey(true, false, false, Keys.F12));
             PluginBase.SetCommand(ItemOrder++, "-SEPARATOR-", null);
             PluginBase.SetCommand(ItemOrder++, "RPG Line Conversion", LaunchConversion, new ShortcutKey(true, false, false, Keys.F5));
@@ -123,7 +123,7 @@ namespace IBMiCmd
         internal static void OpenInclude()
         {
             Thread gothread = new Thread((ThreadStart)delegate { 
-                string LineNum = NppFunctions.getLine(NppFunctions.GetLineNumber());
+                string LineNum = NppFunctions.GetLine(NppFunctions.GetLineNumber());
                 OpenMember Member = Include.HandleInclude(LineNum);
 
                 if (Member != null)

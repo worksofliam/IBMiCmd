@@ -21,7 +21,7 @@ namespace IBMiCmd.Forms
         {
             string freeOut = "", fixedLine = "";
             
-            fixedLine = NppFunctions.getLine(NppFunctions.GetLineNumber());
+            fixedLine = NppFunctions.GetLine(NppFunctions.GetLineNumber());
 
             freeOut = RPGFree.getFree(fixedLine);
             if (freeOut != "")
@@ -39,7 +39,7 @@ namespace IBMiCmd.Forms
 
         private void button1_Click(object sender, EventArgs e)
         {
-            NppFunctions.setLine(textBox2.Text);
+            NppFunctions.SetLine(textBox2.Text);
             this.Close();
         }
 
