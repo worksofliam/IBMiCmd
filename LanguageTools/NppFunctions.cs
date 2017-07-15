@@ -55,6 +55,17 @@ namespace IBMiCmd.LanguageTools
             }
         }
 
+        public static void DisplayErrors(string Lib, string Obj)
+        {
+            ErrorHandle.getErrors(Lib, Obj);
+
+            if (Main.ErrorWindow != null)
+            {
+                Main.ErrorWindow.publishErrors();
+                Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, Main.ErrorWindow.Handle);
+            }
+        }
+
         public static void HandleTrigger(SCNotification Notification)
         {
             StringBuilder path = new StringBuilder(Win32.MAX_PATH);

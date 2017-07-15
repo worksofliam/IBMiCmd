@@ -45,6 +45,7 @@ namespace IBMiCmd.Forms
             {
                 files[1] = Path.GetFileName(OpenFile);
 
+                IBMi.AddOutput(files[0] + " == " + files[1]);
                 if (files[0] == files[1])
                 {
                     SwitchToFile(OpenFile, Line, Col);
@@ -58,6 +59,7 @@ namespace IBMiCmd.Forms
             {
                 files[1] = Path.GetFileNameWithoutExtension(OpenFile);
 
+                IBMi.AddOutput(files[0] + " == " + files[1]);
                 if (files[0] == files[1])
                 {
                     SwitchToFile(OpenFile, Line, Col);
@@ -65,7 +67,33 @@ namespace IBMiCmd.Forms
                 }
             }
 
+            //Compare just by file name & try MEMBER name
+            files[0] = GetQSYSMemberName(File);
+            foreach (string OpenFile in OpenFiles)
+            {
+                files[1] = Path.GetFileNameWithoutExtension(OpenFile);
+
+                IBMi.AddOutput(files[0] + " == " + files[1]);
+                if (files[0] == files[1])
+                {
+                    SwitchToFile(OpenFile, Line, Col);
+                    return;
+                }
+            }
+
+            if (Main.CommandWindow != null) Main.CommandWindow.loadNewCommands();
+
             MessageBox.Show("Unable to open error. Please open the source manually first and then try again.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private static string GetQSYSMemberName(string Input)
+        {
+            if (Input.Contains("(") && Input.Contains(")"))
+            {
+                Input = Input.Substring(Input.IndexOf('(') + 1);
+                Input = Input.Substring(0, Input.IndexOf(')'));
+            }
+            return Input;
         }
 
         private static void SwitchToFile(string name, int line, int col)

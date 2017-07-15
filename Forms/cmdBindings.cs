@@ -85,12 +85,7 @@ namespace IBMiCmd.Forms
 
             if (errDsp != null)
             {
-                ErrorHandle.getErrors(errDsp[0], errDsp[1]);
-                if (Main.ErrorWindow != null)
-                {
-                    Main.ErrorWindow.publishErrors();
-                    Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, Main.ErrorWindow.Handle);
-                }
+                NppFunctions.DisplayErrors(errDsp[0], errDsp[1]);
             }
         }
         

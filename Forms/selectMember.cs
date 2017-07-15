@@ -177,5 +177,24 @@ namespace IBMiCmd.Forms
                 }
             }
         }
+
+        private void loadErrorsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //Show errors
+            if (listView1.SelectedItems.Count == 1)
+            {
+                ListViewItem selection = listView1.SelectedItems[0];
+                string tag = (string)selection.Tag;
+                if (tag != "")
+                {
+                    string[] path = tag.Split('.');
+
+                    Thread gothread = new Thread((ThreadStart)delegate {
+                        NppFunctions.DisplayErrors(path[0], selection.Text);
+                    });
+                    gothread.Start();
+                }
+            }
+        }
     }
 }
