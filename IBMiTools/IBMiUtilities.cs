@@ -18,7 +18,7 @@ namespace IBMiCmd.IBMiTools
         public static bool IsValidQSYSObjectName(string s)
         {
             if (s == null || s == "") return false;
-            return Regex.Match(s, "^[a-zA-Z#][\\w#]{0,9}$").Success;
+            return Regex.Match(s, "^[a-zA-Z#][\\w#\\.]{0,9}$").Success;
         }
 
         public static string[] GetMemberList(string Lib, string Obj)
