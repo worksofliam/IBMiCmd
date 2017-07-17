@@ -49,7 +49,7 @@ namespace IBMiCmd.Forms
                     foreach (string member in members)
                     {
                         curItem = new ListViewItem(Path.GetFileNameWithoutExtension(member), 0);
-                        curItem.Tag = Lib + '.' + Obj;
+                        curItem.Tag = Lib + '|' + Obj;
 
                         curItems.Add(curItem);
                     }
@@ -114,7 +114,7 @@ namespace IBMiCmd.Forms
                 string tag = (string)selection.Tag;
                 if (tag != "")
                 {
-                    string[] path = tag.Split('.');
+                    string[] path = tag.Split('|');
 
                     OpenMember(path[0], path[1], selection.Text, false);
                 }
@@ -157,7 +157,7 @@ namespace IBMiCmd.Forms
                 string tag = (string)selection.Tag;
                 if (tag != "")
                 {
-                    string[] path = tag.Split('.');
+                    string[] path = tag.Split('|');
 
                     OpenMember(path[0], path[1], selection.Text, true);
                 }
@@ -173,7 +173,7 @@ namespace IBMiCmd.Forms
                 string tag = (string)selection.Tag;
                 if (tag != "")
                 {
-                    string[] path = tag.Split('.');
+                    string[] path = tag.Split('|');
 
                     OpenMember(path[0], path[1], selection.Text, false);
                 }
@@ -189,7 +189,7 @@ namespace IBMiCmd.Forms
                 string tag = (string)selection.Tag;
                 if (tag != "")
                 {
-                    string[] path = tag.Split('.');
+                    string[] path = tag.Split('|');
 
                     Thread gothread = new Thread((ThreadStart)delegate {
                         NppFunctions.DisplayErrors(path[0], selection.Text);

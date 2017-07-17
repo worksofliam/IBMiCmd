@@ -54,7 +54,7 @@ namespace IBMiCmd.IBMiTools
 
             commands.Add("ASCII");
             commands.Add("cd /QSYS.lib");
-            commands.Add("recv " + Lib + ".lib/" + Obj + ".file/" + Mbr + ".mbr \"" + filetemp + "\"");
+            commands.Add("recv \"" + Lib + ".lib/" + Obj + ".file/" + Mbr + ".mbr\" \"" + filetemp + "\"");
 
             if (IBMi.RunCommands(commands.ToArray()) == false)
             {
@@ -76,7 +76,7 @@ namespace IBMiCmd.IBMiTools
 
             commands.Add("ASCII");
             commands.Add("cd /QSYS.lib");
-            commands.Add("put \"" + Local + "\" " + Lib + ".lib/" + Obj + ".file/" + Mbr + ".mbr");
+            commands.Add("put \"" + Local + "\" \"" + Lib + ".lib/" + Obj + ".file/" + Mbr + ".mbr\"");
 
             //Returns true if successful
             return !IBMi.RunCommands(commands.ToArray());
