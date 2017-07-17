@@ -61,7 +61,7 @@ namespace IBMiCmd.Forms
                 else
                 {
                     listView1.Items.Add(new ListViewItem("No members found!", 1));
-                    if (Main.CommandWindow != null) Main.CommandWindow.loadNewCommands();
+                    if (Main.CommandWindow != null) Main.CommandWindow.loadNewOutput();
 
                     toolStripLabel2.Text = "0 members";
                 }
@@ -73,7 +73,7 @@ namespace IBMiCmd.Forms
         {
             Thread gothread = new Thread((ThreadStart)delegate {
                 string resultFile = IBMiUtilities.DownloadMember(Lib, Obj, Mbr);
-                if (Main.CommandWindow != null) Main.CommandWindow.loadNewCommands();
+                if (Main.CommandWindow != null) Main.CommandWindow.loadNewOutput();
 
                 if (resultFile != "")
                 {

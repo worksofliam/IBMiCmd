@@ -100,14 +100,14 @@ namespace IBMiCmd.LanguageTools
                                 bool UploadResult = IBMiUtilities.UploadMember(member.GetLocalFile(), member.GetLibrary(), member.GetObject(), member.GetMember());
                                 if (UploadResult == false)
                                 {
-                                    IBMi.AddOutput("Failed to upload source to member!");
+                                    System.Windows.Forms.MessageBox.Show("Failed to upload to " + member.GetMember() + " on " + member.GetSystemName() + ".");
                                 }
                             }
                             else
                             {
-                                IBMi.AddOutput("Cannot save to member as not connected to correct system.");
+                                System.Windows.Forms.MessageBox.Show("Unable to upload to " + member.GetMember() + ". You must be connected to " + member.GetSystemName() + " in order to save this file.");
                             }
-                            if (Main.CommandWindow != null) Main.CommandWindow.loadNewCommands();
+                            if (Main.CommandWindow != null) Main.CommandWindow.loadNewOutput();
                         });
                         gothread.Start();
                     }

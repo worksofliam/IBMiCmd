@@ -51,7 +51,7 @@ namespace IBMiCmd.Forms
             }
             
             string resultFile = IBMiUtilities.DownloadMember(textBox1.Text, textBox2.Text, textBox3.Text);
-            if (Main.CommandWindow != null) Main.CommandWindow.loadNewCommands();
+            if (Main.CommandWindow != null) Main.CommandWindow.loadNewOutput();
 
             if (resultFile != "")
             {

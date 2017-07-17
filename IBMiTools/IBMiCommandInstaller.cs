@@ -38,7 +38,7 @@ namespace IBMiCmd.IBMiTools
                 }
                 IBMiUtilities.DebugLog("InstallRemoteLib - DONE!");
 
-                if (Main.CommandWindow != null) Main.CommandWindow.loadNewCommands();
+                if (Main.CommandWindow != null) Main.CommandWindow.loadNewOutput();
             });
             thread.Start();
         }

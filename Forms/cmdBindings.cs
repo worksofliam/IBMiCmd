@@ -81,7 +81,7 @@ namespace IBMiCmd.Forms
         public void runCommands(string[] commands, string[] errDsp)
         {
             IBMi.RunCommands(commands);
-            if (Main.CommandWindow != null) Main.CommandWindow.loadNewCommands();
+            if (Main.CommandWindow != null) Main.CommandWindow.loadNewOutput();
 
             if (errDsp != null)
             {

@@ -59,7 +59,7 @@ namespace IBMiCmd.Forms
                 }
                 else
                 {
-                    if (Main.CommandWindow != null) Main.CommandWindow.loadNewCommands();
+                    if (Main.CommandWindow != null) Main.CommandWindow.loadNewOutput();
                     MessageBox.Show("Failed to save " + this._Member.GetMember() + ". Please check the Command Entry output.");
                 }
             }

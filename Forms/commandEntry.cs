@@ -38,10 +38,10 @@ namespace IBMiCmd
         public void runCommands(string[] commands)
         {
             IBMi.RunCommands(commands);
-            loadNewCommands();
+            loadNewOutput();
         }
 
-        public void loadNewCommands()
+        public void loadNewOutput()
         {
             Invoke((MethodInvoker)delegate
             {

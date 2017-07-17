@@ -82,7 +82,7 @@ namespace IBMiCmd.Forms
                 }
             }
 
-            if (Main.CommandWindow != null) Main.CommandWindow.loadNewCommands();
+            if (Main.CommandWindow != null) Main.CommandWindow.loadNewOutput();
 
             MessageBox.Show("Unable to open error. Please open the source manually first and then try again.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
