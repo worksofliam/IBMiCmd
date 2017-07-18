@@ -22,7 +22,13 @@ namespace IBMiCmd.Forms
 		private void libraryList_Load(object sender, EventArgs e)
 		{
             this.Text = "Library List for " + IBMi.GetConfig("system");
-			textBox1.Text = IBMi.GetConfig("datalibl");
+
+			string[] libl = IBMi.GetConfig("datalibl").Split(',');
+            foreach(string lib in libl)
+            {
+                listBox1.Items.Add(lib);
+            }
+
             textBox2.Text = IBMi.GetConfig("curlib");
         }
 
@@ -37,14 +43,14 @@ namespace IBMiCmd.Forms
             label2.Update();
 
             string s = "";
-			foreach (string item in textBox1.Text.Trim().Split(',')) {
+			foreach (string item in listBox1.Items) {
                 if (IBMiUtilities.IsValidQSYSObjectName(item.Trim()))
                 {
                     s += item.Trim() + ',';
                 }
                 else
                 {
-                    label2.Text = "Invalid Library List Syntax. Valid syntax is < LIB,LIB,LIB >";
+                    label2.Text = "Invalid library: " + item.Trim();
                     label2.Update();
                     return;
                 }
@@ -55,7 +61,7 @@ namespace IBMiCmd.Forms
             }
             else
             {
-                label2.Text = "Invalid Current Library Syntax. Valid syntax is < LIB >";
+                label2.Text = "Invalid current library.";
                 label2.Update();
                 return;
             }
@@ -63,6 +69,61 @@ namespace IBMiCmd.Forms
             IBMi.SetConfig("datalibl", s.Remove(s.Length - 1, 1)); //Remove last comma
 
             this.Close();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (textBox1.Text != "")
+            {
+                if (!listBox1.Items.Contains(textBox1.Text))
+                {
+                    listBox1.Items.Add(textBox1.Text);
+                    textBox1.Text = "";
+                }
+            }
+        }
+
+        private void listBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            int index = listBox1.SelectedIndex;
+            if (index >= 0)
+            {
+                switch (e.KeyCode)
+                {
+                    case Keys.Delete:
+                        listBox1.Items.RemoveAt(index);
+                        break;
+                    case Keys.Down:
+                        MoveItem(1);
+                        break;
+                    case Keys.Up:
+                        MoveItem(-1);
+                        break;
+                }
+            }
+        }
+
+        public void MoveItem(int direction)
+        {
+            // Checking selected item
+            if (listBox1.SelectedItem == null || listBox1.SelectedIndex < 0)
+                return; // No selected item - nothing to do
+
+            // Calculate new index using move direction
+            int newIndex = listBox1.SelectedIndex + direction;
+
+            // Checking bounds of the range
+            if (newIndex < 0 || newIndex >= listBox1.Items.Count)
+                return; // Index out of range - nothing to do
+
+            object selected = listBox1.SelectedItem;
+
+            // Removing removable element
+            listBox1.Items.Remove(selected);
+            // Insert it in new position
+            listBox1.Items.Insert(newIndex, selected);
+            // Restore selection
+            if (direction == 1) listBox1.SetSelected(newIndex-1, true);
         }
     }
 }
