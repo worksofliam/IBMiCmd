@@ -29,7 +29,9 @@ namespace IBMiCmd.IBMiTools
 
             Lib = Lib.ToUpper();
             Obj = Obj.ToUpper();
-            
+
+            if (Lib == "*CURLIB") Lib = IBMi.GetConfig("curlib");
+
             commands.Add("cd /QSYS.lib/" + Lib + ".lib/" + Obj + ".file");
             commands.Add("ls");
 
@@ -54,6 +56,8 @@ namespace IBMiCmd.IBMiTools
             Obj = Obj.ToUpper();
             Mbr = Mbr.ToUpper();
 
+            if (Lib == "*CURLIB") Lib = IBMi.GetConfig("curlib");
+
             commands.Add("ASCII");
             commands.Add("cd /QSYS.lib");
             commands.Add("recv \"" + Lib + ".lib/" + Obj + ".file/" + Mbr + ".mbr\" \"" + filetemp + "\"");
@@ -75,6 +79,8 @@ namespace IBMiCmd.IBMiTools
             Lib = Lib.ToUpper();
             Obj = Obj.ToUpper();
             Mbr = Mbr.ToUpper();
+
+            if (Lib == "*CURLIB") Lib = IBMi.GetConfig("curlib");
 
             commands.Add("ASCII");
             commands.Add("cd /QSYS.lib");

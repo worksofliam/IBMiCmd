@@ -25,6 +25,8 @@ namespace IBMiCmd.LanguageTools
             lib = lib.Trim().ToUpper();
             obj = obj.Trim().ToUpper();
 
+            if (lib == "*CURLIB") lib = IBMi.GetConfig("curlib");
+
             commands.Add("ASCII");
             commands.Add("cd /QSYS.lib");
             commands.Add("recv \"" + lib + ".lib/EVFEVENT.file/" + obj + ".mbr\" \"" + filetemp + "\"");

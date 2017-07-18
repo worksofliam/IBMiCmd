@@ -32,8 +32,6 @@ namespace IBMiCmd.Forms
             textBox2.Text = textBox2.Text.ToUpper();
             textBox3.Text = textBox3.Text.ToUpper();
 
-            if (textBox1.Text == "*CURLIB") textBox1.Text = IBMi.GetConfig("curlib");
-
             if (!IBMiUtilities.IsValidQSYSObjectName(textBox1.Text))
             {
                 MessageBox.Show("Library name is not valid.");
