@@ -72,38 +72,21 @@ namespace IBMiCmd.LanguageTools
             List<string> lines = new List<string>();
             List<string> pieces = new List<string>();
             string current = "";
-            int inBracket = 0;
-            Boolean inText = false;
 
             foreach (char c in Line.ToCharArray())
             {
                 switch (c)
                 {
                     case ' ':
-                        if (inBracket == 0 && !inText)
+                        if (current != "")
                         {
-                            if (current != "")
-                            {
-                                pieces.Add(current);
-                            }
+                            pieces.Add(current);
                             current = "";
                         }
                         else
                         {
                             current += c;
                         }
-                        break;
-                    case '(':
-                        if (!inText) inBracket++;
-                        current += c;
-                        break;
-                    case ')':
-                        if (!inText) inBracket--;
-                        current += c;
-                        break;
-                    case '\'':
-                        inText = !inText;
-                        current += c;
                         break;
                     default:
                         current += c;
