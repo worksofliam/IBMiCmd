@@ -42,6 +42,10 @@ namespace IBMiCmd.Forms
             label2.Text = "";
             label2.Update();
 
+            //Add a default library
+            if (listBox1.Items.Count == 0)
+                listBox1.Items.Add("SYSTOOLS");
+
             string s = "";
 			foreach (string item in listBox1.Items) {
                 if (IBMiUtilities.IsValidQSYSObjectName(item.Trim()))
