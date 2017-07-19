@@ -95,19 +95,19 @@ namespace IBMiCmd.LanguageTools
             }
             if (current != "") pieces.Add(current);
 
-            int commandLen = pieces[0].Length + 1;
+            int parmStart = StartSpace + pieces[0].Length + 1;
 
             current = "".PadLeft(StartSpace);
             foreach (string piece in pieces)
             {
-                if ((current.Length + piece.Length) < RecordLength)
+                if ((current.Length + piece.Length + 2) < RecordLength)
                 {
                     current += piece + ' ';
                 }
                 else
                 {
                     lines.Add(current.TrimEnd() + " +");
-                    current = "".PadLeft(StartSpace + commandLen) + piece + ' ';
+                    current = "".PadLeft(parmStart) + piece + ' ';
                 }
             }
 
