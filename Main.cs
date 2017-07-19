@@ -91,6 +91,7 @@ namespace IBMiCmd
             //PluginBase.SetCommand(ItemOrder++, "Upload Source Member", UploadMember, new ShortcutKey(true, false, true, Keys.X));
             PluginBase.SetCommand(ItemOrder++, "Open Include/Copy", OpenInclude, new ShortcutKey(true, false, false, Keys.F12));
             PluginBase.SetCommand(ItemOrder++, "-SEPARATOR-", null);
+            PluginBase.SetCommand(ItemOrder++, "Format CL file", ManageCL, new ShortcutKey(true, false, false, Keys.F4));
             PluginBase.SetCommand(ItemOrder++, "RPG Line Conversion", LaunchConversion, new ShortcutKey(true, false, false, Keys.F5));
             PluginBase.SetCommand(ItemOrder++, "RPG File Conversion", LaunchFileConversion, new ShortcutKey(true, false, false, Keys.F6));
             PluginBase.SetCommand(ItemOrder++, "-SEPARATOR-", null);
@@ -113,6 +114,12 @@ namespace IBMiCmd
         internal static void About()
         {
             MessageBox.Show($"IBMiCmd, created by Works Of Barry. { Environment.NewLine} github.com/WorksOfBarry/IBMiCmd");
+        }
+
+        internal static void ManageCL()
+        {
+            CLFile.CorrectLines(NppFunctions.GetCurrentFileName(), 80);
+            NppFunctions.RefreshWindow(NppFunctions.GetCurrentFileName());
         }
 
         internal static void LoadConfigSelect()

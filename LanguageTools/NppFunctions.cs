@@ -82,16 +82,28 @@ namespace IBMiCmd.LanguageTools
                 Win32.SendMessage(curScintilla, SciMsg.SCI_GRABFOCUS, 0, 0);
             }
         }
+        
+        public static string GetCurrentFileName()
+        {
+            var sb = new StringBuilder(Win32.MAX_PATH);
+            Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLCURRENTPATH, 0, sb);
+            return sb.ToString();
+        }
+
+        public static void RefreshWindow(string path)
+        {
+            Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_RELOADFILE, 0, path);
+            Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_MAKECURRENTBUFFERDIRTY, 0, 0);
+        }
 
         public static void HandleTrigger(SCNotification Notification)
         {
-            StringBuilder path = new StringBuilder(Win32.MAX_PATH);
+            string path = GetCurrentFileName();
             OpenMember member;
             switch (Notification.nmhdr.code)
             {
                 case (uint)NppMsg.NPPN_FILESAVED:
-                    Win32.SendMessage(Notification.nmhdr.hwndFrom, NppMsg.NPPM_GETFULLCURRENTPATH, 0, path);
-                    member = OpenMembers.GetMember(path.ToString());
+                    member = OpenMembers.GetMember(path);
                     if (member != null)
                     {
                         Thread gothread = new Thread((ThreadStart)delegate {  
@@ -114,11 +126,10 @@ namespace IBMiCmd.LanguageTools
                     break;
 
                 case (uint)NppMsg.NPPN_FILEBEFORECLOSE:
-                    Win32.SendMessage(Notification.nmhdr.hwndFrom, NppMsg.NPPM_GETFULLCURRENTPATH, 0, path);
-                    if (OpenMembers.Contains(path.ToString()))
+                    if (OpenMembers.Contains(path))
                     {
-                        OpenMembers.RemoveMember(path.ToString());
-                        File.Delete(path.ToString());
+                        OpenMembers.RemoveMember(path);
+                        File.Delete(path);
                     }
                     break;
             }

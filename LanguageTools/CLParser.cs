@@ -24,6 +24,116 @@ namespace IBMiCmd.LanguageTools
         }
     }
 
+    public class CLFile
+    {
+        public static void CorrectLines(string InputFile, int RecordLength)
+        {
+            List<string> outputFile = new List<string>();
+            foreach (string Line in File.ReadAllLines(InputFile))
+            {
+                if (Line.Length <= RecordLength)
+                {
+                    outputFile.Add(Line);
+                }
+                else
+                {
+                    foreach(string newLine in SplitUpLine(Line, FindStartSpace(Line), RecordLength))
+                    {
+                        outputFile.Add(newLine);
+                    }
+                }
+            }
+
+            File.WriteAllLines(InputFile, outputFile.ToArray());
+        }
+
+        public static int FindStartSpace(string Line)
+        {
+            int output = 0;
+
+            foreach(char c in Line.ToCharArray())
+            {
+                if (c == ' ')
+                {
+                    output++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return output;
+        }
+
+        public static string[] SplitUpLine(string Line, int StartSpace, int RecordLength)
+        {
+            Line = Line.Trim();
+            List<string> lines = new List<string>();
+            List<string> pieces = new List<string>();
+            string current = "";
+            int inBracket = 0;
+            Boolean inText = false;
+
+            foreach (char c in Line.ToCharArray())
+            {
+                switch (c)
+                {
+                    case ' ':
+                        if (inBracket == 0 && !inText)
+                        {
+                            if (current != "")
+                            {
+                                pieces.Add(current);
+                            }
+                            current = "";
+                        }
+                        else
+                        {
+                            current += c;
+                        }
+                        break;
+                    case '(':
+                        if (!inText) inBracket++;
+                        current += c;
+                        break;
+                    case ')':
+                        if (!inText) inBracket--;
+                        current += c;
+                        break;
+                    case '\'':
+                        inText = !inText;
+                        current += c;
+                        break;
+                    default:
+                        current += c;
+                        break;
+                }
+            }
+            if (current != "") pieces.Add(current);
+
+            int commandLen = pieces[0].Length + 1;
+
+            current = "".PadLeft(StartSpace);
+            foreach (string piece in pieces)
+            {
+                if ((current.Length + piece.Length) < RecordLength)
+                {
+                    current += piece + ' ';
+                }
+                else
+                {
+                    lines.Add(current.TrimEnd() + " +");
+                    current = "".PadLeft(StartSpace + commandLen) + piece + ' ';
+                }
+            }
+
+            if (current.Trim() != "") lines.Add(current);
+
+            return lines.ToArray();
+        }
+    }
+
     public class CLParser
     {
         // In memory cache of cl commands

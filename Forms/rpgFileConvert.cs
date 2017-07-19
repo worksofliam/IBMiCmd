@@ -18,7 +18,7 @@ namespace IBMiCmd.Forms
 
         private void rpgFileConvert_Load(object sender, EventArgs e)
         {
-            this._curFile = GetCurrentFileName();
+            this._curFile = NppFunctions.GetCurrentFileName();
             this.Text = "RPG Conversion - " + this._curFile;
             if (File.Exists(this._curFile))
             {
@@ -122,7 +122,7 @@ namespace IBMiCmd.Forms
         private void acceptToolStripMenuItem_Click(object sender, EventArgs e)
         {
             File.WriteAllLines(this._curFile, richTextBox2.Lines);
-            RefreshWindow(this._curFile);
+            NppFunctions.RefreshWindow(this._curFile);
             this.Close();
         }
 
@@ -131,18 +131,5 @@ namespace IBMiCmd.Forms
             this.Close();
         }
 
-
-        public static string GetCurrentFileName()
-        {
-            var sb = new StringBuilder(Win32.MAX_PATH);
-            Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLCURRENTPATH, 0, sb);
-            return sb.ToString();
-        }
-
-        public static void RefreshWindow(string path)
-        {
-            Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_RELOADFILE, 0, path);
-            Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_MAKECURRENTBUFFERDIRTY, 0, 0);
-        }
     }
 }
