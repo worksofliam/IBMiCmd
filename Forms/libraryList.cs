@@ -56,19 +56,33 @@ namespace IBMiCmd.Forms
                 }
             }
 
-            if (IBMiUtilities.IsValidQSYSObjectName(textBox2.Text.Trim())) {
-                IBMi.SetConfig("curlib", textBox2.Text.Trim()); //Remove last comma
-            }
-            else
+            if (!IBMiUtilities.IsValidQSYSObjectName(textBox2.Text.Trim())) 
             {
                 label2.Text = "Invalid current library.";
                 label2.Update();
                 return;
             }
 
-            IBMi.SetConfig("datalibl", s.Remove(s.Length - 1, 1)); //Remove last comma
+            string origLibl = IBMi.GetConfig("datalibl");
+            string origCur = IBMi.GetConfig("curlib");
 
-            this.Close();
+            IBMi.SetConfig("datalibl", s.Remove(s.Length - 1, 1)); //Remove last comma
+            IBMi.SetConfig("curlib", textBox2.Text.Trim()); //Remove last comma
+
+            Boolean hasFailed = IBMi.RunCommands(new string[0]);
+
+            if (hasFailed)
+            {
+                IBMi.SetConfig("datalibl", origLibl);
+                IBMi.SetConfig("curlib", origCur);
+
+                MessageBox.Show("Library list contains invalid libraries.", "Library list", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (Main.CommandWindow != null) Main.CommandWindow.loadNewOutput();
+            }
+            else
+            {
+                this.Close();
+            }
         }
 
         private void button3_Click(object sender, EventArgs e)
