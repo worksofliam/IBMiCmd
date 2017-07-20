@@ -91,22 +91,35 @@ namespace IBMiCmd.Forms
         
         private static string replaceVars(string cmd)
         {
-            StringBuilder path = new StringBuilder(Win32.MAX_PATH);
-            Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFILENAME, 0, path);
+            OpenMember currentMember = null;
+            string path = NppFunctions.GetCurrentFileName();
             string[] name;
-            if (path.ToString().Contains("."))
+
+            if (path.Contains("."))
             {
-                name = path.ToString().Split('.');
+                name = path.Split('.');
             }
             else
             {
                 name = new string[2];
-                name[0] = path.ToString();
+                name[0] = path;
                 name[1] = "";
             }
 
             cmd = cmd.Replace("%file%", name[0]);
             cmd = cmd.Replace("%ext%", name[1]);
+
+            cmd = cmd.Replace("%host%", IBMi.GetConfig("system"));
+            cmd = cmd.Replace("%user%", IBMi.GetConfig("user"));
+            cmd = cmd.Replace("%curlib%", IBMi.GetConfig("curlib"));
+
+            if (OpenMembers.Contains(path))
+            {
+                currentMember = OpenMembers.GetMember(path);
+                cmd = cmd.Replace("%openlib%", currentMember.GetLibrary());
+                cmd = cmd.Replace("%openspf%", currentMember.GetObject());
+                cmd = cmd.Replace("%openmbr%", currentMember.GetMember());
+            }
 
             return cmd;
         }
