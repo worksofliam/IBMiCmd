@@ -5,6 +5,7 @@ using System.Threading;
 using System.Windows.Forms;
 using IBMiCmd.LanguageTools;
 using IBMiCmd.IBMiTools;
+using System;
 
 namespace IBMiCmd.Forms
 {
@@ -51,6 +52,7 @@ namespace IBMiCmd.Forms
 
             if (e.Node.Tag.ToString().Trim() != "")
             {
+                toolStripStatusLabel1.Text = e.Node.Text + " in progress..";
                 cmds = e.Node.Tag.ToString().Split('|');
 
                 for(int i = 0; i < cmds.Length; i++)
@@ -85,8 +87,11 @@ namespace IBMiCmd.Forms
 
             if (errDsp != null)
             {
+                toolStripStatusLabel1.Text = "Fetching errors... ";
                 NppFunctions.DisplayErrors(errDsp[0], errDsp[1]);
             }
+
+            toolStripStatusLabel1.Text = "Finished at " + DateTime.Now.ToString("h:mm:ss tt");
         }
         
         private static string replaceVars(string cmd)
