@@ -35,10 +35,12 @@ namespace IBMiCmd.IBMiTools
 
                 _config.Add("localDefintionsInstalled", "false");
 
-                _config.Add("binds", "COMPILE|RELIC|BUILD");
-                _config.Add("COMPILE", "CD '/home/MYUSER'|CRTSQLRPGI OBJ(#MYUSER/%file%) SRCSTMF('%file%.%ext%') OPTION(*EVENTF) REPLACE(*YES) COMMIT(*NONE)|ERRORS #MYUSER %file%");
-                _config.Add("RELIC", "CRTBNDRPG OBJ(#MYUSER/RELIC) SRCSTMF('RelicPackageManager/QSOURCE/RELIC.SQLRPGLE') OPTION(*EVENTF) REPLACE(*YES) COMMIT(*NONE)");
-                _config.Add("BUILD", "CD '/home/MYUSER'|CRTBNDRPG PGM(#MYUSER/BUILD) SRCSTMF('RelicPackageManager/QSOURCE/BUILD.SQLRPGLE') OPTION(*EVENTF) REPLACE(*YES)|ERRORS #MYUSER BUILD");
+                _config.Add("binds", "MBR_CRTBNDRPG|MBR_CRTSQLRPGI|MBR_CRTBNDCL|MBR_CRTBNDC|IFS_CRTBNDRPG");
+                _config.Add("MBR_CRTBNDRPG", "CRTBNDRPG PGM(%openlib%/%openmbr%) SRCFILE(%openlib%/%openspf%) OPTION(*EVENTF) DBGVIEW(*SOURCE)|ERRORS %openlib% %openmbr%");
+                _config.Add("MBR_CRTSQLRPGI", "CRTSQLRPGI OBJ(%openlib%/%openmbr%) SRCFILE(%openlib%/%openspf%) COMMIT(*NONE) OPTION(*EVENTF *XREF)|ERRORS %openlib% %openmbr%");
+                _config.Add("MBR_CRTBNDCL", "CRTBNDCL PGM(%openlib%/%openmbr%) SRCFILE(%openlib%/%openspf%) OPTION(*EVENTF)|ERRORS %openlib% %openmbr%");
+                _config.Add("MBR_CRTBNDC", "CRTBNDC PGM(%openlib%/%openmbr%) SRCFILE(%openlib%/%openspf%) DBGVIEW(*SOURCE)|ERRORS %openlib% %openmbr%");
+                _config.Add("IFS_CRTBNDRPG", "CRTBNDRPG PGM(%curlib%/%file%) SRCSTMF('%file%.%ext%') OPTION(*EVENTF) DBGVIEW(*SOURCE)|ERRORS %curlib% %file%");
 
                 PrintConfig();
 
