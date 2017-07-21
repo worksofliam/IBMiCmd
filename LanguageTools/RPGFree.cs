@@ -27,7 +27,7 @@ namespace IBMiCmd.LanguageTools
             {
                 case '/':
                     if (line.ToUpper() == "FREE" || line.ToUpper() == "END-FREE") return "*BLANK";
-                    return "".PadLeft(6) + "/" + line;
+                    return "";
                 case '*':
                     if (line == "")
                     {
