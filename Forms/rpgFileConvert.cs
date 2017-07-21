@@ -40,7 +40,7 @@ namespace IBMiCmd.Forms
                         curLineStart = "*linestart";
                     }
 
-                    if (curLineStart != "DCL-PARM")
+                    if (curLineStart != "DCL-PARM" && curLineStart != "DCL-SUBF" && curLine != "*NAMEREM")
                     {
                         if (isPR)
                         {
@@ -69,7 +69,7 @@ namespace IBMiCmd.Forms
                         }
                     }
 
-                    if (curLine == "*BLANK")
+                    if (curLine == "*BLANK" || curLine == "*NAMEREM")
                     {
                         AppendNewText(richTextBox1, lines[i].TrimEnd(), Color.Red);
                     }

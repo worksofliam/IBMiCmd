@@ -5,6 +5,7 @@ namespace IBMiCmd.LanguageTools
     class RPGFree
     {
         private static string prevName = "";
+        private static Boolean isSubf = false;
         public static string getFree(string input)
         {
             input = ' ' + input.PadRight(80);
@@ -58,7 +59,7 @@ namespace IBMiCmd.LanguageTools
                     if (line.EndsWith("..."))
                     {
                         prevName = line.Substring(0, line.Length - 3);
-                        return "*BLANK";
+                        return "*NAMEREM";
                     }
 
                     switch (type.ToUpper())
@@ -156,6 +157,7 @@ namespace IBMiCmd.LanguageTools
                         case "PR":
                         case "PI":
                             if (name == "") name = "*N";
+                            isSubf = (field == "DS");
                             output = "Dcl-" + field + " " + name + " " + type + " " + keywords + ";";
                             break;
                         case "":
@@ -166,7 +168,7 @@ namespace IBMiCmd.LanguageTools
                             }
                             else
                             {
-                                output = "  Dcl-Parm " + name + " " + type + " " + keywords + ';';
+                                output = "  " + (isSubf ? "Dcl-Subf" : "Dcl-Parm") + " " + name + " " + type + " " + keywords + ';';
                             }
                             break;
                     }
@@ -183,7 +185,7 @@ namespace IBMiCmd.LanguageTools
                     if (line.EndsWith("..."))
                     {
                         prevName = line.Substring(0, line.Length - 3);
-                        return "*BLANK";
+                        return "*NAMEREM";
                     }
 
                     switch (Char.ToUpper(chars[24]))
