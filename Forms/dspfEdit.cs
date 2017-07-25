@@ -17,6 +17,17 @@ namespace IBMiCmd.Forms
         public dspfEdit()
         {
             InitializeComponent();
+
+            field_name.TextChanged += field_save_Click;
+            field_val.TextChanged += field_save_Click;
+            field_input.CheckedChanged += field_save_Click;
+            field_output.CheckedChanged += field_save_Click;
+            field_text.CheckedChanged += field_save_Click;
+            field_len.ValueChanged += field_save_Click;
+            field_colour.SelectedIndexChanged += field_save_Click;
+
+            field_x.ValueChanged += field_save_Click;
+            field_y.ValueChanged += field_save_Click;
         }
 
         private Control CurrentlySelectedField;
@@ -60,9 +71,20 @@ namespace IBMiCmd.Forms
             text.Tag = fieldInfo;
             text.Location = DSPFtoUILoc(fieldInfo.Position);
             text.MouseClick += label_MouseClick;
-            //if (Input) text.Font = new Font(text.Font, FontStyle.Underline);
 
             screen.Controls.Add(text);
+        }
+        
+        private void button1_Click(object sender, EventArgs e)
+        {
+            CurrentlySelectedField.Dispose();
+            groupBox1.Visible = false;
+        }
+
+        private void screen_MouseClick(object sender, MouseEventArgs e)
+        {
+            CurrentlySelectedField = null;
+            groupBox1.Visible = false;
         }
 
         public static Point DSPFtoUILoc(Point point)
@@ -134,18 +156,6 @@ namespace IBMiCmd.Forms
             {
                 CurrentlySelectedField.Font = new Font(CurrentlySelectedField.Font, FontStyle.Regular);
             }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            CurrentlySelectedField.Dispose();
-            groupBox1.Visible = false;
-        }
-
-        private void screen_MouseClick(object sender, MouseEventArgs e)
-        {
-            CurrentlySelectedField = null;
-            groupBox1.Visible = false;
         }
     }
 }
