@@ -33,6 +33,10 @@ namespace IBMiCmd.LanguageTools
                     return Color.Yellow;
                 case "BLUE":
                     return Color.LightBlue;
+                case "RED":
+                    return Color.Red;
+                case "WHITE":
+                    return Color.White;
 
                 default:
                     return Color.Green;

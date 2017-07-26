@@ -17,7 +17,6 @@ namespace IBMiCmd.Forms
         public dspfEdit()
         {
             InitializeComponent();
-
             field_name.TextChanged += field_save_Click;
             field_val.TextChanged += field_save_Click;
             field_input.CheckedChanged += field_save_Click;
@@ -33,10 +32,10 @@ namespace IBMiCmd.Forms
         private Control CurrentlySelectedField;
         private void label_MouseClick(object sender, MouseEventArgs e)
         {
+            CurrentlySelectedField = null;
+
             Control controlItem = (Control)sender;
             FieldInfo fieldInfo = (FieldInfo)controlItem.Tag;
-            
-            this.CurrentlySelectedField = controlItem;
             
             groupBox1.Visible = true;
             groupBox1.Text = fieldInfo.Name;
@@ -54,18 +53,21 @@ namespace IBMiCmd.Forms
 
             field_x.Value = fieldInfo.Position.X;
             field_y.Value = fieldInfo.Position.Y;
+
+            this.CurrentlySelectedField = controlItem;
         }
 
         public void AddLabel(FieldInfo.TextType Type, Point location)
         {
             Label text = new Label();
             FieldInfo fieldInfo = new FieldInfo();
-            fieldInfo.Name = "TEXT" + screen.Controls.Count.ToString();
-            fieldInfo.Length = 9;
-            fieldInfo.Value = "Text here";
+            fieldInfo.Name = Type.ToString().ToUpper() + screen.Controls.Count.ToString();
+            fieldInfo.Length = Type.ToString().Length;
+            fieldInfo.Value = Type.ToString();
             fieldInfo.Position = new Point(1, 1);
             fieldInfo.Type = Type;
 
+            text.AutoSize = true;
             text.Name = fieldInfo.Name;
             text.Text = fieldInfo.Value;
             text.Tag = fieldInfo;
@@ -99,7 +101,7 @@ namespace IBMiCmd.Forms
 
         private void inputToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AddLabel(FieldInfo.TextType.Output, new Point(1, 1));
+            AddLabel(FieldInfo.TextType.Input, new Point(1, 1));
         }
 
         private void outputToolStripMenuItem_Click(object sender, EventArgs e)
@@ -107,16 +109,21 @@ namespace IBMiCmd.Forms
             AddLabel(FieldInfo.TextType.Output, new Point(1, 1));
         }
 
+        private void textToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            AddLabel(FieldInfo.TextType.Text, new Point(1, 1));
+        }
+
         private void field_save_Click(object sender, EventArgs e)
         {
+            if (CurrentlySelectedField == null) return;
+
             FieldInfo fieldInfo = (FieldInfo)CurrentlySelectedField.Tag;
 
             fieldInfo.Name = field_name.Text;
             fieldInfo.Length = Convert.ToInt32(field_len.Value);
-            fieldInfo.Value = field_val.Text.PadRight(fieldInfo.Length);
+            fieldInfo.Value = field_val.Text;
             fieldInfo.Position = new Point(Convert.ToInt32(field_x.Value), Convert.ToInt32(field_y.Value));
-
-            field_len.Enabled = !field_text.Checked;
 
             if (field_input.Checked)
                 fieldInfo.Type = FieldInfo.TextType.Input;
@@ -125,11 +132,21 @@ namespace IBMiCmd.Forms
             if (field_text.Checked)
                 fieldInfo.Type = FieldInfo.TextType.Text;
 
-            if (fieldInfo.Type != FieldInfo.TextType.Text)
+            field_len.Enabled = (fieldInfo.Type != FieldInfo.TextType.Text);
+
+            if (fieldInfo.Type == FieldInfo.TextType.Text)
             {
-                if (field_len.Value < field_val.Text.Length)
+                if (fieldInfo.Value.Length == 0) fieldInfo.Value = "-";
+
+                fieldInfo.Length = fieldInfo.Value.Length;
+                field_len.Value = fieldInfo.Length;
+            }
+            else
+            {
+                if (fieldInfo.Value.Length > fieldInfo.Length)
                 {
-                    field_val.Text = field_val.Text.Substring(0, Convert.ToInt32(field_len.Value));
+                    fieldInfo.Value = fieldInfo.Value.Substring(0, fieldInfo.Length);
+                    field_val.Text = fieldInfo.Value;
                 }
             }
 
@@ -137,17 +154,17 @@ namespace IBMiCmd.Forms
                 fieldInfo.Colour = field_colour.SelectedItems[0].ToString();
             }
 
-            if (fieldInfo.Type == FieldInfo.TextType.Output) {
-                if (fieldInfo.Value.Trim() == "")
-                {
-                    fieldInfo.Value = "".PadRight(fieldInfo.Length, 'O');
-                }
-            }
-
             CurrentlySelectedField.Name = fieldInfo.Name;
-            CurrentlySelectedField.Text = fieldInfo.Value;
             CurrentlySelectedField.Location = DSPFtoUILoc(fieldInfo.Position);
             CurrentlySelectedField.ForeColor = FieldInfo.TextToColor(fieldInfo.Colour);
+            if (fieldInfo.Value.Trim() == "")
+            {
+                CurrentlySelectedField.Text = fieldInfo.Value.PadRight(fieldInfo.Length, '_');
+            }
+            else
+            {
+                CurrentlySelectedField.Text = fieldInfo.Value.PadRight(fieldInfo.Length);
+            }
             if (fieldInfo.Type == FieldInfo.TextType.Input)
             {
                 CurrentlySelectedField.Font = new Font(CurrentlySelectedField.Font, FontStyle.Underline);
