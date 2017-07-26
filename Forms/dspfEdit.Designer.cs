@@ -33,6 +33,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.insertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.recordFormatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.inputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.outputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,7 +41,6 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button1 = new System.Windows.Forms.Button();
             this.field_text = new System.Windows.Forms.RadioButton();
-            this.field_save = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.field_y = new System.Windows.Forms.NumericUpDown();
             this.field_x = new System.Windows.Forms.NumericUpDown();
@@ -55,12 +55,22 @@
             this.label2 = new System.Windows.Forms.Label();
             this.field_name = new System.Windows.Forms.TextBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
+            this.rec_funcs = new System.Windows.Forms.CheckedListBox();
+            this.rcd_name = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.screen.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.field_y)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.field_x)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.field_len)).BeginInit();
+            this.tabControl1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // screen
@@ -69,7 +79,7 @@
             this.screen.Controls.Add(this.label1);
             this.screen.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.screen.ForeColor = System.Drawing.Color.Lime;
-            this.screen.Location = new System.Drawing.Point(24, 42);
+            this.screen.Location = new System.Drawing.Point(204, 52);
             this.screen.Name = "screen";
             this.screen.Size = new System.Drawing.Size(640, 456);
             this.screen.TabIndex = 1;
@@ -94,7 +104,7 @@
             this.insertToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(927, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1106, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -107,10 +117,18 @@
             // insertToolStripMenuItem
             // 
             this.insertToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.recordFormatToolStripMenuItem,
             this.textToolStripMenuItem});
             this.insertToolStripMenuItem.Name = "insertToolStripMenuItem";
             this.insertToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.insertToolStripMenuItem.Text = "Insert";
+            // 
+            // recordFormatToolStripMenuItem
+            // 
+            this.recordFormatToolStripMenuItem.Name = "recordFormatToolStripMenuItem";
+            this.recordFormatToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.recordFormatToolStripMenuItem.Text = "Record Format";
+            this.recordFormatToolStripMenuItem.Click += new System.EventHandler(this.recordFormatToolStripMenuItem_Click);
             // 
             // textToolStripMenuItem
             // 
@@ -119,7 +137,7 @@
             this.outputToolStripMenuItem,
             this.textToolStripMenuItem1});
             this.textToolStripMenuItem.Name = "textToolStripMenuItem";
-            this.textToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
+            this.textToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.textToolStripMenuItem.Text = "Text";
             // 
             // inputToolStripMenuItem
@@ -147,7 +165,6 @@
             // 
             this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Controls.Add(this.field_text);
-            this.groupBox1.Controls.Add(this.field_save);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.field_y);
             this.groupBox1.Controls.Add(this.field_x);
@@ -161,7 +178,7 @@
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.field_name);
-            this.groupBox1.Location = new System.Drawing.Point(670, 53);
+            this.groupBox1.Location = new System.Drawing.Point(850, 63);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(239, 445);
             this.groupBox1.TabIndex = 3;
@@ -171,7 +188,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(13, 334);
+            this.button1.Location = new System.Drawing.Point(143, 410);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(90, 29);
             this.button1.TabIndex = 15;
@@ -189,16 +206,6 @@
             this.field_text.TabStop = true;
             this.field_text.Text = "Text";
             this.field_text.UseVisualStyleBackColor = true;
-            // 
-            // field_save
-            // 
-            this.field_save.Location = new System.Drawing.Point(109, 334);
-            this.field_save.Name = "field_save";
-            this.field_save.Size = new System.Drawing.Size(124, 29);
-            this.field_save.TabIndex = 13;
-            this.field_save.Text = "Update / Save";
-            this.field_save.UseVisualStyleBackColor = true;
-            this.field_save.Click += new System.EventHandler(this.field_save_Click);
             // 
             // label6
             // 
@@ -368,17 +375,126 @@
             // 
             this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(670, 42);
+            this.comboBox1.Location = new System.Drawing.Point(850, 52);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(239, 28);
             this.comboBox1.TabIndex = 5;
             this.comboBox1.SelectedValueChanged += new System.EventHandler(this.comboBox1_SelectedValueChanged);
             // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Location = new System.Drawing.Point(204, 27);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(637, 25);
+            this.tabControl1.TabIndex = 6;
+            this.tabControl1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Selecting);
+            this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_TabIndexChanged);
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Location = new System.Drawing.Point(4, 29);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(629, 0);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "FORMAT1";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.button2);
+            this.groupBox2.Controls.Add(this.label8);
+            this.groupBox2.Controls.Add(this.rec_funcs);
+            this.groupBox2.Controls.Add(this.rcd_name);
+            this.groupBox2.Controls.Add(this.label7);
+            this.groupBox2.Location = new System.Drawing.Point(12, 27);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(186, 481);
+            this.groupBox2.TabIndex = 7;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Record Format";
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(105, 446);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 29);
+            this.button2.TabIndex = 4;
+            this.button2.Text = "Save";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(15, 89);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(107, 20);
+            this.label8.TabIndex = 3;
+            this.label8.Text = "Function keys";
+            // 
+            // rec_funcs
+            // 
+            this.rec_funcs.ColumnWidth = 50;
+            this.rec_funcs.FormattingEnabled = true;
+            this.rec_funcs.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24"});
+            this.rec_funcs.Location = new System.Drawing.Point(19, 112);
+            this.rec_funcs.MultiColumn = true;
+            this.rec_funcs.Name = "rec_funcs";
+            this.rec_funcs.Size = new System.Drawing.Size(152, 130);
+            this.rec_funcs.TabIndex = 2;
+            // 
+            // rcd_name
+            // 
+            this.rcd_name.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.rcd_name.Location = new System.Drawing.Point(71, 33);
+            this.rcd_name.MaxLength = 10;
+            this.rcd_name.Name = "rcd_name";
+            this.rcd_name.Size = new System.Drawing.Size(100, 26);
+            this.rcd_name.TabIndex = 1;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(15, 36);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(51, 20);
+            this.label7.TabIndex = 0;
+            this.label7.Text = "Name";
+            // 
             // dspfEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(927, 542);
+            this.ClientSize = new System.Drawing.Size(1106, 518);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.screen);
@@ -400,6 +516,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.field_y)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.field_x)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.field_len)).EndInit();
+            this.tabControl1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -429,10 +548,18 @@
         private System.Windows.Forms.NumericUpDown field_y;
         private System.Windows.Forms.NumericUpDown field_x;
         private System.Windows.Forms.ToolStripMenuItem outputToolStripMenuItem;
-        private System.Windows.Forms.Button field_save;
         private System.Windows.Forms.RadioButton field_text;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ToolStripMenuItem textToolStripMenuItem1;
         private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.ToolStripMenuItem recordFormatToolStripMenuItem;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.TextBox rcd_name;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.CheckedListBox rec_funcs;
+        private System.Windows.Forms.Button button2;
     }
 }

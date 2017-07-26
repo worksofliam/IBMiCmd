@@ -14,6 +14,7 @@ namespace IBMiCmd.Forms
 
     public partial class dspfEdit : Form
     {
+        private int fieldCounter = 0;
         public dspfEdit()
         {
             InitializeComponent();
@@ -27,6 +28,9 @@ namespace IBMiCmd.Forms
 
             field_x.ValueChanged += field_save_Click;
             field_y.ValueChanged += field_save_Click;
+
+            this.CurrentRecordFormat = tabControl1.SelectedTab.Text;
+            rcd_name.Text = this.CurrentRecordFormat;
         }
 
         #region onClicks
@@ -80,6 +84,28 @@ namespace IBMiCmd.Forms
             groupBox1.Visible = false;
         }
 
+        private void comboBox1_SelectedValueChanged(object sender, EventArgs e)
+        {
+            int index = comboBox1.SelectedIndex;
+            if (index >= 0)
+            {
+                if (screen.Controls[comboBox1.Items[index].ToString()] != null)
+                {
+                    if (CurrentlySelectedField != null)
+                    {
+                        if (CurrentlySelectedField.Name != comboBox1.Items[index].ToString())
+                        {
+                            label_MouseClick(screen.Controls[comboBox1.Items[index].ToString()], null);
+                        }
+                    }
+                    else
+                    {
+                        label_MouseClick(screen.Controls[comboBox1.Items[index].ToString()], null);
+                    }
+                }
+            }
+        }
+
         #endregion
 
         public static Point DSPFtoUILoc(Point point)
@@ -93,25 +119,54 @@ namespace IBMiCmd.Forms
         }
 
         #region LabelAdding
-        public void AddLabel(FieldInfo.TextType Type, Point location)
+        public void AddLabel(FieldInfo.TextType Type, Point location, FieldInfo PreInfo = null)
         {
             Label text = new Label();
-            FieldInfo fieldInfo = new FieldInfo();
-            fieldInfo.Name = Type.ToString().ToUpper() + screen.Controls.Count.ToString();
-            fieldInfo.Length = Type.ToString().Length;
-            fieldInfo.Value = Type.ToString();
-            fieldInfo.Position = new Point(1, 1);
-            fieldInfo.Type = Type;
+            FieldInfo fieldInfo;
+
+            if (PreInfo == null)
+            {
+                fieldCounter++;
+                fieldInfo = new FieldInfo();
+                fieldInfo.Name = Type.ToString().ToUpper() + fieldCounter.ToString();
+                fieldInfo.Length = Type.ToString().Length;
+                fieldInfo.Value = Type.ToString();
+                fieldInfo.Position = location;
+                fieldInfo.Type = Type;
+            }
+            else
+            {
+                fieldInfo = PreInfo;
+            }
 
             text.AutoSize = true;
             text.Name = fieldInfo.Name;
             text.Text = fieldInfo.Value;
             text.Tag = fieldInfo;
             text.Location = DSPFtoUILoc(fieldInfo.Position);
+
+            text.ForeColor = FieldInfo.TextToColor(fieldInfo.Colour);
+            if (fieldInfo.Value.Trim() == "")
+            {
+                text.Text = fieldInfo.Value.PadRight(fieldInfo.Length, '_');
+            }
+            else
+            {
+                text.Text = fieldInfo.Value.PadRight(fieldInfo.Length);
+            }
+
+            if (fieldInfo.Type == FieldInfo.TextType.Input)
+            {
+                text.Font = new Font(screen.Font, FontStyle.Underline);
+            }
+            else
+            {
+                text.Font = new Font(screen.Font, FontStyle.Regular);
+            }
+
             text.MouseClick += label_MouseClick;
 
             screen.Controls.Add(text);
-
             comboBox1.Items.Add(fieldInfo.Name);
         }
 
@@ -196,26 +251,96 @@ namespace IBMiCmd.Forms
                 CurrentlySelectedField.Font = new Font(CurrentlySelectedField.Font, FontStyle.Regular);
             }
         }
+        
+        #region Record Formats
+        private Dictionary<string, RecordInfo> RecordFormats = new Dictionary<string, RecordInfo>();
+        private string CurrentRecordFormat = "";
 
-        private void comboBox1_SelectedValueChanged(object sender, EventArgs e)
+        private void recordFormatToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int index = comboBox1.SelectedIndex;
-            if (index >= 0) {
-                if (screen.Controls[comboBox1.Items[index].ToString()] != null)
-                {
-                    if (CurrentlySelectedField != null)
-                    {
-                        if (CurrentlySelectedField.Name != comboBox1.Items[index].ToString())
-                        {
-                            label_MouseClick(screen.Controls[comboBox1.Items[index].ToString()], null);
-                        }
-                    }
-                    else
-                    {
-                        label_MouseClick(screen.Controls[comboBox1.Items[index].ToString()], null);
-                    }
-                }
+            newRcdFmt newrcdfmt = new newRcdFmt();
+
+            newrcdfmt.ShowDialog();
+            if (newrcdfmt.name.Trim() != "")
+            {
+                tabControl1.TabPages.Add(new TabPage(newrcdfmt.name));
             }
         }
+        
+        private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            //Saving old tab
+            TabPage current = (sender as TabControl).SelectedTab;
+            string RcdFmtName = this.CurrentRecordFormat;
+
+            SaveFormat(RcdFmtName);
+
+            screen.Controls.Clear();
+        }
+
+        private void tabControl1_TabIndexChanged(object sender, TabControlEventArgs e)
+        {
+            //Loading new tab
+            string RcdFmtName = tabControl1.SelectedTab.Text;
+            this.CurrentRecordFormat = RcdFmtName;
+
+            rcd_name.Text = this.CurrentRecordFormat;
+
+            if (!RecordFormats.ContainsKey(RcdFmtName))
+                RecordFormats.Add(RcdFmtName, new RecordInfo(RcdFmtName));
+
+            comboBox1.Items.Clear();
+            foreach (FieldInfo field in RecordFormats[RcdFmtName].Fields)
+            {
+                AddLabel(field.Type, field.Position, field);
+            }
+            
+            for (int i = 0; i < 24; i++) 
+            {
+                rec_funcs.SetItemChecked(i, RecordFormats[RcdFmtName].FunctionKeys[i]);
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //Handle rename
+            if (this.CurrentRecordFormat != rcd_name.Text)
+            {
+                if (RecordFormats.ContainsKey(this.CurrentRecordFormat))
+                {
+                    RecordFormats.Remove(this.CurrentRecordFormat);
+                }
+                tabControl1.SelectedTab.Text = rcd_name.Text;
+            }
+
+            SaveFormat(rcd_name.Text);
+            this.CurrentRecordFormat = rcd_name.Text;
+        }
+
+        private void SaveFormat(string RcdFmtName)
+        {
+            List<FieldInfo> RecordFields = new List<FieldInfo>();
+
+            foreach (Control field in screen.Controls)
+            {
+                if (field.Tag is FieldInfo)
+                {
+                    RecordFields.Add(field.Tag as FieldInfo);
+                }
+            }
+
+            if (!RecordFormats.ContainsKey(RcdFmtName))
+                RecordFormats.Add(RcdFmtName, new RecordInfo(RcdFmtName));
+
+            RecordFormats[RcdFmtName].Fields = RecordFields.ToArray();
+            
+            for (int i = 0; i < 24; i++) 
+            {
+                RecordFormats[RcdFmtName].FunctionKeys[i] = rec_funcs.GetItemChecked(i);
+            }
+
+            RecordFormats[RcdFmtName].Name = RcdFmtName;
+        }
+        #endregion
     }
 }

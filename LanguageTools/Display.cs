@@ -7,6 +7,25 @@ using System.Threading.Tasks;
 
 namespace IBMiCmd.LanguageTools
 {
+    public class RecordInfo
+    {
+        public string Name;
+        public FieldInfo[] Fields;
+        public Boolean[] FunctionKeys;
+
+        public RecordInfo(String name)
+        {
+            Name = name;
+            Fields = new FieldInfo[0];
+            FunctionKeys = new Boolean[24];
+
+            for (int i = 0; i < 24; i++)
+            {
+                FunctionKeys[i] = false;
+            }
+        }
+    }
+
     public class FieldInfo
     {
         public string Name;
