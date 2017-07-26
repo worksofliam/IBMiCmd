@@ -61,6 +61,7 @@
             this.rcd_name = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.field_both = new System.Windows.Forms.RadioButton();
+            this.field_hidden = new System.Windows.Forms.RadioButton();
             this.screen.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -137,6 +138,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.field_hidden);
             this.groupBox1.Controls.Add(this.field_both);
             this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Controls.Add(this.field_text);
@@ -185,7 +187,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(2, 328);
+            this.label6.Location = new System.Drawing.Point(2, 353);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(70, 20);
             this.label6.TabIndex = 12;
@@ -193,7 +195,7 @@
             // 
             // field_y
             // 
-            this.field_y.Location = new System.Drawing.Point(156, 326);
+            this.field_y.Location = new System.Drawing.Point(156, 351);
             this.field_y.Maximum = new decimal(new int[] {
             24,
             0,
@@ -215,7 +217,7 @@
             // 
             // field_x
             // 
-            this.field_x.Location = new System.Drawing.Point(73, 326);
+            this.field_x.Location = new System.Drawing.Point(73, 351);
             this.field_x.Maximum = new decimal(new int[] {
             80,
             0,
@@ -238,7 +240,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(11, 240);
+            this.label5.Location = new System.Drawing.Point(11, 265);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(55, 20);
             this.label5.TabIndex = 9;
@@ -254,7 +256,7 @@
             "Blue",
             "Red",
             "White"});
-            this.field_colour.Location = new System.Drawing.Point(73, 231);
+            this.field_colour.Location = new System.Drawing.Point(73, 256);
             this.field_colour.Name = "field_colour";
             this.field_colour.Size = new System.Drawing.Size(160, 84);
             this.field_colour.TabIndex = 8;
@@ -262,7 +264,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 189);
+            this.label4.Location = new System.Drawing.Point(9, 214);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(59, 20);
             this.label4.TabIndex = 7;
@@ -270,7 +272,7 @@
             // 
             // field_len
             // 
-            this.field_len.Location = new System.Drawing.Point(73, 187);
+            this.field_len.Location = new System.Drawing.Point(73, 212);
             this.field_len.Maximum = new decimal(new int[] {
             80,
             0,
@@ -474,6 +476,17 @@
             this.field_both.Text = "Both";
             this.field_both.UseVisualStyleBackColor = true;
             // 
+            // field_hidden
+            // 
+            this.field_hidden.AutoSize = true;
+            this.field_hidden.Location = new System.Drawing.Point(149, 176);
+            this.field_hidden.Name = "field_hidden";
+            this.field_hidden.Size = new System.Drawing.Size(78, 24);
+            this.field_hidden.TabIndex = 17;
+            this.field_hidden.TabStop = true;
+            this.field_hidden.Text = "Hidden";
+            this.field_hidden.UseVisualStyleBackColor = true;
+            // 
             // dspfEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -545,5 +558,6 @@
         private System.Windows.Forms.CheckedListBox rec_funcs;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.RadioButton field_both;
+        private System.Windows.Forms.RadioButton field_hidden;
     }
 }

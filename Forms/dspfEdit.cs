@@ -77,18 +77,26 @@ namespace IBMiCmd.Forms
 
             field_name.Text = fieldInfo.Name;
             field_val.Text = fieldInfo.Value;
+
             field_input.Checked = fieldInfo.Type == FieldInfo.TextType.Input;
             field_output.Checked = fieldInfo.Type == FieldInfo.TextType.Output;
             field_text.Checked = fieldInfo.Type == FieldInfo.TextType.Text;
             field_both.Checked = fieldInfo.Type == FieldInfo.TextType.Both;
+            field_hidden.Checked = fieldInfo.Type == FieldInfo.TextType.Hidden;
 
             field_len.Enabled = !field_text.Checked;
             field_len.Value = fieldInfo.Length;
 
             field_colour.SelectedIndex = field_colour.Items.IndexOf(fieldInfo.Colour);
 
-            field_x.Value = fieldInfo.Position.X;
-            field_y.Value = fieldInfo.Position.Y;
+            field_x.Enabled = (fieldInfo.Type != FieldInfo.TextType.Hidden);
+            field_y.Enabled = (fieldInfo.Type != FieldInfo.TextType.Hidden);
+
+            if (fieldInfo.Type != FieldInfo.TextType.Hidden)
+            {
+                field_x.Value = fieldInfo.Position.X;
+                field_y.Value = fieldInfo.Position.Y;
+            }
 
             int index = comboBox1.Items.IndexOf(fieldInfo.Name);
             if (index >= 0)
@@ -174,6 +182,7 @@ namespace IBMiCmd.Forms
             text.Text = fieldInfo.Value;
             text.Tag = fieldInfo;
             text.Location = DSPFtoUILoc(fieldInfo.Position);
+            text.Visible = (fieldInfo.Type != FieldInfo.TextType.Hidden);
 
             text.ForeColor = FieldInfo.TextToColor(fieldInfo.Colour);
             if (fieldInfo.Value.Trim() == "")
@@ -226,8 +235,13 @@ namespace IBMiCmd.Forms
                 fieldInfo.Type = FieldInfo.TextType.Text;
             if (field_both.Checked)
                 fieldInfo.Type = FieldInfo.TextType.Both;
+            if (field_hidden.Checked)
+                fieldInfo.Type = FieldInfo.TextType.Hidden;
 
             field_len.Enabled = (fieldInfo.Type != FieldInfo.TextType.Text);
+
+            field_x.Enabled = (fieldInfo.Type != FieldInfo.TextType.Hidden);
+            field_y.Enabled = (fieldInfo.Type != FieldInfo.TextType.Hidden);
 
             if (fieldInfo.Type == FieldInfo.TextType.Text)
             {
@@ -256,6 +270,7 @@ namespace IBMiCmd.Forms
             CurrentlySelectedField.Name = fieldInfo.Name;
             CurrentlySelectedField.Location = DSPFtoUILoc(fieldInfo.Position);
             CurrentlySelectedField.ForeColor = FieldInfo.TextToColor(fieldInfo.Colour);
+            CurrentlySelectedField.Visible = (fieldInfo.Type != FieldInfo.TextType.Hidden);
             if (fieldInfo.Value.Trim() == "")
             {
                 CurrentlySelectedField.Text = fieldInfo.Value.PadRight(fieldInfo.Length, '_');
@@ -303,6 +318,7 @@ namespace IBMiCmd.Forms
         private void tabControl1_TabIndexChanged(object sender, TabControlEventArgs e)
         {
             //Loading new tab
+            groupBox1.Visible = false;
             string RcdFmtName = tabControl1.SelectedTab.Text;
             LoadFormat(RcdFmtName);
         }

@@ -96,7 +96,6 @@ namespace IBMiCmd
             PluginBase.SetCommand(ItemOrder++, "RPG File Conversion", LaunchFileConversion, new ShortcutKey(true, false, false, Keys.F6));
             PluginBase.SetCommand(ItemOrder++, "-SEPARATOR-", null);
             PluginBase.SetCommand(ItemOrder++, "Display File Editor", DisplayEdit);
-            PluginBase.SetCommand(ItemOrder++, "Display File Parser", DisplayParse);
             if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Refresh Extname Definitions", BuildSourceContext);
             if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Extname Content Assist", AutoComplete, new ShortcutKey(false, true, false, Keys.Space));
             if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Prompt CL Command", PromptCommand, new ShortcutKey(true, false, false, Keys.F4));
@@ -130,10 +129,6 @@ namespace IBMiCmd
             }
 
             Editor.Show();
-        }
-
-        internal static void DisplayParse()
-        {
         }
 
         internal static void ManageCL()

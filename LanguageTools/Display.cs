@@ -26,72 +26,93 @@ namespace IBMiCmd.LanguageTools
 
         public void ParseLines(string[] Lines)
         {
+            int textcounter = 0;
             char[] chars;
             string name, len, type, dec, inout, x, y, keywords, Line = "";
 
             //https://www.ibm.com/support/knowledgecenter/ssw_ibm_i_73/rzakc/rzakcmstpsnent.htm
-            foreach (string TrueLine in Lines)
+            try
             {
-                Line = TrueLine.PadRight(80);
-                chars = Line.ToCharArray();
-                name = buildString(chars, 18, 10).Trim();
-                len = buildString(chars, 29, 5).Trim();
-                type = chars[34].ToString().ToUpper();
-                dec = buildString(chars, 35, 2).Trim();
-                inout = chars[37].ToString().ToUpper();
-                y = buildString(chars, 39, 2).Trim();
-                x = buildString(chars, 42, 2).Trim();
-                keywords = Line.Substring(44).Trim();
-
-                switch (chars[16])
+                foreach (string TrueLine in Lines)
                 {
-                    case 'R':
-                        if (CurrentField != null) CurrentFields.Add(CurrentField);
-                        if (CurrentFields != null) CurrentRecord.Fields = CurrentFields.ToArray();
-                        if (CurrentRecord != null) Formats.Add(CurrentRecord.Name, CurrentRecord);
+                    Line = TrueLine.PadRight(80);
+                    chars = Line.ToCharArray();
+                    name = buildString(chars, 18, 10).Trim();
+                    len = buildString(chars, 29, 5).Trim();
+                    type = chars[34].ToString().ToUpper();
+                    dec = buildString(chars, 35, 2).Trim();
+                    inout = chars[37].ToString().ToUpper();
+                    y = buildString(chars, 39, 2).Trim();
+                    x = buildString(chars, 42, 2).Trim();
+                    keywords = Line.Substring(44).Trim();
 
-                        CurrentRecord = new RecordInfo(name);
-                        CurrentFields = new List<FieldInfo>();
-                        HandleKeywords(keywords);
-                        break;
-                    case ' ':
-                        if (x != "" && y != "")
-                        {
-                            if (CurrentField != null)
-                                CurrentFields.Add(CurrentField);
+                    switch (chars[16])
+                    {
+                        case 'R':
+                            if (CurrentField != null) CurrentFields.Add(CurrentField);
+                            if (CurrentFields != null) CurrentRecord.Fields = CurrentFields.ToArray();
+                            if (CurrentRecord != null) Formats.Add(CurrentRecord.Name, CurrentRecord);
 
-                            CurrentField = new FieldInfo();
-                            CurrentField.Position = new Point(Convert.ToInt32(x), Convert.ToInt32(y));
-                        }
-                        if (name != "")
-                        {
-                            CurrentField.Name = name;
-                            CurrentField.Value = "";
-                            CurrentField.Length = Convert.ToInt32(len);
-                            switch (inout)
+                            CurrentRecord = new RecordInfo(name);
+                            CurrentFields = new List<FieldInfo>();
+                            CurrentField = null;
+                            HandleKeywords(keywords);
+                            break;
+                        case ' ':
+                            if ((x != "" && y != "") || inout == "H")
                             {
-                                case "I":
-                                    CurrentField.Type = FieldInfo.TextType.Input;
-                                    break;
-                                case "B":
-                                    CurrentField.Type = FieldInfo.TextType.Both;
-                                    break;
-                                case " ":
-                                case "O":
-                                    CurrentField.Type = FieldInfo.TextType.Output;
-                                    break;
+                                if (CurrentField != null)
+                                    CurrentFields.Add(CurrentField);
+
+                                if (inout == "H")
+                                {
+                                    x = "0"; y = "0";
+                                }
+
+                                CurrentField = new FieldInfo();
+                                CurrentField.Position = new Point(Convert.ToInt32(x), Convert.ToInt32(y));
                             }
-                            HandleKeywords(keywords);
-                        }
-                        else
-                        {
-                            CurrentField.Name = "TEXT";
-                            HandleKeywords(keywords);
-                            CurrentField.Length = CurrentField.Value.Length;
-                            CurrentField.Type = FieldInfo.TextType.Text;
-                        }
-                        break;
+                            if (name != "")
+                            {
+                                CurrentField.Name = name;
+                                CurrentField.Value = "";
+                                CurrentField.Length = Convert.ToInt32(len);
+                                switch (inout)
+                                {
+                                    case "I":
+                                        CurrentField.Type = FieldInfo.TextType.Input;
+                                        break;
+                                    case "B":
+                                        CurrentField.Type = FieldInfo.TextType.Both;
+                                        break;
+                                    case "H":
+                                        CurrentField.Type = FieldInfo.TextType.Hidden;
+                                        break;
+                                    case " ":
+                                    case "O":
+                                        CurrentField.Type = FieldInfo.TextType.Output;
+                                        break;
+                                }
+                                HandleKeywords(keywords);
+                            }
+                            else
+                            {
+                                HandleKeywords(keywords);
+                                if (CurrentField != null)
+                                {
+                                    textcounter++;
+                                    CurrentField.Name = "TEXT" + textcounter.ToString();
+                                    CurrentField.Length = CurrentField.Value.Length;
+                                    CurrentField.Type = FieldInfo.TextType.Text;
+                                }
+                            }
+                            break;
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Line error " + Line);
             }
 
             if (CurrentField != null) CurrentFields.Add(CurrentField);
@@ -144,7 +165,7 @@ namespace IBMiCmd.LanguageTools
 
                 if (option.StartsWith("CA"))
                 {
-                    CurrentRecord.FunctionKeys[Convert.ToInt32(value)] = true;
+                    CurrentRecord.FunctionKeys[Convert.ToInt32(value)-1] = true;
                 }
             }
         }
@@ -188,7 +209,8 @@ namespace IBMiCmd.LanguageTools
             Input,
             Output,
             Both,
-            Text
+            Text,
+            Hidden
         }
 
         public static Color TextToColor(string Colour)
