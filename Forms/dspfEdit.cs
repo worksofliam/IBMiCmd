@@ -29,6 +29,8 @@ namespace IBMiCmd.Forms
             field_y.ValueChanged += field_save_Click;
         }
 
+        #region onClicks
+
         private Control CurrentlySelectedField;
         private void label_MouseClick(object sender, MouseEventArgs e)
         {
@@ -54,9 +56,43 @@ namespace IBMiCmd.Forms
             field_x.Value = fieldInfo.Position.X;
             field_y.Value = fieldInfo.Position.Y;
 
+            int index = comboBox1.Items.IndexOf(fieldInfo.Name);
+            if (index >= 0)
+                comboBox1.SelectedIndex = index;
+
             this.CurrentlySelectedField = controlItem;
         }
+        
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int index = comboBox1.Items.IndexOf(CurrentlySelectedField.Name);
+            if (index >= 0)
+                comboBox1.Items.RemoveAt(index);
 
+            CurrentlySelectedField.Dispose();
+            groupBox1.Visible = false;
+        }
+
+        private void screen_MouseClick(object sender, MouseEventArgs e)
+        {
+            comboBox1.SelectedIndex = -1;
+            CurrentlySelectedField = null;
+            groupBox1.Visible = false;
+        }
+
+        #endregion
+
+        public static Point DSPFtoUILoc(Point point)
+        {
+            int x = point.X - 1, y = point.Y - 1;
+
+            x = x * 8;
+            y = y * 19;
+
+            return new Point(x, y);
+        }
+
+        #region LabelAdding
         public void AddLabel(FieldInfo.TextType Type, Point location)
         {
             Label text = new Label();
@@ -75,28 +111,8 @@ namespace IBMiCmd.Forms
             text.MouseClick += label_MouseClick;
 
             screen.Controls.Add(text);
-        }
-        
-        private void button1_Click(object sender, EventArgs e)
-        {
-            CurrentlySelectedField.Dispose();
-            groupBox1.Visible = false;
-        }
 
-        private void screen_MouseClick(object sender, MouseEventArgs e)
-        {
-            CurrentlySelectedField = null;
-            groupBox1.Visible = false;
-        }
-
-        public static Point DSPFtoUILoc(Point point)
-        {
-            int x = point.X - 1, y = point.Y - 1;
-
-            x = x * 8;
-            y = y * 19;
-
-            return new Point(x, y);
+            comboBox1.Items.Add(fieldInfo.Name);
         }
 
         private void inputToolStripMenuItem_Click(object sender, EventArgs e)
@@ -113,12 +129,15 @@ namespace IBMiCmd.Forms
         {
             AddLabel(FieldInfo.TextType.Text, new Point(1, 1));
         }
+        #endregion
 
         private void field_save_Click(object sender, EventArgs e)
         {
             if (CurrentlySelectedField == null) return;
 
             FieldInfo fieldInfo = (FieldInfo)CurrentlySelectedField.Tag;
+
+            if (field_name.Text.Trim() == "") field_name.Text = "FIELD";
 
             fieldInfo.Name = field_name.Text;
             fieldInfo.Length = Convert.ToInt32(field_len.Value);
@@ -154,6 +173,10 @@ namespace IBMiCmd.Forms
                 fieldInfo.Colour = field_colour.SelectedItems[0].ToString();
             }
 
+            int index = comboBox1.Items.IndexOf(CurrentlySelectedField.Name);
+            if (index >= 0)
+                comboBox1.Items[index] = fieldInfo.Name;
+
             CurrentlySelectedField.Name = fieldInfo.Name;
             CurrentlySelectedField.Location = DSPFtoUILoc(fieldInfo.Position);
             CurrentlySelectedField.ForeColor = FieldInfo.TextToColor(fieldInfo.Colour);
@@ -172,6 +195,24 @@ namespace IBMiCmd.Forms
             else
             {
                 CurrentlySelectedField.Font = new Font(CurrentlySelectedField.Font, FontStyle.Regular);
+            }
+        }
+
+        private void comboBox1_SelectedValueChanged(object sender, EventArgs e)
+        {
+            int index = comboBox1.SelectedIndex;
+            if (index >= 0) {
+                if (CurrentlySelectedField != null)
+                {
+                    if (CurrentlySelectedField.Name != comboBox1.Items[index].ToString())
+                    {
+                        label_MouseClick(screen.Controls[comboBox1.Items[index].ToString()], null);
+                    }
+                }
+                else
+                {
+                    label_MouseClick(screen.Controls[comboBox1.Items[index].ToString()], null);
+                }
             }
         }
     }
