@@ -35,9 +35,6 @@
             this.insertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.recordFormatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.inputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.outputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.textToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button1 = new System.Windows.Forms.Button();
             this.field_text = new System.Windows.Forms.RadioButton();
@@ -63,6 +60,7 @@
             this.rec_funcs = new System.Windows.Forms.CheckedListBox();
             this.rcd_name = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.field_both = new System.Windows.Forms.RadioButton();
             this.screen.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -132,37 +130,14 @@
             // 
             // textToolStripMenuItem
             // 
-            this.textToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.inputToolStripMenuItem,
-            this.outputToolStripMenuItem,
-            this.textToolStripMenuItem1});
             this.textToolStripMenuItem.Name = "textToolStripMenuItem";
             this.textToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.textToolStripMenuItem.Text = "Text";
-            // 
-            // inputToolStripMenuItem
-            // 
-            this.inputToolStripMenuItem.Name = "inputToolStripMenuItem";
-            this.inputToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
-            this.inputToolStripMenuItem.Text = "Input";
-            this.inputToolStripMenuItem.Click += new System.EventHandler(this.inputToolStripMenuItem_Click);
-            // 
-            // outputToolStripMenuItem
-            // 
-            this.outputToolStripMenuItem.Name = "outputToolStripMenuItem";
-            this.outputToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
-            this.outputToolStripMenuItem.Text = "Output";
-            this.outputToolStripMenuItem.Click += new System.EventHandler(this.outputToolStripMenuItem_Click);
-            // 
-            // textToolStripMenuItem1
-            // 
-            this.textToolStripMenuItem1.Name = "textToolStripMenuItem1";
-            this.textToolStripMenuItem1.Size = new System.Drawing.Size(112, 22);
-            this.textToolStripMenuItem1.Text = "Text";
-            this.textToolStripMenuItem1.Click += new System.EventHandler(this.textToolStripMenuItem1_Click);
+            this.textToolStripMenuItem.Click += new System.EventHandler(this.textToolStripMenuItem_Click);
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.field_both);
             this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Controls.Add(this.field_text);
             this.groupBox1.Controls.Add(this.label6);
@@ -199,7 +174,7 @@
             // field_text
             // 
             this.field_text.AutoSize = true;
-            this.field_text.Location = new System.Drawing.Point(168, 117);
+            this.field_text.Location = new System.Drawing.Point(149, 117);
             this.field_text.Name = "field_text";
             this.field_text.Size = new System.Drawing.Size(57, 24);
             this.field_text.TabIndex = 14;
@@ -210,7 +185,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(2, 295);
+            this.label6.Location = new System.Drawing.Point(2, 328);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(70, 20);
             this.label6.TabIndex = 12;
@@ -218,7 +193,7 @@
             // 
             // field_y
             // 
-            this.field_y.Location = new System.Drawing.Point(156, 293);
+            this.field_y.Location = new System.Drawing.Point(156, 326);
             this.field_y.Maximum = new decimal(new int[] {
             24,
             0,
@@ -240,7 +215,7 @@
             // 
             // field_x
             // 
-            this.field_x.Location = new System.Drawing.Point(73, 293);
+            this.field_x.Location = new System.Drawing.Point(73, 326);
             this.field_x.Maximum = new decimal(new int[] {
             80,
             0,
@@ -263,7 +238,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(11, 207);
+            this.label5.Location = new System.Drawing.Point(11, 240);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(55, 20);
             this.label5.TabIndex = 9;
@@ -279,7 +254,7 @@
             "Blue",
             "Red",
             "White"});
-            this.field_colour.Location = new System.Drawing.Point(73, 198);
+            this.field_colour.Location = new System.Drawing.Point(73, 231);
             this.field_colour.Name = "field_colour";
             this.field_colour.Size = new System.Drawing.Size(160, 84);
             this.field_colour.TabIndex = 8;
@@ -287,7 +262,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 156);
+            this.label4.Location = new System.Drawing.Point(9, 189);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(59, 20);
             this.label4.TabIndex = 7;
@@ -295,7 +270,7 @@
             // 
             // field_len
             // 
-            this.field_len.Location = new System.Drawing.Point(73, 154);
+            this.field_len.Location = new System.Drawing.Point(73, 187);
             this.field_len.Maximum = new decimal(new int[] {
             80,
             0,
@@ -318,7 +293,7 @@
             // field_output
             // 
             this.field_output.AutoSize = true;
-            this.field_output.Location = new System.Drawing.Point(85, 117);
+            this.field_output.Location = new System.Drawing.Point(149, 147);
             this.field_output.Name = "field_output";
             this.field_output.Size = new System.Drawing.Size(76, 24);
             this.field_output.TabIndex = 5;
@@ -329,7 +304,7 @@
             // field_input
             // 
             this.field_input.AutoSize = true;
-            this.field_input.Location = new System.Drawing.Point(15, 117);
+            this.field_input.Location = new System.Drawing.Point(73, 147);
             this.field_input.Name = "field_input";
             this.field_input.Size = new System.Drawing.Size(64, 24);
             this.field_input.TabIndex = 4;
@@ -488,6 +463,17 @@
             this.label7.TabIndex = 0;
             this.label7.Text = "Name";
             // 
+            // field_both
+            // 
+            this.field_both.AutoSize = true;
+            this.field_both.Location = new System.Drawing.Point(73, 117);
+            this.field_both.Name = "field_both";
+            this.field_both.Size = new System.Drawing.Size(61, 24);
+            this.field_both.TabIndex = 16;
+            this.field_both.TabStop = true;
+            this.field_both.Text = "Both";
+            this.field_both.UseVisualStyleBackColor = true;
+            // 
             // dspfEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -532,7 +518,6 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem insertToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem textToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem inputToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox field_name;
@@ -547,10 +532,8 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.NumericUpDown field_y;
         private System.Windows.Forms.NumericUpDown field_x;
-        private System.Windows.Forms.ToolStripMenuItem outputToolStripMenuItem;
         private System.Windows.Forms.RadioButton field_text;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.ToolStripMenuItem textToolStripMenuItem1;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
@@ -561,5 +544,6 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.CheckedListBox rec_funcs;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.RadioButton field_both;
     }
 }

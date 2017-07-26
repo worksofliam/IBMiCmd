@@ -15,7 +15,7 @@ namespace IBMiCmd.Forms
     public partial class dspfEdit : Form
     {
         private int fieldCounter = 0;
-        public dspfEdit()
+        public dspfEdit(Dictionary<String, RecordInfo> Formats = null)
         {
             InitializeComponent();
             field_name.TextChanged += field_save_Click;
@@ -29,8 +29,37 @@ namespace IBMiCmd.Forms
             field_x.ValueChanged += field_save_Click;
             field_y.ValueChanged += field_save_Click;
 
-            this.CurrentRecordFormat = tabControl1.SelectedTab.Text;
-            rcd_name.Text = this.CurrentRecordFormat;
+            Boolean loadNew = false;
+            if (Formats == null)
+            {
+                loadNew = true;
+            }
+            else
+            {
+                if (Formats.Count == 0)
+                {
+                    loadNew = true;
+                }
+                else
+                {
+                    tabControl1.TabPages.Clear();
+                    foreach (string Format in Formats.Keys)
+                    {
+                        tabControl1.TabPages.Add(Format);
+                    }
+                    rcd_name.Text = Formats.Keys.ToArray()[0];
+                    tabControl1.SelectedIndex = 0;
+
+                    RecordFormats = Formats;
+                    LoadFormat(rcd_name.Text);
+                }
+            }
+
+            if (loadNew)
+            {
+                this.CurrentRecordFormat = tabControl1.SelectedTab.Text;
+                rcd_name.Text = this.CurrentRecordFormat;
+            }
         }
 
         #region onClicks
@@ -51,6 +80,7 @@ namespace IBMiCmd.Forms
             field_input.Checked = fieldInfo.Type == FieldInfo.TextType.Input;
             field_output.Checked = fieldInfo.Type == FieldInfo.TextType.Output;
             field_text.Checked = fieldInfo.Type == FieldInfo.TextType.Text;
+            field_both.Checked = fieldInfo.Type == FieldInfo.TextType.Both;
 
             field_len.Enabled = !field_text.Checked;
             field_len.Value = fieldInfo.Length;
@@ -169,18 +199,8 @@ namespace IBMiCmd.Forms
             screen.Controls.Add(text);
             comboBox1.Items.Add(fieldInfo.Name);
         }
-
-        private void inputToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AddLabel(FieldInfo.TextType.Input, new Point(1, 1));
-        }
-
-        private void outputToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AddLabel(FieldInfo.TextType.Output, new Point(1, 1));
-        }
-
-        private void textToolStripMenuItem1_Click(object sender, EventArgs e)
+        
+        private void textToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AddLabel(FieldInfo.TextType.Text, new Point(1, 1));
         }
@@ -204,6 +224,8 @@ namespace IBMiCmd.Forms
                 fieldInfo.Type = FieldInfo.TextType.Output;
             if (field_text.Checked)
                 fieldInfo.Type = FieldInfo.TextType.Text;
+            if (field_both.Checked)
+                fieldInfo.Type = FieldInfo.TextType.Both;
 
             field_len.Enabled = (fieldInfo.Type != FieldInfo.TextType.Text);
 
@@ -242,7 +264,7 @@ namespace IBMiCmd.Forms
             {
                 CurrentlySelectedField.Text = fieldInfo.Value.PadRight(fieldInfo.Length);
             }
-            if (fieldInfo.Type == FieldInfo.TextType.Input)
+            if (fieldInfo.Type == FieldInfo.TextType.Input || fieldInfo.Type == FieldInfo.TextType.Both)
             {
                 CurrentlySelectedField.Font = new Font(CurrentlySelectedField.Font, FontStyle.Underline);
             }
@@ -282,23 +304,7 @@ namespace IBMiCmd.Forms
         {
             //Loading new tab
             string RcdFmtName = tabControl1.SelectedTab.Text;
-            this.CurrentRecordFormat = RcdFmtName;
-
-            rcd_name.Text = this.CurrentRecordFormat;
-
-            if (!RecordFormats.ContainsKey(RcdFmtName))
-                RecordFormats.Add(RcdFmtName, new RecordInfo(RcdFmtName));
-
-            comboBox1.Items.Clear();
-            foreach (FieldInfo field in RecordFormats[RcdFmtName].Fields)
-            {
-                AddLabel(field.Type, field.Position, field);
-            }
-            
-            for (int i = 0; i < 24; i++) 
-            {
-                rec_funcs.SetItemChecked(i, RecordFormats[RcdFmtName].FunctionKeys[i]);
-            }
+            LoadFormat(RcdFmtName);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -315,6 +321,27 @@ namespace IBMiCmd.Forms
 
             SaveFormat(rcd_name.Text);
             this.CurrentRecordFormat = rcd_name.Text;
+        }
+
+        private void LoadFormat(String RcdFmtName)
+        {
+            this.CurrentRecordFormat = RcdFmtName;
+
+            rcd_name.Text = this.CurrentRecordFormat;
+
+            if (!RecordFormats.ContainsKey(RcdFmtName))
+                RecordFormats.Add(RcdFmtName, new RecordInfo(RcdFmtName));
+
+            comboBox1.Items.Clear();
+            foreach (FieldInfo field in RecordFormats[RcdFmtName].Fields)
+            {
+                AddLabel(field.Type, field.Position, field);
+            }
+
+            for (int i = 0; i < 24; i++)
+            {
+                rec_funcs.SetItemChecked(i, RecordFormats[RcdFmtName].FunctionKeys[i]);
+            }
         }
 
         private void SaveFormat(string RcdFmtName)

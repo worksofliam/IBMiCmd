@@ -91,11 +91,12 @@ namespace IBMiCmd
             //PluginBase.SetCommand(ItemOrder++, "Upload Source Member", UploadMember, new ShortcutKey(true, false, true, Keys.X));
             PluginBase.SetCommand(ItemOrder++, "Open Include/Copy", OpenInclude, new ShortcutKey(true, false, false, Keys.F12));
             PluginBase.SetCommand(ItemOrder++, "-SEPARATOR-", null);
-            PluginBase.SetCommand(ItemOrder++, "Display File Editor", DisplayEdit);
             PluginBase.SetCommand(ItemOrder++, "Format CL file", ManageCL, new ShortcutKey(true, false, false, Keys.F4));
             PluginBase.SetCommand(ItemOrder++, "RPG Line Conversion", LaunchConversion, new ShortcutKey(true, false, false, Keys.F5));
             PluginBase.SetCommand(ItemOrder++, "RPG File Conversion", LaunchFileConversion, new ShortcutKey(true, false, false, Keys.F6));
             PluginBase.SetCommand(ItemOrder++, "-SEPARATOR-", null);
+            PluginBase.SetCommand(ItemOrder++, "Display File Editor", DisplayEdit);
+            PluginBase.SetCommand(ItemOrder++, "Display File Parser", DisplayParse);
             if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Refresh Extname Definitions", BuildSourceContext);
             if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Extname Content Assist", AutoComplete, new ShortcutKey(false, true, false, Keys.Space));
             if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Prompt CL Command", PromptCommand, new ShortcutKey(true, false, false, Keys.F4));
@@ -119,7 +120,20 @@ namespace IBMiCmd
 
         internal static void DisplayEdit()
         {
-            new dspfEdit().Show();
+            dspfEdit Editor = new dspfEdit();
+            string path = NppFunctions.GetCurrentFileName();
+            if (path.Trim() != "")
+            {
+                DisplayParse parser = new LanguageTools.DisplayParse();
+                parser.ParseFile(path);
+                Editor = new dspfEdit(parser.GetRecordFormats());
+            }
+
+            Editor.Show();
+        }
+
+        internal static void DisplayParse()
+        {
         }
 
         internal static void ManageCL()
