@@ -357,6 +357,7 @@
             // 
             // field_name
             // 
+            this.field_name.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.field_name.Location = new System.Drawing.Point(73, 35);
             this.field_name.MaxLength = 10;
             this.field_name.Name = "field_name";

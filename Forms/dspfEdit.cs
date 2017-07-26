@@ -134,7 +134,6 @@ namespace IBMiCmd.Forms
         private void field_save_Click(object sender, EventArgs e)
         {
             if (CurrentlySelectedField == null) return;
-
             FieldInfo fieldInfo = (FieldInfo)CurrentlySelectedField.Tag;
 
             if (field_name.Text.Trim() == "") field_name.Text = "FIELD";
@@ -173,7 +172,7 @@ namespace IBMiCmd.Forms
                 fieldInfo.Colour = field_colour.SelectedItems[0].ToString();
             }
 
-            int index = comboBox1.Items.IndexOf(CurrentlySelectedField.Name);
+            int index = comboBox1.FindStringExact(CurrentlySelectedField.Name);
             if (index >= 0)
                 comboBox1.Items[index] = fieldInfo.Name;
 
@@ -202,16 +201,19 @@ namespace IBMiCmd.Forms
         {
             int index = comboBox1.SelectedIndex;
             if (index >= 0) {
-                if (CurrentlySelectedField != null)
+                if (screen.Controls[comboBox1.Items[index].ToString()] != null)
                 {
-                    if (CurrentlySelectedField.Name != comboBox1.Items[index].ToString())
+                    if (CurrentlySelectedField != null)
+                    {
+                        if (CurrentlySelectedField.Name != comboBox1.Items[index].ToString())
+                        {
+                            label_MouseClick(screen.Controls[comboBox1.Items[index].ToString()], null);
+                        }
+                    }
+                    else
                     {
                         label_MouseClick(screen.Controls[comboBox1.Items[index].ToString()], null);
                     }
-                }
-                else
-                {
-                    label_MouseClick(screen.Controls[comboBox1.Items[index].ToString()], null);
                 }
             }
         }
