@@ -227,6 +227,10 @@ namespace IBMiCmd.LanguageTools
                     return Color.Red;
                 case "WHITE":
                     return Color.White;
+                case "TURQUOISE":
+                    return Color.Turquoise;
+                case "PINK":
+                    return Color.Pink;
 
                 default:
                     return Color.Green;

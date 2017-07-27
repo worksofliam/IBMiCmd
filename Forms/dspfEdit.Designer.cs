@@ -29,13 +29,14 @@
         private void InitializeComponent()
         {
             this.screen = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.insertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.recordFormatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.field_hidden = new System.Windows.Forms.RadioButton();
+            this.field_both = new System.Windows.Forms.RadioButton();
             this.button1 = new System.Windows.Forms.Button();
             this.field_text = new System.Windows.Forms.RadioButton();
             this.label6 = new System.Windows.Forms.Label();
@@ -60,9 +61,6 @@
             this.rec_funcs = new System.Windows.Forms.CheckedListBox();
             this.rcd_name = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.field_both = new System.Windows.Forms.RadioButton();
-            this.field_hidden = new System.Windows.Forms.RadioButton();
-            this.screen.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.field_y)).BeginInit();
@@ -75,26 +73,13 @@
             // screen
             // 
             this.screen.BackColor = System.Drawing.Color.Black;
-            this.screen.Controls.Add(this.label1);
             this.screen.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.screen.ForeColor = System.Drawing.Color.Lime;
             this.screen.Location = new System.Drawing.Point(204, 52);
             this.screen.Name = "screen";
-            this.screen.Size = new System.Drawing.Size(640, 456);
+            this.screen.Size = new System.Drawing.Size(717, 456);
             this.screen.TabIndex = 1;
             this.screen.MouseClick += new System.Windows.Forms.MouseEventHandler(this.screen_MouseClick);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(639, 456);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "1234567890123456789012345678901234567890123456789012345678901234567890\r\n2\r\n3\r\n4\r\n" +
-    "5\r\n6\r\n7\r\n8\r\n9\r\n0\r\n1\r\n2\r\n3\r\n4\r\n5\r\n6\r\n7\r\n8\r\n9\r\n0\r\n1\r\n2\r\n3\r\n4";
-            this.label1.Visible = false;
             // 
             // menuStrip1
             // 
@@ -103,7 +88,7 @@
             this.insertToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1106, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1175, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -155,13 +140,35 @@
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.field_name);
-            this.groupBox1.Location = new System.Drawing.Point(850, 63);
+            this.groupBox1.Location = new System.Drawing.Point(927, 63);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(239, 445);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Selected";
             this.groupBox1.Visible = false;
+            // 
+            // field_hidden
+            // 
+            this.field_hidden.AutoSize = true;
+            this.field_hidden.Location = new System.Drawing.Point(149, 176);
+            this.field_hidden.Name = "field_hidden";
+            this.field_hidden.Size = new System.Drawing.Size(78, 24);
+            this.field_hidden.TabIndex = 17;
+            this.field_hidden.TabStop = true;
+            this.field_hidden.Text = "Hidden";
+            this.field_hidden.UseVisualStyleBackColor = true;
+            // 
+            // field_both
+            // 
+            this.field_both.AutoSize = true;
+            this.field_both.Location = new System.Drawing.Point(73, 117);
+            this.field_both.Name = "field_both";
+            this.field_both.Size = new System.Drawing.Size(61, 24);
+            this.field_both.TabIndex = 16;
+            this.field_both.TabStop = true;
+            this.field_both.Text = "Both";
+            this.field_both.UseVisualStyleBackColor = true;
             // 
             // button1
             // 
@@ -255,7 +262,9 @@
             "Yellow",
             "Blue",
             "Red",
-            "White"});
+            "White",
+            "Turquoise",
+            "Pink"});
             this.field_colour.Location = new System.Drawing.Point(73, 256);
             this.field_colour.Name = "field_colour";
             this.field_colour.Size = new System.Drawing.Size(160, 84);
@@ -352,7 +361,7 @@
             // 
             this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(850, 52);
+            this.comboBox1.Location = new System.Drawing.Point(927, 52);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(239, 28);
             this.comboBox1.TabIndex = 5;
@@ -364,7 +373,7 @@
             this.tabControl1.Location = new System.Drawing.Point(204, 27);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(637, 25);
+            this.tabControl1.Size = new System.Drawing.Size(710, 25);
             this.tabControl1.TabIndex = 6;
             this.tabControl1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Selecting);
             this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_TabIndexChanged);
@@ -374,7 +383,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 29);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(629, 0);
+            this.tabPage1.Size = new System.Drawing.Size(702, 0);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "FORMAT1";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -465,33 +474,11 @@
             this.label7.TabIndex = 0;
             this.label7.Text = "Name";
             // 
-            // field_both
-            // 
-            this.field_both.AutoSize = true;
-            this.field_both.Location = new System.Drawing.Point(73, 117);
-            this.field_both.Name = "field_both";
-            this.field_both.Size = new System.Drawing.Size(61, 24);
-            this.field_both.TabIndex = 16;
-            this.field_both.TabStop = true;
-            this.field_both.Text = "Both";
-            this.field_both.UseVisualStyleBackColor = true;
-            // 
-            // field_hidden
-            // 
-            this.field_hidden.AutoSize = true;
-            this.field_hidden.Location = new System.Drawing.Point(149, 176);
-            this.field_hidden.Name = "field_hidden";
-            this.field_hidden.Size = new System.Drawing.Size(78, 24);
-            this.field_hidden.TabIndex = 17;
-            this.field_hidden.TabStop = true;
-            this.field_hidden.Text = "Hidden";
-            this.field_hidden.UseVisualStyleBackColor = true;
-            // 
             // dspfEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1106, 518);
+            this.ClientSize = new System.Drawing.Size(1175, 518);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.comboBox1);
@@ -506,8 +493,6 @@
             this.Name = "dspfEdit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Display File Edit";
-            this.screen.ResumeLayout(false);
-            this.screen.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -526,7 +511,6 @@
         #endregion
 
         private System.Windows.Forms.Panel screen;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem insertToolStripMenuItem;

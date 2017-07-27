@@ -150,7 +150,7 @@ namespace IBMiCmd.Forms
         {
             int x = point.X - 1, y = point.Y - 1;
 
-            x = x * 8;
+            x = x * 9;
             y = y * 19;
 
             return new Point(x, y);
@@ -266,6 +266,8 @@ namespace IBMiCmd.Forms
             int index = comboBox1.FindStringExact(CurrentlySelectedField.Name);
             if (index >= 0)
                 comboBox1.Items[index] = fieldInfo.Name;
+
+            field_x.Maximum = 80 - fieldInfo.Length;
 
             CurrentlySelectedField.Name = fieldInfo.Name;
             CurrentlySelectedField.Location = DSPFtoUILoc(fieldInfo.Position);
