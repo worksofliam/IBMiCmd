@@ -94,6 +94,9 @@ namespace IBMiCmd.Forms
         }
         private void label_MouseClick(object sender, MouseEventArgs e)
         {
+            if (CurrentlySelectedField != null)
+                CurrentlySelectedField.BackColor = Color.Black;
+
             CurrentlySelectedField = null;
 
             Control controlItem = (Control)sender;
@@ -133,6 +136,7 @@ namespace IBMiCmd.Forms
             if (index >= 0)
                 comboBox1.SelectedIndex = index;
 
+            controlItem.BackColor = Color.DimGray;
             controlItem.BringToFront();
 
             this.CurrentlySelectedField = controlItem;
@@ -150,6 +154,9 @@ namespace IBMiCmd.Forms
 
         private void screen_MouseClick(object sender, MouseEventArgs e)
         {
+            if (CurrentlySelectedField != null)
+                CurrentlySelectedField.BackColor = Color.Black;
+
             comboBox1.SelectedIndex = -1;
             CurrentlySelectedField = null;
             groupBox1.Visible = false;
