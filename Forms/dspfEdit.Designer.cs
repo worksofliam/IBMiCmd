@@ -82,9 +82,9 @@
             this.screen.BackColor = System.Drawing.Color.Black;
             this.screen.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.screen.ForeColor = System.Drawing.Color.Lime;
-            this.screen.Location = new System.Drawing.Point(204, 52);
+            this.screen.Location = new System.Drawing.Point(201, 52);
             this.screen.Name = "screen";
-            this.screen.Size = new System.Drawing.Size(717, 456);
+            this.screen.Size = new System.Drawing.Size(720, 456);
             this.screen.TabIndex = 1;
             this.screen.MouseClick += new System.Windows.Forms.MouseEventHandler(this.screen_MouseClick);
             // 
@@ -382,10 +382,10 @@
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Location = new System.Drawing.Point(204, 27);
+            this.tabControl1.Location = new System.Drawing.Point(201, 27);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(710, 25);
+            this.tabControl1.Size = new System.Drawing.Size(720, 25);
             this.tabControl1.TabIndex = 6;
             this.tabControl1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Selecting);
             this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_TabIndexChanged);
@@ -395,7 +395,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 29);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(702, 0);
+            this.tabPage1.Size = new System.Drawing.Size(712, 0);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "FORMAT1";
             this.tabPage1.UseVisualStyleBackColor = true;
