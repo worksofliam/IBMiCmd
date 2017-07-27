@@ -62,6 +62,11 @@
             this.rcd_name = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rec_pageup = new System.Windows.Forms.CheckBox();
+            this.rec_pagedown = new System.Windows.Forms.CheckBox();
+            this.field_number = new System.Windows.Forms.CheckBox();
+            this.field_dec = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.field_y)).BeginInit();
@@ -69,6 +74,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.field_len)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.field_dec)).BeginInit();
             this.SuspendLayout();
             // 
             // screen
@@ -126,6 +132,9 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.field_dec);
+            this.groupBox1.Controls.Add(this.field_number);
             this.groupBox1.Controls.Add(this.field_hidden);
             this.groupBox1.Controls.Add(this.field_both);
             this.groupBox1.Controls.Add(this.button1);
@@ -165,7 +174,7 @@
             // field_both
             // 
             this.field_both.AutoSize = true;
-            this.field_both.Location = new System.Drawing.Point(73, 117);
+            this.field_both.Location = new System.Drawing.Point(62, 117);
             this.field_both.Name = "field_both";
             this.field_both.Size = new System.Drawing.Size(61, 24);
             this.field_both.TabIndex = 16;
@@ -197,7 +206,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(2, 353);
+            this.label6.Location = new System.Drawing.Point(2, 371);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(70, 20);
             this.label6.TabIndex = 12;
@@ -205,7 +214,7 @@
             // 
             // field_y
             // 
-            this.field_y.Location = new System.Drawing.Point(156, 351);
+            this.field_y.Location = new System.Drawing.Point(156, 369);
             this.field_y.Maximum = new decimal(new int[] {
             24,
             0,
@@ -227,7 +236,7 @@
             // 
             // field_x
             // 
-            this.field_x.Location = new System.Drawing.Point(73, 351);
+            this.field_x.Location = new System.Drawing.Point(73, 369);
             this.field_x.Maximum = new decimal(new int[] {
             80,
             0,
@@ -250,7 +259,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(11, 265);
+            this.label5.Location = new System.Drawing.Point(11, 283);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(55, 20);
             this.label5.TabIndex = 9;
@@ -268,7 +277,7 @@
             "White",
             "Turquoise",
             "Pink"});
-            this.field_colour.Location = new System.Drawing.Point(73, 256);
+            this.field_colour.Location = new System.Drawing.Point(73, 274);
             this.field_colour.Name = "field_colour";
             this.field_colour.Size = new System.Drawing.Size(160, 84);
             this.field_colour.TabIndex = 8;
@@ -276,7 +285,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 214);
+            this.label4.Location = new System.Drawing.Point(9, 211);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(59, 20);
             this.label4.TabIndex = 7;
@@ -284,7 +293,7 @@
             // 
             // field_len
             // 
-            this.field_len.Location = new System.Drawing.Point(73, 212);
+            this.field_len.Location = new System.Drawing.Point(73, 209);
             this.field_len.Maximum = new decimal(new int[] {
             80,
             0,
@@ -318,7 +327,7 @@
             // field_input
             // 
             this.field_input.AutoSize = true;
-            this.field_input.Location = new System.Drawing.Point(73, 147);
+            this.field_input.Location = new System.Drawing.Point(62, 147);
             this.field_input.Name = "field_input";
             this.field_input.Size = new System.Drawing.Size(64, 24);
             this.field_input.TabIndex = 4;
@@ -393,6 +402,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.rec_pagedown);
+            this.groupBox2.Controls.Add(this.rec_pageup);
             this.groupBox2.Controls.Add(this.button2);
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.rec_funcs);
@@ -484,6 +495,57 @@
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
+            // rec_pageup
+            // 
+            this.rec_pageup.AutoSize = true;
+            this.rec_pageup.Location = new System.Drawing.Point(61, 248);
+            this.rec_pageup.Name = "rec_pageup";
+            this.rec_pageup.Size = new System.Drawing.Size(90, 24);
+            this.rec_pageup.TabIndex = 5;
+            this.rec_pageup.Text = "Page Up";
+            this.rec_pageup.UseVisualStyleBackColor = true;
+            // 
+            // rec_pagedown
+            // 
+            this.rec_pagedown.AutoSize = true;
+            this.rec_pagedown.Location = new System.Drawing.Point(61, 277);
+            this.rec_pagedown.Name = "rec_pagedown";
+            this.rec_pagedown.Size = new System.Drawing.Size(110, 24);
+            this.rec_pagedown.TabIndex = 6;
+            this.rec_pagedown.Text = "Page Down";
+            this.rec_pagedown.UseVisualStyleBackColor = true;
+            // 
+            // field_number
+            // 
+            this.field_number.AutoSize = true;
+            this.field_number.Location = new System.Drawing.Point(62, 176);
+            this.field_number.Name = "field_number";
+            this.field_number.Size = new System.Drawing.Size(84, 24);
+            this.field_number.TabIndex = 18;
+            this.field_number.Text = "Number";
+            this.field_number.UseVisualStyleBackColor = true;
+            // 
+            // field_dec
+            // 
+            this.field_dec.Location = new System.Drawing.Point(89, 242);
+            this.field_dec.Maximum = new decimal(new int[] {
+            63,
+            0,
+            0,
+            0});
+            this.field_dec.Name = "field_dec";
+            this.field_dec.Size = new System.Drawing.Size(144, 26);
+            this.field_dec.TabIndex = 19;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(9, 245);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(74, 20);
+            this.label1.TabIndex = 20;
+            this.label1.Text = "Decimals";
+            // 
             // dspfEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -513,6 +575,7 @@
             this.tabControl1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.field_dec)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -554,5 +617,10 @@
         private System.Windows.Forms.RadioButton field_both;
         private System.Windows.Forms.RadioButton field_hidden;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.CheckBox rec_pagedown;
+        private System.Windows.Forms.CheckBox rec_pageup;
+        private System.Windows.Forms.CheckBox field_number;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown field_dec;
     }
 }

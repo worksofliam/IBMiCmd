@@ -23,12 +23,20 @@ namespace IBMiCmd.Forms
             _File = LocalFile;
 
             InitializeComponent();
+
             field_name.TextChanged += field_save_Click;
             field_val.TextChanged += field_save_Click;
+
             field_input.CheckedChanged += field_save_Click;
             field_output.CheckedChanged += field_save_Click;
             field_text.CheckedChanged += field_save_Click;
+            field_hidden.CheckedChanged += field_save_Click;
+            field_both.CheckedChanged += field_save_Click;
+            field_number.CheckedChanged += field_save_Click;
+
             field_len.ValueChanged += field_save_Click;
+            field_dec.ValueChanged += field_save_Click;
+
             field_colour.SelectedIndexChanged += field_save_Click;
 
             field_x.ValueChanged += field_save_Click;
@@ -103,6 +111,10 @@ namespace IBMiCmd.Forms
             field_both.Checked = fieldInfo.fieldType == FieldInfo.FieldType.Both;
             field_hidden.Checked = fieldInfo.fieldType == FieldInfo.FieldType.Hidden;
 
+            field_number.Checked = (fieldInfo.dataType == FieldInfo.DataType.Decimal);
+            field_dec.Enabled = (fieldInfo.dataType == FieldInfo.DataType.Decimal);
+            field_dec.Value = (field_dec.Enabled ? fieldInfo.Decimals : 0);
+
             field_len.Enabled = !field_text.Checked;
             field_len.Value = fieldInfo.Length;
 
@@ -110,7 +122,7 @@ namespace IBMiCmd.Forms
 
             field_x.Enabled = (fieldInfo.fieldType != FieldInfo.FieldType.Hidden);
             field_y.Enabled = (fieldInfo.fieldType != FieldInfo.FieldType.Hidden);
-
+            
             if (fieldInfo.fieldType != FieldInfo.FieldType.Hidden)
             {
                 field_x.Value = fieldInfo.Position.X;
@@ -261,19 +273,26 @@ namespace IBMiCmd.Forms
             fieldInfo.Length = Convert.ToInt32(field_len.Value);
             fieldInfo.Value = field_val.Text;
             fieldInfo.Position = new Point(Convert.ToInt32(field_x.Value), Convert.ToInt32(field_y.Value));
+            fieldInfo.Decimals = Convert.ToInt32(field_dec.Value);
 
+            if (field_text.Checked)
+                fieldInfo.fieldType = FieldInfo.FieldType.Const;
             if (field_input.Checked)
                 fieldInfo.fieldType = FieldInfo.FieldType.Input;
             if (field_output.Checked)
                 fieldInfo.fieldType = FieldInfo.FieldType.Output;
-            if (field_text.Checked)
-                fieldInfo.fieldType = FieldInfo.FieldType.Const;
             if (field_both.Checked)
                 fieldInfo.fieldType = FieldInfo.FieldType.Both;
             if (field_hidden.Checked)
                 fieldInfo.fieldType = FieldInfo.FieldType.Hidden;
 
+            if (field_number.Checked)
+                fieldInfo.dataType = FieldInfo.DataType.Decimal;
+            else
+                fieldInfo.dataType = FieldInfo.DataType.Char;
+
             field_len.Enabled = (fieldInfo.fieldType != FieldInfo.FieldType.Const);
+            field_dec.Enabled = (field_len.Enabled && field_number.Checked);
 
             field_x.Enabled = (fieldInfo.fieldType != FieldInfo.FieldType.Hidden);
             field_y.Enabled = (fieldInfo.fieldType != FieldInfo.FieldType.Hidden);
@@ -418,6 +437,9 @@ namespace IBMiCmd.Forms
             {
                 RecordFormats[RcdFmtName].FunctionKeys[i] = rec_funcs.GetItemChecked(i);
             }
+
+            RecordFormats[RcdFmtName].Pagedown = rec_pagedown.Checked;
+            RecordFormats[RcdFmtName].Pageup = rec_pageup.Checked;
 
             RecordFormats[RcdFmtName].Name = RcdFmtName;
         }
