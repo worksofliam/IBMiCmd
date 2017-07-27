@@ -65,6 +65,20 @@ namespace IBMiCmd.Forms
         #region onClicks
 
         private Control CurrentlySelectedField;
+        private void label_MouseUp(object sender, MouseEventArgs e)
+        {
+            Control controlItem = (Control)sender;
+            FieldInfo fieldInfo = (FieldInfo)controlItem.Tag;
+
+            field_x.ValueChanged -= field_save_Click;
+            field_y.ValueChanged -= field_save_Click;
+
+            field_x.Value = fieldInfo.Position.X;
+            field_y.Value = fieldInfo.Position.Y;
+
+            field_x.ValueChanged += field_save_Click;
+            field_y.ValueChanged += field_save_Click;
+        }
         private void label_MouseClick(object sender, MouseEventArgs e)
         {
             CurrentlySelectedField = null;
@@ -206,6 +220,7 @@ namespace IBMiCmd.Forms
             }
 
             text.MouseClick += label_MouseClick;
+            text.MouseUp += label_MouseUp;
 
             screen.Controls.Add(text);
             comboBox1.Items.Add(fieldInfo.Name);
