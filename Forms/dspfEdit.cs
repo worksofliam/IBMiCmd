@@ -102,6 +102,8 @@ namespace IBMiCmd.Forms
             if (index >= 0)
                 comboBox1.SelectedIndex = index;
 
+            controlItem.BringToFront();
+
             this.CurrentlySelectedField = controlItem;
         }
         
@@ -159,7 +161,7 @@ namespace IBMiCmd.Forms
         #region LabelAdding
         public void AddLabel(FieldInfo.TextType Type, Point location, FieldInfo PreInfo = null)
         {
-            Label text = new Label();
+            DragLabel text = new DragLabel();
             FieldInfo fieldInfo;
 
             if (PreInfo == null)
@@ -215,7 +217,7 @@ namespace IBMiCmd.Forms
         }
         #endregion
 
-        private void field_save_Click(object sender, EventArgs e)
+        public void field_save_Click(object sender, EventArgs e)
         {
             if (CurrentlySelectedField == null) return;
             FieldInfo fieldInfo = (FieldInfo)CurrentlySelectedField.Tag;

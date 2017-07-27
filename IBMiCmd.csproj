@@ -100,6 +100,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DllExport\DllExportAttribute.cs" />
+    <Compile Include="Forms\DragLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Forms\dspfEdit.cs">
       <SubType>Form</SubType>
     </Compile>
