@@ -61,6 +61,7 @@
             this.rec_funcs = new System.Windows.Forms.CheckedListBox();
             this.rcd_name = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.field_y)).BeginInit();
@@ -94,6 +95,8 @@
             // 
             // fileToolStripMenuItem
             // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -474,6 +477,13 @@
             this.label7.TabIndex = 0;
             this.label7.Text = "Name";
             // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
             // dspfEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -543,5 +553,6 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.RadioButton field_both;
         private System.Windows.Forms.RadioButton field_hidden;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
     }
 }

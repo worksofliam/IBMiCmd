@@ -125,7 +125,7 @@ namespace IBMiCmd
             {
                 DisplayParse parser = new LanguageTools.DisplayParse();
                 parser.ParseFile(path);
-                Editor = new dspfEdit(parser.GetRecordFormats());
+                Editor = new dspfEdit(parser.GetRecordFormats(), path);
             }
 
             Editor.Show();

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace IBMiCmd.Forms
 {
@@ -15,8 +16,12 @@ namespace IBMiCmd.Forms
     public partial class dspfEdit : Form
     {
         private int fieldCounter = 0;
-        public dspfEdit(Dictionary<String, RecordInfo> Formats = null)
+        private string _File;
+
+        public dspfEdit(Dictionary<String, RecordInfo> Formats = null, string LocalFile = "")
         {
+            _File = LocalFile;
+
             InitializeComponent();
             field_name.TextChanged += field_save_Click;
             field_val.TextChanged += field_save_Click;
@@ -92,21 +97,21 @@ namespace IBMiCmd.Forms
             field_name.Text = fieldInfo.Name;
             field_val.Text = fieldInfo.Value;
 
-            field_input.Checked = fieldInfo.Type == FieldInfo.TextType.Input;
-            field_output.Checked = fieldInfo.Type == FieldInfo.TextType.Output;
-            field_text.Checked = fieldInfo.Type == FieldInfo.TextType.Text;
-            field_both.Checked = fieldInfo.Type == FieldInfo.TextType.Both;
-            field_hidden.Checked = fieldInfo.Type == FieldInfo.TextType.Hidden;
+            field_input.Checked = fieldInfo.fieldType == FieldInfo.FieldType.Input;
+            field_output.Checked = fieldInfo.fieldType == FieldInfo.FieldType.Output;
+            field_text.Checked = fieldInfo.fieldType == FieldInfo.FieldType.Const;
+            field_both.Checked = fieldInfo.fieldType == FieldInfo.FieldType.Both;
+            field_hidden.Checked = fieldInfo.fieldType == FieldInfo.FieldType.Hidden;
 
             field_len.Enabled = !field_text.Checked;
             field_len.Value = fieldInfo.Length;
 
             field_colour.SelectedIndex = field_colour.Items.IndexOf(fieldInfo.Colour);
 
-            field_x.Enabled = (fieldInfo.Type != FieldInfo.TextType.Hidden);
-            field_y.Enabled = (fieldInfo.Type != FieldInfo.TextType.Hidden);
+            field_x.Enabled = (fieldInfo.fieldType != FieldInfo.FieldType.Hidden);
+            field_y.Enabled = (fieldInfo.fieldType != FieldInfo.FieldType.Hidden);
 
-            if (fieldInfo.Type != FieldInfo.TextType.Hidden)
+            if (fieldInfo.fieldType != FieldInfo.FieldType.Hidden)
             {
                 field_x.Value = fieldInfo.Position.X;
                 field_y.Value = fieldInfo.Position.Y;
@@ -159,6 +164,17 @@ namespace IBMiCmd.Forms
                 }
             }
         }
+        
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFormat(rcd_name.Text);
+            if (_File != "")
+            {
+                DisplayGenerate dspfGen = new DisplayGenerate();
+                dspfGen.Generate(RecordFormats);
+                File.WriteAllLines(_File, dspfGen.GetOutput());
+            }
+        }
 
         #endregion
 
@@ -173,7 +189,7 @@ namespace IBMiCmd.Forms
         }
 
         #region LabelAdding
-        public void AddLabel(FieldInfo.TextType Type, Point location, FieldInfo PreInfo = null)
+        public void AddLabel(FieldInfo.DataType Type, Point location, FieldInfo PreInfo = null)
         {
             DragLabel text = new DragLabel();
             FieldInfo fieldInfo;
@@ -186,7 +202,9 @@ namespace IBMiCmd.Forms
                 fieldInfo.Length = Type.ToString().Length;
                 fieldInfo.Value = Type.ToString();
                 fieldInfo.Position = location;
-                fieldInfo.Type = Type;
+
+                fieldInfo.dataType = Type;
+                fieldInfo.fieldType = FieldInfo.FieldType.Both;
             }
             else
             {
@@ -198,7 +216,7 @@ namespace IBMiCmd.Forms
             text.Text = fieldInfo.Value;
             text.Tag = fieldInfo;
             text.Location = DSPFtoUILoc(fieldInfo.Position);
-            text.Visible = (fieldInfo.Type != FieldInfo.TextType.Hidden);
+            text.Visible = (fieldInfo.fieldType != FieldInfo.FieldType.Hidden);
 
             text.ForeColor = FieldInfo.TextToColor(fieldInfo.Colour);
             if (fieldInfo.Value.Trim() == "")
@@ -210,7 +228,7 @@ namespace IBMiCmd.Forms
                 text.Text = fieldInfo.Value.PadRight(fieldInfo.Length);
             }
 
-            if (fieldInfo.Type == FieldInfo.TextType.Input)
+            if (fieldInfo.fieldType == FieldInfo.FieldType.Input)
             {
                 text.Font = new Font(screen.Font, FontStyle.Underline);
             }
@@ -228,7 +246,7 @@ namespace IBMiCmd.Forms
         
         private void textToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AddLabel(FieldInfo.TextType.Text, new Point(1, 1));
+            AddLabel(FieldInfo.DataType.Char, new Point(1, 1));
         }
         #endregion
 
@@ -245,22 +263,22 @@ namespace IBMiCmd.Forms
             fieldInfo.Position = new Point(Convert.ToInt32(field_x.Value), Convert.ToInt32(field_y.Value));
 
             if (field_input.Checked)
-                fieldInfo.Type = FieldInfo.TextType.Input;
+                fieldInfo.fieldType = FieldInfo.FieldType.Input;
             if (field_output.Checked)
-                fieldInfo.Type = FieldInfo.TextType.Output;
+                fieldInfo.fieldType = FieldInfo.FieldType.Output;
             if (field_text.Checked)
-                fieldInfo.Type = FieldInfo.TextType.Text;
+                fieldInfo.fieldType = FieldInfo.FieldType.Const;
             if (field_both.Checked)
-                fieldInfo.Type = FieldInfo.TextType.Both;
+                fieldInfo.fieldType = FieldInfo.FieldType.Both;
             if (field_hidden.Checked)
-                fieldInfo.Type = FieldInfo.TextType.Hidden;
+                fieldInfo.fieldType = FieldInfo.FieldType.Hidden;
 
-            field_len.Enabled = (fieldInfo.Type != FieldInfo.TextType.Text);
+            field_len.Enabled = (fieldInfo.fieldType != FieldInfo.FieldType.Const);
 
-            field_x.Enabled = (fieldInfo.Type != FieldInfo.TextType.Hidden);
-            field_y.Enabled = (fieldInfo.Type != FieldInfo.TextType.Hidden);
+            field_x.Enabled = (fieldInfo.fieldType != FieldInfo.FieldType.Hidden);
+            field_y.Enabled = (fieldInfo.fieldType != FieldInfo.FieldType.Hidden);
 
-            if (fieldInfo.Type == FieldInfo.TextType.Text)
+            if (fieldInfo.fieldType == FieldInfo.FieldType.Const)
             {
                 if (fieldInfo.Value.Length == 0) fieldInfo.Value = "-";
 
@@ -289,7 +307,7 @@ namespace IBMiCmd.Forms
             CurrentlySelectedField.Name = fieldInfo.Name;
             CurrentlySelectedField.Location = DSPFtoUILoc(fieldInfo.Position);
             CurrentlySelectedField.ForeColor = FieldInfo.TextToColor(fieldInfo.Colour);
-            CurrentlySelectedField.Visible = (fieldInfo.Type != FieldInfo.TextType.Hidden);
+            CurrentlySelectedField.Visible = (fieldInfo.fieldType != FieldInfo.FieldType.Hidden);
             if (fieldInfo.Value.Trim() == "")
             {
                 CurrentlySelectedField.Text = fieldInfo.Value.PadRight(fieldInfo.Length, '_');
@@ -298,7 +316,7 @@ namespace IBMiCmd.Forms
             {
                 CurrentlySelectedField.Text = fieldInfo.Value.PadRight(fieldInfo.Length);
             }
-            if (fieldInfo.Type == FieldInfo.TextType.Input || fieldInfo.Type == FieldInfo.TextType.Both)
+            if (fieldInfo.fieldType == FieldInfo.FieldType.Input || fieldInfo.fieldType == FieldInfo.FieldType.Both)
             {
                 CurrentlySelectedField.Font = new Font(CurrentlySelectedField.Font, FontStyle.Underline);
             }
@@ -370,7 +388,7 @@ namespace IBMiCmd.Forms
             comboBox1.Items.Clear();
             foreach (FieldInfo field in RecordFormats[RcdFmtName].Fields)
             {
-                AddLabel(field.Type, field.Position, field);
+                AddLabel(field.dataType, field.Position, field);
             }
 
             for (int i = 0; i < 24; i++)

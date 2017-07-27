@@ -42,8 +42,8 @@ namespace IBMiCmd.LanguageTools
                     type = chars[34].ToString().ToUpper();
                     dec = buildString(chars, 35, 2).Trim();
                     inout = chars[37].ToString().ToUpper();
-                    y = buildString(chars, 39, 2).Trim();
-                    x = buildString(chars, 42, 2).Trim();
+                    y = buildString(chars, 38, 3).Trim();
+                    x = buildString(chars, 41, 3).Trim();
                     keywords = Line.Substring(44).Trim();
 
                     switch (chars[16])
@@ -80,17 +80,29 @@ namespace IBMiCmd.LanguageTools
                                 switch (inout)
                                 {
                                     case "I":
-                                        CurrentField.Type = FieldInfo.TextType.Input;
+                                        CurrentField.fieldType = FieldInfo.FieldType.Input;
                                         break;
                                     case "B":
-                                        CurrentField.Type = FieldInfo.TextType.Both;
+                                        CurrentField.fieldType = FieldInfo.FieldType.Both;
                                         break;
                                     case "H":
-                                        CurrentField.Type = FieldInfo.TextType.Hidden;
+                                        CurrentField.fieldType = FieldInfo.FieldType.Hidden;
                                         break;
                                     case " ":
                                     case "O":
-                                        CurrentField.Type = FieldInfo.TextType.Output;
+                                        CurrentField.fieldType = FieldInfo.FieldType.Output;
+                                        break;
+                                }
+
+                                CurrentField.Decimals = 0;
+                                switch (type.ToUpper())
+                                {
+                                    case "D":
+                                        CurrentField.dataType = FieldInfo.DataType.Decimal;
+                                        if (dec != "") CurrentField.Decimals = Convert.ToInt32(dec);
+                                        break;
+                                    default:
+                                        CurrentField.dataType = FieldInfo.DataType.Char;
                                         break;
                                 }
                                 HandleKeywords(keywords);
@@ -100,10 +112,14 @@ namespace IBMiCmd.LanguageTools
                                 HandleKeywords(keywords);
                                 if (CurrentField != null)
                                 {
-                                    textcounter++;
-                                    CurrentField.Name = "TEXT" + textcounter.ToString();
-                                    CurrentField.Length = CurrentField.Value.Length;
-                                    CurrentField.Type = FieldInfo.TextType.Text;
+                                    if (CurrentField.Name == null)
+                                    {
+                                        textcounter++;
+                                        CurrentField.Name = "TEXT" + textcounter.ToString();
+                                        if (CurrentField.Value == null) CurrentField.Value = "";
+                                        CurrentField.Length = CurrentField.Value.Length;
+                                        CurrentField.fieldType = FieldInfo.FieldType.Const;
+                                    }
                                 }
                             }
                             break;
@@ -171,6 +187,116 @@ namespace IBMiCmd.LanguageTools
         }
     }
 
+    public class DisplayGenerate
+    {
+        private List<string> Output;
+        
+        public void Generate(Dictionary<string, RecordInfo> Formats)
+        {
+            Output = new List<string>();
+
+            foreach(string Format in Formats.Keys)
+            {
+                GenerateFormatHeader(Formats[Format]);
+                foreach (FieldInfo Field in Formats[Format].Fields)
+                {
+                    GenerateField(Field);
+                }
+            }
+        }
+
+        public string[] GetOutput()
+        {
+            return Output.ToArray();
+        }
+
+        private void GenerateFormatHeader(RecordInfo Format)
+        {
+            string ind = "";
+
+            Output.Add("     A          R " + Format.Name.PadRight(10));
+
+            for (var i = 0; i < Format.FunctionKeys.Length; i++)
+            {
+                if (Format.FunctionKeys[i])
+                {
+                    ind = (i + 1).ToString().PadLeft(2, '0');
+                    Output.Add("     A                                      CA" + ind + "(" + ind + ")");
+                }
+            }
+
+            if (Format.Pageup)
+                Output.Add("     A                                      ROLLUP(66)");
+            if (Format.Pagedown)
+                Output.Add("     A                                      ROLLDOWN(44)");
+        }
+
+        private void GenerateField(FieldInfo Field)
+        {
+            string Definition;
+
+            if (Field.fieldType != FieldInfo.FieldType.Const)
+            {
+                Definition = "     A            " + Field.Name.PadRight(10) + " " + Field.Length.ToString().Trim().PadRight(5);
+                switch (Field.dataType)
+                {
+                    case FieldInfo.DataType.Decimal:
+                        Definition += "D";
+                        if (Field.Decimals == 0)
+                        {
+                            Definition += "  ";
+                        }
+                        else
+                        {
+                            Definition += Field.Decimals.ToString().Trim().PadLeft(2);
+                        }
+                        break;
+                    case FieldInfo.DataType.Char:
+                        Definition += "".PadLeft(3);
+                        break;
+                }
+
+                switch (Field.fieldType)
+                {
+                    case FieldInfo.FieldType.Both:
+                        Definition += 'B';
+                        break;
+                    case FieldInfo.FieldType.Hidden:
+                        Definition += 'H';
+                        break;
+                    case FieldInfo.FieldType.Input:
+                        Definition += 'I';
+                        break;
+                    case FieldInfo.FieldType.Output:
+                        Definition += 'O';
+                        break;
+                }
+            }
+            else
+            {
+                Definition = "     A                                ";
+            }
+
+            if (Field.fieldType != FieldInfo.FieldType.Hidden)
+            {
+                Definition += Field.Position.Y.ToString().Trim().PadLeft(3);
+                Definition += Field.Position.X.ToString().Trim().PadLeft(3);
+            }
+            else
+            {
+                Definition += "".PadRight(6);
+            }
+
+            if (Field.Value != "")
+                Definition += "'" + Field.Value + "'";
+
+            Output.Add(Definition); Definition = "";
+            
+            if (Field.Colour != "Green")
+                Output.Add("     A                                      " + FieldInfo.ColourToDspf(Field.Colour));
+        }
+    }
+
     public class RecordInfo
     {
         public string Name;
@@ -199,17 +325,24 @@ namespace IBMiCmd.LanguageTools
     {
         public string Name;
         public string Value;
-        public TextType Type;
-        public int Length;
+        public DataType dataType;
+        public FieldType fieldType;
+        public int Length, Decimals;
         public string Colour = "Green";
         public Point Position;
 
-        public enum TextType
+        public enum DataType
+        {
+            Char,
+            Decimal
+        }
+
+        public enum FieldType
         {
             Input,
             Output,
             Both,
-            Text,
+            Const,
             Hidden
         }
 
@@ -257,6 +390,30 @@ namespace IBMiCmd.LanguageTools
                     return "Pink";
                 default:
                     return "Green";
+            }
+        }
+
+        public static string ColourToDspf(String Colour)
+        {
+            switch (Colour.ToUpper())
+            {
+                case "GREEN":
+                    return "COLOR(GRN)";
+                case "YELLOW":
+                    return "COLOR(YLW)";
+                case "BLUE":
+                    return "COLOR(BLU)";
+                case "RED":
+                    return "COLOR(RED)";
+                case "WHITE":
+                    return "COLOR(WHT)";
+                case "TURQUOISE":
+                    return "COLOR(TRQ)";
+                case "PINK":
+                    return "COLOR(PNK)";
+
+                default:
+                    return "COLOR(GRN)";
             }
         }
     }
