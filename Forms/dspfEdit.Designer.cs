@@ -60,6 +60,9 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.rec_sizex = new System.Windows.Forms.NumericUpDown();
+            this.rec_sizey = new System.Windows.Forms.NumericUpDown();
+            this.rec_window = new System.Windows.Forms.CheckBox();
             this.rec_pagedown = new System.Windows.Forms.CheckBox();
             this.rec_pageup = new System.Windows.Forms.CheckBox();
             this.button2 = new System.Windows.Forms.Button();
@@ -67,6 +70,7 @@
             this.rec_funcs = new System.Windows.Forms.CheckedListBox();
             this.rcd_name = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.screenbg = new System.Windows.Forms.Panel();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.field_dec)).BeginInit();
@@ -75,6 +79,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.field_len)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.rec_sizex)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rec_sizey)).BeginInit();
+            this.screenbg.SuspendLayout();
             this.SuspendLayout();
             // 
             // screen
@@ -82,7 +89,7 @@
             this.screen.BackColor = System.Drawing.Color.Black;
             this.screen.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.screen.ForeColor = System.Drawing.Color.Lime;
-            this.screen.Location = new System.Drawing.Point(201, 52);
+            this.screen.Location = new System.Drawing.Point(0, 0);
             this.screen.Name = "screen";
             this.screen.Size = new System.Drawing.Size(720, 456);
             this.screen.TabIndex = 1;
@@ -441,6 +448,9 @@
             // groupBox2
             // 
             this.groupBox2.BackColor = System.Drawing.SystemColors.Control;
+            this.groupBox2.Controls.Add(this.rec_sizex);
+            this.groupBox2.Controls.Add(this.rec_sizey);
+            this.groupBox2.Controls.Add(this.rec_window);
             this.groupBox2.Controls.Add(this.rec_pagedown);
             this.groupBox2.Controls.Add(this.rec_pageup);
             this.groupBox2.Controls.Add(this.button2);
@@ -455,10 +465,66 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Record Format";
             // 
+            // rec_sizex
+            // 
+            this.rec_sizex.Enabled = false;
+            this.rec_sizex.Location = new System.Drawing.Point(15, 333);
+            this.rec_sizex.Maximum = new decimal(new int[] {
+            78,
+            0,
+            0,
+            0});
+            this.rec_sizex.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.rec_sizex.Name = "rec_sizex";
+            this.rec_sizex.Size = new System.Drawing.Size(71, 26);
+            this.rec_sizex.TabIndex = 9;
+            this.rec_sizex.Value = new decimal(new int[] {
+            25,
+            0,
+            0,
+            0});
+            // 
+            // rec_sizey
+            // 
+            this.rec_sizey.Enabled = false;
+            this.rec_sizey.Location = new System.Drawing.Point(92, 333);
+            this.rec_sizey.Maximum = new decimal(new int[] {
+            23,
+            0,
+            0,
+            0});
+            this.rec_sizey.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.rec_sizey.Name = "rec_sizey";
+            this.rec_sizey.Size = new System.Drawing.Size(71, 26);
+            this.rec_sizey.TabIndex = 8;
+            this.rec_sizey.Value = new decimal(new int[] {
+            6,
+            0,
+            0,
+            0});
+            // 
+            // rec_window
+            // 
+            this.rec_window.AutoSize = true;
+            this.rec_window.Location = new System.Drawing.Point(23, 305);
+            this.rec_window.Name = "rec_window";
+            this.rec_window.Size = new System.Drawing.Size(84, 24);
+            this.rec_window.TabIndex = 7;
+            this.rec_window.Text = "Window";
+            this.rec_window.UseVisualStyleBackColor = true;
+            // 
             // rec_pagedown
             // 
             this.rec_pagedown.AutoSize = true;
-            this.rec_pagedown.Location = new System.Drawing.Point(61, 277);
+            this.rec_pagedown.Location = new System.Drawing.Point(23, 277);
             this.rec_pagedown.Name = "rec_pagedown";
             this.rec_pagedown.Size = new System.Drawing.Size(110, 24);
             this.rec_pagedown.TabIndex = 6;
@@ -468,7 +534,7 @@
             // rec_pageup
             // 
             this.rec_pageup.AutoSize = true;
-            this.rec_pageup.Location = new System.Drawing.Point(61, 248);
+            this.rec_pageup.Location = new System.Drawing.Point(23, 248);
             this.rec_pageup.Name = "rec_pageup";
             this.rec_pageup.Size = new System.Drawing.Size(90, 24);
             this.rec_pageup.TabIndex = 5;
@@ -547,6 +613,18 @@
             this.label7.TabIndex = 0;
             this.label7.Text = "Name";
             // 
+            // screenbg
+            // 
+            this.screenbg.BackColor = System.Drawing.Color.DimGray;
+            this.screenbg.Controls.Add(this.screen);
+            this.screenbg.Cursor = System.Windows.Forms.Cursors.Default;
+            this.screenbg.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.screenbg.ForeColor = System.Drawing.Color.Lime;
+            this.screenbg.Location = new System.Drawing.Point(201, 52);
+            this.screenbg.Name = "screenbg";
+            this.screenbg.Size = new System.Drawing.Size(720, 456);
+            this.screenbg.TabIndex = 8;
+            // 
             // dspfEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -556,8 +634,8 @@
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.screen);
             this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.screenbg);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MainMenuStrip = this.menuStrip1;
@@ -577,6 +655,9 @@
             this.tabControl1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.rec_sizex)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rec_sizey)).EndInit();
+            this.screenbg.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -623,5 +704,9 @@
         private System.Windows.Forms.CheckBox field_number;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown field_dec;
+        private System.Windows.Forms.CheckBox rec_window;
+        private System.Windows.Forms.NumericUpDown rec_sizex;
+        private System.Windows.Forms.NumericUpDown rec_sizey;
+        private System.Windows.Forms.Panel screenbg;
     }
 }

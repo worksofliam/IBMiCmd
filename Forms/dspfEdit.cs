@@ -15,6 +15,7 @@ namespace IBMiCmd.Forms
 
     public partial class dspfEdit : Form
     {
+        public static Size WindowSize;
         private int fieldCounter = 0;
         private string _File;
 
@@ -328,7 +329,8 @@ namespace IBMiCmd.Forms
             if (index >= 0)
                 comboBox1.Items[index] = fieldInfo.Name;
 
-            field_x.Maximum = 80 - fieldInfo.Length;
+            field_x.Maximum = WindowSize.Width - fieldInfo.Length;
+            field_y.Maximum = WindowSize.Height;
 
             CurrentlySelectedField.Name = fieldInfo.Name;
             CurrentlySelectedField.Location = DSPFtoUILoc(fieldInfo.Position);
@@ -399,6 +401,7 @@ namespace IBMiCmd.Forms
             }
 
             SaveFormat(rcd_name.Text);
+
             this.CurrentRecordFormat = rcd_name.Text;
         }
 
@@ -421,6 +424,19 @@ namespace IBMiCmd.Forms
             {
                 rec_funcs.SetItemChecked(i, RecordFormats[RcdFmtName].FunctionKeys[i]);
             }
+
+            rec_window.Checked = RecordFormats[RcdFmtName].isWindow;
+
+            rec_sizex.Enabled = RecordFormats[RcdFmtName].isWindow;
+            rec_sizey.Enabled = RecordFormats[RcdFmtName].isWindow;
+
+            if (RecordFormats[RcdFmtName].isWindow)
+            {
+                rec_sizex.Value = RecordFormats[RcdFmtName].WindowSize.Width;
+                rec_sizey.Value = RecordFormats[RcdFmtName].WindowSize.Height;
+            }
+
+            AdjustScreenSize();
         }
 
         private void SaveFormat(string RcdFmtName)
@@ -448,7 +464,55 @@ namespace IBMiCmd.Forms
             RecordFormats[RcdFmtName].Pagedown = rec_pagedown.Checked;
             RecordFormats[RcdFmtName].Pageup = rec_pageup.Checked;
 
+            RecordFormats[RcdFmtName].isWindow = rec_window.Checked;
+            RecordFormats[RcdFmtName].WindowSize = new Size(Convert.ToInt32(rec_sizex.Value), Convert.ToInt32(rec_sizey.Value));
+
             RecordFormats[RcdFmtName].Name = RcdFmtName;
+
+            rec_sizex.Enabled = RecordFormats[RcdFmtName].isWindow;
+            rec_sizey.Enabled = RecordFormats[RcdFmtName].isWindow;
+            
+            AdjustScreenSize();
+        }
+
+        private void AdjustScreenSize()
+        {
+            Boolean normalSize = false;
+            if (this.CurrentRecordFormat != null) {
+                if (RecordFormats.ContainsKey(this.CurrentRecordFormat))
+                {
+                    if (RecordFormats[this.CurrentRecordFormat].isWindow)
+                    {
+                        Size windowSize = RecordFormats[this.CurrentRecordFormat].WindowSize;
+                        screen.Size = new Size(DSPFtoUILoc(new Point(windowSize.Width + 2, windowSize.Height+1)));
+                        screen.Location = new Point(
+                            screenbg.Width / 2 - screen.Size.Width / 2,
+                            screenbg.Height / 2 - screen.Size.Height / 2
+                        );
+
+                        WindowSize = new Size(windowSize.Width+1, windowSize.Height);
+                    }
+                    else
+                    {
+                        normalSize = true;
+                    }
+                }
+                else
+                {
+                    normalSize = true;
+                }
+            }
+            else
+            {
+                normalSize = true;
+            }
+
+            if (normalSize)
+            {
+                screen.Location = new Point(0, 0);
+                screen.Size = new Size(720, 456);
+                WindowSize = new Size(80, 24);
+            }
         }
         #endregion
     }

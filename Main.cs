@@ -128,7 +128,7 @@ namespace IBMiCmd
                 Editor = new dspfEdit(parser.GetRecordFormats(), path);
             }
 
-            Editor.Show();
+            Editor.ShowDialog();
         }
 
         internal static void ManageCL()

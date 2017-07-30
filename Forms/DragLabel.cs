@@ -59,7 +59,7 @@ namespace IBMiCmd.Forms
             p.Y = e.Y + labelWorker.Top;
             
             FieldInfo fieldInfo = (FieldInfo)labelWorker.Tag;
-            fieldInfo.Position = PointToDSPF(PointToDSPFView(new Point(p.X - iClickX, p.Y - iClickY)), 80 - fieldInfo.Length);
+            fieldInfo.Position = PointToDSPF(PointToDSPFView(new Point(p.X - iClickX, p.Y - iClickY)), fieldInfo.Length);
             labelWorker.Location = dspfEdit.DSPFtoUILoc(fieldInfo.Position);
 
             clicked = false;
@@ -80,15 +80,15 @@ namespace IBMiCmd.Forms
             return new Point(x, y);
         }
 
-        private static Point PointToDSPF(Point Location, int MaxLen = 80)
+        private static Point PointToDSPF(Point Location, int fieldLen)
         {
             int x = (((int)Location.X) / 9)+1;
             int y = (((int)Location.Y) / 19)+1;
 
             if (x < 1) x = 1;
-            if (x > MaxLen) x = MaxLen;
+            if ((x + fieldLen) > dspfEdit.WindowSize.Width) x = dspfEdit.WindowSize.Width - fieldLen;
             if (y < 1) y = 1;
-            if (y > 24) y = 24;
+            if (y > dspfEdit.WindowSize.Height) y = dspfEdit.WindowSize.Height;
 
             return new Point(x, y);
         }

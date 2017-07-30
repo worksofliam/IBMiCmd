@@ -177,6 +177,15 @@ namespace IBMiCmd.LanguageTools
                     case "ROLLDOWN":
                         CurrentRecord.Pageup = false;
                         break;
+                    case "WINDOW":
+                        CurrentRecord.isWindow = true;
+                        string[] points = value.Split(' ');
+                        //WINDOW (STARTY STARTX SIZEY SIZEX)
+                        CurrentRecord.WindowSize = new Size(
+                            Convert.ToInt32(points[3]), 
+                            Convert.ToInt32(points[2])
+                        );
+                        break;
                 }
 
                 if (option.StartsWith("CA"))
@@ -229,6 +238,14 @@ namespace IBMiCmd.LanguageTools
                 Output.Add("     A                                      ROLLUP(66)");
             if (Format.Pagedown)
                 Output.Add("     A                                      ROLLDOWN(44)");
+
+            if (Format.isWindow)
+            {
+                int starty = 0, startx = 0;
+                starty = (24 - Format.WindowSize.Height) / 2;
+                startx = (80 - Format.WindowSize.Width) / 2;
+                Output.Add("     A                                      WINDOW(" + starty.ToString() + " " + startx.ToString() + " " + Format.WindowSize.Height.ToString() + " " + Format.WindowSize.Width.ToString() + ")");
+            }
         }
 
         private void GenerateField(FieldInfo Field)
@@ -305,6 +322,9 @@ namespace IBMiCmd.LanguageTools
         public Boolean Pageup;
         public Boolean Pagedown;
 
+        public Boolean isWindow;
+        public Size WindowSize;
+
         public RecordInfo(String name)
         {
             Name = name;
@@ -318,6 +338,9 @@ namespace IBMiCmd.LanguageTools
 
             Pageup = false;
             Pagedown = false;
+
+            isWindow = false;
+            WindowSize = new Size(80, 24);
         }
     }
 
