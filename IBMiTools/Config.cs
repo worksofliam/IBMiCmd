@@ -11,7 +11,7 @@ namespace IBMiCmd.IBMiTools
     {
         public static void SwitchToConfig(string Config)
         {
-            IBMi.LoadConfig(Main.SystemsDirectory + Config, Config);
+            IBMi.LoadConfig(Main.SystemsDirectory + Config + ".cfg", Config);
             File.WriteAllText(Main.ConfigDirectory + "dftcfg", Config);
         }
 

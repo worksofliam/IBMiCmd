@@ -21,7 +21,7 @@ namespace IBMiCmd.IBMiTools
         public static void LoadConfig(string FileLoc, string System = "mysystem")
         {
             _config.Clear();
-            _ConfigFile = FileLoc + ".cfg";
+            _ConfigFile = FileLoc;
             string[] data;
             if (!File.Exists(_ConfigFile))
             {

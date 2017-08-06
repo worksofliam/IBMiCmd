@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 using IBMiCmd.IBMiTools;
+using System.Drawing;
 
 namespace IBMiCmd.Forms
 {
@@ -21,9 +22,14 @@ namespace IBMiCmd.Forms
         private void ReloadListView()
         {
             listView1.Items.Clear();
+            ListViewItem item;
             foreach (string System in Config.GetConfigs())
             {
-                listView1.Items.Add(new ListViewItem(System, 0));
+                string configLoc = Main.SystemsDirectory + System + ".cfg";
+                item = listView1.Items.Add(new ListViewItem(System, 0));
+
+                if (IBMi._ConfigFile == configLoc)
+                    item.ForeColor = Color.Blue;
             }
         }
 
@@ -55,6 +61,34 @@ namespace IBMiCmd.Forms
         private void button2_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void listView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                if (listView1.SelectedItems.Count == 1)
+                {
+                    var confirmResult = MessageBox.Show("Are you sure to delete this configuration?",
+                                     "Delete system configuration",
+                                     MessageBoxButtons.YesNo);
+
+                    if (confirmResult == DialogResult.Yes)
+                    {
+                        ListViewItem item = listView1.SelectedItems[0];
+                        string configLoc = Main.SystemsDirectory + item.Text + ".cfg";
+                        if (IBMi._ConfigFile != configLoc)
+                        {
+                            File.Delete(configLoc);
+                            listView1.Items.Remove(item);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Cannot delete config which is currently selected.");
+                        }
+                    }
+                }
+            }
         }
     }
 }
