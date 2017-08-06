@@ -119,9 +119,9 @@
             // 
             this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "file.png");
+            this.imageList1.Images.SetKeyName(0, "package.png");
             this.imageList1.Images.SetKeyName(1, "cancel.png");
-            this.imageList1.Images.SetKeyName(2, "rounded-info-button.png");
+            this.imageList1.Images.SetKeyName(2, "information.png");
             // 
             // contextMenuStrip1
             // 
@@ -130,26 +130,26 @@
             this.toolStripMenuItem2,
             this.loadErrorsToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(153, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(134, 70);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(133, 22);
             this.toolStripMenuItem1.Text = "Edit";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(133, 22);
             this.toolStripMenuItem2.Text = "Browse";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
             // loadErrorsToolStripMenuItem
             // 
             this.loadErrorsToolStripMenuItem.Name = "loadErrorsToolStripMenuItem";
-            this.loadErrorsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.loadErrorsToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.loadErrorsToolStripMenuItem.Text = "Load errors";
             this.loadErrorsToolStripMenuItem.Click += new System.EventHandler(this.loadErrorsToolStripMenuItem_Click);
             // 

@@ -61,10 +61,10 @@
             // 
             this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "couple-of-arrows-changing-places.png");
-            this.imageList1.Images.SetKeyName(1, "file.png");
-            this.imageList1.Images.SetKeyName(2, "error.png");
-            this.imageList1.Images.SetKeyName(3, "rounded-info-button.png");
+            this.imageList1.Images.SetKeyName(0, "computer_go.png");
+            this.imageList1.Images.SetKeyName(1, "package.png");
+            this.imageList1.Images.SetKeyName(2, "exclamation.png");
+            this.imageList1.Images.SetKeyName(3, "information.png");
             // 
             // statusStrip1
             // 

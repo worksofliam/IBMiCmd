@@ -135,10 +135,10 @@ namespace IBMiCmd
                     DisplayParse parser = new LanguageTools.DisplayParse();
                     parser.ParseFile(path);
                     Editor = new dspfEdit(parser.GetRecordFormats(), path);
-                    NppFunctions.RefreshWindow(path);
                 }
 
                 Editor.ShowDialog();
+                if (path.Trim() != "") NppFunctions.RefreshWindow(path);
             }
 
         }
