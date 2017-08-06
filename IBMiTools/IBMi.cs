@@ -18,6 +18,12 @@ namespace IBMiCmd.IBMiTools
         private static Boolean _getList = false;
         private static List<string> _list = new List<string>();
 
+        private static void CheckExist(string key, string value)
+        {
+            if (!_config.ContainsKey(key))
+                _config.Add(key, value);
+        }
+
         public static void LoadConfig(string FileLoc, string System = "mysystem")
         {
             _config.Clear();
@@ -25,45 +31,57 @@ namespace IBMiCmd.IBMiTools
             string[] data;
             if (!File.Exists(_ConfigFile))
             {
-                _config.Add("system", System);
-                _config.Add("username", "myuser");
-                _config.Add("password", "mypass");
-                _config.Add("datalibl", "SYSTOOLS");
-                _config.Add("curlib", "SYSTOOLS");
-                _config.Add("installlib", "QGPL");
-                _config.Add("experimental", "false");
+                CheckExist("system", System);
+                CheckExist("username", "myuser");
+                CheckExist("password", "mypass");
+                CheckExist("datalibl", "SYSTOOLS");
+                CheckExist("curlib", "SYSTOOLS");
+                CheckExist("clrcdlen", "80");
+                CheckExist("installlib", "QGPL");
+                CheckExist("experimental", "false");
 
-                _config.Add("localDefintionsInstalled", "false");
+                CheckExist("localDefintionsInstalled", "false");
 
-                _config.Add("binds", "MBR_CRTBNDRPG|MBR_CRTSQLRPGI|MBR_CRTBNDCL|MBR_CRTBNDC|IFS_CRTBNDRPG");
-                _config.Add("MBR_CRTBNDRPG", "CRTBNDRPG PGM(%openlib%/%openmbr%) SRCFILE(%openlib%/%openspf%) OPTION(*EVENTF) DBGVIEW(*SOURCE)|ERRORS %openlib% %openmbr%");
-                _config.Add("MBR_CRTSQLRPGI", "CRTSQLRPGI OBJ(%openlib%/%openmbr%) SRCFILE(%openlib%/%openspf%) COMMIT(*NONE) OPTION(*EVENTF *XREF)|ERRORS %openlib% %openmbr%");
-                _config.Add("MBR_CRTBNDCL", "CRTBNDCL PGM(%openlib%/%openmbr%) SRCFILE(%openlib%/%openspf%) OPTION(*EVENTF)|ERRORS %openlib% %openmbr%");
-                _config.Add("MBR_CRTBNDC", "CRTBNDC PGM(%openlib%/%openmbr%) SRCFILE(%openlib%/%openspf%) DBGVIEW(*SOURCE)|ERRORS %openlib% %openmbr%");
-                _config.Add("IFS_CRTBNDRPG", "CRTBNDRPG PGM(%curlib%/%file%) SRCSTMF('%file%.%ext%') OPTION(*EVENTF) DBGVIEW(*SOURCE)|ERRORS %curlib% %file%");
+                CheckExist("binds", "MBR_CRTBNDRPG|MBR_CRTSQLRPGI|MBR_CRTBNDCL|MBR_CRTBNDC|IFS_CRTBNDRPG");
+                CheckExist("MBR_CRTBNDRPG", "CRTBNDRPG PGM(%openlib%/%openmbr%) SRCFILE(%openlib%/%openspf%) OPTION(*EVENTF) DBGVIEW(*SOURCE)|ERRORS %openlib% %openmbr%");
+                CheckExist("MBR_CRTSQLRPGI", "CRTSQLRPGI OBJ(%openlib%/%openmbr%) SRCFILE(%openlib%/%openspf%) COMMIT(*NONE) OPTION(*EVENTF *XREF)|ERRORS %openlib% %openmbr%");
+                CheckExist("MBR_CRTBNDCL", "CRTBNDCL PGM(%openlib%/%openmbr%) SRCFILE(%openlib%/%openspf%) OPTION(*EVENTF)|ERRORS %openlib% %openmbr%");
+                CheckExist("MBR_CRTBNDC", "CRTBNDC PGM(%openlib%/%openmbr%) SRCFILE(%openlib%/%openspf%) DBGVIEW(*SOURCE)|ERRORS %openlib% %openmbr%");
+                CheckExist("IFS_CRTBNDRPG", "CRTBNDRPG PGM(%curlib%/%file%) SRCSTMF('%file%.%ext%') OPTION(*EVENTF) DBGVIEW(*SOURCE)|ERRORS %curlib% %file%");
 
                 PrintConfig();
 
                 MessageBox.Show("You will now be prompted to enter in a Remote System.");
                 Main.RemoteSetup();
             }
-
-            _config.Clear();
-
-            foreach (string Line in File.ReadAllLines(_ConfigFile))
+            else
             {
-                data = Line.Split('=');
-                for (int i = 0; i < data.Length; i++) data[i] = data[i].Trim();
+                foreach (string Line in File.ReadAllLines(_ConfigFile))
+                {
+                    data = Line.Split('=');
+                    for (int i = 0; i < data.Length; i++) data[i] = data[i].Trim();
 
-                if (_config.ContainsKey(data[0]))
-                {
-                    _config[data[0]] = data[1];
+                    if (_config.ContainsKey(data[0]))
+                    {
+                        _config[data[0]] = data[1];
+                    }
+                    else
+                    {
+                        _config.Add(data[0], data[1]);
+                    }
                 }
-                else
-                {
-                    _config.Add(data[0], data[1]);
-                }
+
+                CheckExist("system", System);
+                CheckExist("username", "myuser");
+                CheckExist("password", "mypass");
+                CheckExist("datalibl", "SYSTOOLS");
+                CheckExist("curlib", "SYSTOOLS");
+                CheckExist("clrcdlen", "80");
+                CheckExist("installlib", "QGPL");
+                CheckExist("experimental", "false");
             }
+
+
         }
 
         private static void PrintConfig()
