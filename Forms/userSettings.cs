@@ -16,6 +16,7 @@ namespace IBMiCmd.Forms
             textBox1.Text = IBMi.GetConfig("system");
             textBox2.Text = IBMi.GetConfig("username");
             textBox3.Text = IBMi.GetConfig("password");
+            numericUpDown1.Value = Convert.ToInt32(IBMi.GetConfig("clrcdlen"));
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -44,8 +45,24 @@ namespace IBMiCmd.Forms
             IBMi.SetConfig("system", textBox1.Text);
             IBMi.SetConfig("username", textBox2.Text);
             IBMi.SetConfig("password", textBox3.Text);
+            IBMi.SetConfig("clrcdlen", numericUpDown1.Value.ToString());
 
             this.Close();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

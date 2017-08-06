@@ -79,6 +79,7 @@ namespace IBMiCmd.IBMiTools
                 CheckExist("clrcdlen", "80");
                 CheckExist("installlib", "QGPL");
                 CheckExist("experimental", "false");
+                PrintConfig();
             }
 
 

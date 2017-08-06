@@ -145,7 +145,7 @@ namespace IBMiCmd
 
         internal static void ManageCL()
         {
-            CLFile.CorrectLines(NppFunctions.GetCurrentFileName(), 80);
+            CLFile.CorrectLines(NppFunctions.GetCurrentFileName(), Convert.ToInt32(IBMi.GetConfig("clrcdlen")));
             NppFunctions.RefreshWindow(NppFunctions.GetCurrentFileName());
         }
 
