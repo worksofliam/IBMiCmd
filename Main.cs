@@ -95,7 +95,6 @@ namespace IBMiCmd
             PluginBase.SetCommand(ItemOrder++, "RPG Line Conversion", LaunchConversion, new ShortcutKey(true, false, false, Keys.F5));
             PluginBase.SetCommand(ItemOrder++, "RPG File Conversion", LaunchFileConversion, new ShortcutKey(true, false, false, Keys.F6));
             PluginBase.SetCommand(ItemOrder++, "-SEPARATOR-", null);
-            PluginBase.SetCommand(ItemOrder++, "Display File Editor", DisplayEdit);
             if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Refresh Extname Definitions", BuildSourceContext);
             if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Extname Content Assist", AutoComplete, new ShortcutKey(false, true, false, Keys.Space));
             if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Prompt CL Command", PromptCommand, new ShortcutKey(true, false, false, Keys.F4));
@@ -115,32 +114,6 @@ namespace IBMiCmd
         internal static void About()
         {
             MessageBox.Show($"IBMiCmd, created by Works Of Barry. { Environment.NewLine} github.com/WorksOfBarry/IBMiCmd");
-        }
-
-        internal static void DisplayEdit()
-        {
-            DialogResult buttonPress = (IBMi.GetConfig("dspfNotice") == "yes" ? DialogResult.Yes : DialogResult.No);
-            if (buttonPress == DialogResult.No)
-            {
-                buttonPress = MessageBox.Show("Do you understand that you use the Display File Editor at your own risk? Currently, the Display File Editor is not ready for production use and therefore holds no responsibility of changes made to source when saving.", "Notice!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (buttonPress == DialogResult.Yes) IBMi.SetConfig("dspfNotice", "yes");
-            }
-
-            if (buttonPress == DialogResult.Yes)
-            {
-                dspfEdit Editor = new dspfEdit();
-                string path = NppFunctions.GetCurrentFileName();
-                if (path.Trim() != "")
-                {
-                    DisplayParse parser = new LanguageTools.DisplayParse();
-                    parser.ParseFile(path);
-                    Editor = new dspfEdit(parser.GetRecordFormats(), path);
-                }
-
-                Editor.ShowDialog();
-                if (path.Trim() != "") NppFunctions.RefreshWindow(path);
-            }
-
         }
 
         internal static void ManageCL()

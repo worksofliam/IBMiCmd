@@ -100,15 +100,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DllExport\DllExportAttribute.cs" />
-    <Compile Include="Forms\DragLabel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Forms\dspfEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\dspfEdit.Designer.cs">
-      <DependentUpon>dspfEdit.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\newConfig.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -148,7 +139,6 @@
     <Compile Include="IBMiTools\Config.cs" />
     <Compile Include="LanguageTools\CLCommandPrompter.cs" />
     <Compile Include="LanguageTools\CLParser.cs" />
-    <Compile Include="LanguageTools\Display.cs" />
     <Compile Include="LanguageTools\ErrorHandle.cs" />
     <Compile Include="Forms\cmdBindings.cs">
       <SubType>Form</SubType>
@@ -238,9 +228,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\commandEntry.resx">
       <DependentUpon>commandEntry.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\dspfEdit.resx">
-      <DependentUpon>dspfEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\errorListing.resx">
       <DependentUpon>errorListing.cs</DependentUpon>
