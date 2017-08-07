@@ -27,6 +27,23 @@ namespace IBMiCmd.LanguageTools
         {
             IntPtr curScintilla = PluginBase.GetCurrentScintilla();
             int lineLength = (int)Win32.SendMessage(curScintilla, SciMsg.SCI_LINELENGTH, line, 0);
+            if (lineLength >= 1)
+            {
+                StringBuilder sb = new StringBuilder(lineLength);
+                Win32.SendMessage(curScintilla, SciMsg.SCI_GETLINE, line, sb);
+
+                return sb.ToString().Substring(0, lineLength);
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public static string GetLineWithSelection(int line)
+        {
+            IntPtr curScintilla = PluginBase.GetCurrentScintilla();
+            int lineLength = (int)Win32.SendMessage(curScintilla, SciMsg.SCI_LINELENGTH, line, 0);
             StringBuilder sb = new StringBuilder(lineLength);
             Win32.SendMessage(curScintilla, SciMsg.SCI_GETLINE, line, sb);
 
@@ -102,6 +119,9 @@ namespace IBMiCmd.LanguageTools
             OpenMember member;
             switch (Notification.nmhdr.code)
             {
+                case (uint)NppMsg.NPPN_SHUTDOWN:
+
+                    break;
                 case (uint)NppMsg.NPPN_FILESAVED:
                     member = OpenMembers.GetMember(path);
                     if (member != null)

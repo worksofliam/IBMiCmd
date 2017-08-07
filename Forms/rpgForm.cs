@@ -21,7 +21,7 @@ namespace IBMiCmd.Forms
         {
             string freeOut = "", fixedLine = "";
             
-            fixedLine = NppFunctions.GetLine(NppFunctions.GetLineNumber());
+            fixedLine = NppFunctions.GetLineWithSelection(NppFunctions.GetLineNumber());
 
             freeOut = RPGFree.getFree(fixedLine);
             if (freeOut != "")
