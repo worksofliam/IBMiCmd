@@ -19,6 +19,13 @@ namespace IBMiCmd.Forms
             this.Visible = false;
         }
 
+        private string currentKey = "";
+
+        public void SetKey(string Key)
+        {
+            currentKey = Key;
+        }
+
         public void LoadList(ListViewItem[] List)
         {
             this.Invoke(new MethodInvoker(delegate ()
@@ -34,8 +41,12 @@ namespace IBMiCmd.Forms
                     listView1.Items.AddRange(List);
                 }
 
-                if (Show && this.Opacity == 0)
-                    this.Location = NppFunctions.GetCaretPos();
+                Point newLoc = NppFunctions.GetCaretPos();
+                if (Show && (this.Opacity == 0 || newLoc.Y > this.Location.Y))
+                    this.Location = newLoc;
+
+                if (Show)
+                    NppFunctions.CancelNPPAutoC();
 
                 this.Opacity = (Show ? 100 : 0);
             }));
@@ -44,6 +55,20 @@ namespace IBMiCmd.Forms
         public void HideWindow()
         {
             this.Opacity = 0;
+        }
+
+        private void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (listView1.SelectedItems.Count == 1) {
+                string value = listView1.SelectedItems[0].Text;
+                if (value.Contains(" "))
+                    value = value.Substring(0, value.IndexOf(' '));
+
+                value = value.Substring(currentKey.Length);
+                //NppFunctions.AppendText(value);
+                HideWindow();
+            }
+
         }
     }
 }

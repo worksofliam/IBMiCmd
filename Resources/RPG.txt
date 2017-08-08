@@ -192,3 +192,4 @@ TIME (Time)|3
 TIMESTAMP (Timestamp)|3
 OBJECT (Java Object)|3
 POINTER (Pointer)|3
+Indicator (Indicator / Boolean)|3

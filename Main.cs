@@ -111,6 +111,7 @@ namespace IBMiCmd
         }
         internal static void PluginCleanUp()
         {
+            IntelliSenseWindow.Dispose();
         }
         #endregion
 

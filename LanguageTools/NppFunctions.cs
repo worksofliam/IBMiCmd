@@ -141,6 +141,11 @@ namespace IBMiCmd.LanguageTools
             return new Point(positionX, positionY);
         }
 
+        public static void CancelNPPAutoC()
+        {
+            Win32.SendMessage(PluginBase.GetCurrentScintilla(), SciMsg.SCI_AUTOCCANCEL, 0, 0);
+        }
+
         public static void HandleTrigger(SCNotification Notification)
         {
             Thread gothread;
