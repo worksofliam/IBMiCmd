@@ -111,12 +111,15 @@ namespace IBMiCmd.Forms
             if (listView1.SelectedItems.Count == 1)
             {
                 ListViewItem selection = listView1.SelectedItems[0];
-                string tag = (string)selection.Tag;
-                if (tag != "")
+                if (selection.Tag != null)
                 {
-                    string[] path = tag.Split('|');
+                    string tag = (string)selection.Tag;
+                    if (tag != "")
+                    {
+                        string[] path = tag.Split('|');
 
-                    OpenMember(path[0], path[1], selection.Text, false);
+                        OpenMember(path[0], path[1], selection.Text, false);
+                    }
                 }
             }
         }
@@ -125,9 +128,12 @@ namespace IBMiCmd.Forms
         {
             if (e.Button == MouseButtons.Right)
             {
-                if (listView1.FocusedItem.Bounds.Contains(e.Location) == true)
+                if (listView1.FocusedItem.Tag != null)
                 {
-                    contextMenuStrip1.Show(Cursor.Position);
+                    if (listView1.FocusedItem.Bounds.Contains(e.Location) == true)
+                    {
+                        contextMenuStrip1.Show(Cursor.Position);
+                    }
                 }
             }
         }

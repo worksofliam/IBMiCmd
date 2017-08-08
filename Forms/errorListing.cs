@@ -19,8 +19,11 @@ namespace IBMiCmd.Forms
             if (e.Node.Tag == null) { }
             else if (e.Node.Tag.ToString() == "CHG")
             {
-                new programChoose().ShowDialog();
-                publishErrors();
+                programChoose select = new programChoose();
+
+                select.ShowDialog();
+                if (select._GotErrors) 
+                    publishErrors();
             }
             else
             {

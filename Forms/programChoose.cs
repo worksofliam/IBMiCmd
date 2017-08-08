@@ -12,15 +12,17 @@ namespace IBMiCmd.Forms
 {
     public partial class programChoose : Form
     {
+        public Boolean _GotErrors = false;
         public programChoose()
         {
             InitializeComponent();
+            _GotErrors = false;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             ErrorHandle.getErrors(textBox1.Text, textBox2.Text);
-
+            _GotErrors = true;
             this.Close();
         }
 

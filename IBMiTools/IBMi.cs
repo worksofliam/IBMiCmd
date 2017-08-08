@@ -12,7 +12,7 @@ namespace IBMiCmd.IBMiTools
         {
             { "426", "Connection closed; transfer aborted." },
             { "530", "Configuration username and password incorrect." },
-            { "550", "File being access may not exist." }
+            { "550", "File being accessed may not exist." }
         };
 
         public static string _ConfigFile { get; set; }
