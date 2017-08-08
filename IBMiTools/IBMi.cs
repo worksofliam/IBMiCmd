@@ -220,13 +220,6 @@ namespace IBMiCmd.IBMiTools
             process.BeginErrorReadLine();
             process.WaitForExit();
 
-#if DEBUG
-            foreach (string retMsg in _output)
-            {
-                IBMiUtilities.DebugLog(retMsg);
-            }
-#endif            
-
             IBMiUtilities.DebugLog("FTP of command file " + FileLoc + " completed");
             return _Failed || _NotConnected;
         }
@@ -235,6 +228,7 @@ namespace IBMiCmd.IBMiTools
         {
             if (outLine.Data != null)
             {
+                IBMiUtilities.Log(outLine.Data);
                 if (outLine.Data.Length >= 5)
                 {
                     if (outLine.Data.Trim() == "Not connected.")

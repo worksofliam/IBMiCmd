@@ -95,6 +95,7 @@ namespace IBMiCmd
             PluginBase.SetCommand(ItemOrder++, "RPG Line Conversion", LaunchConversion, new ShortcutKey(true, false, false, Keys.F5));
             PluginBase.SetCommand(ItemOrder++, "RPG File Conversion", LaunchFileConversion, new ShortcutKey(true, false, false, Keys.F6));
             PluginBase.SetCommand(ItemOrder++, "-SEPARATOR-", null);
+            PluginBase.SetCommand(ItemOrder++, "Open Log File", OpenLogFile);
             if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Refresh Extname Definitions", BuildSourceContext);
             if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Extname Content Assist", AutoComplete, new ShortcutKey(false, true, false, Keys.Space));
             if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Prompt CL Command", PromptCommand, new ShortcutKey(true, false, false, Keys.F4));
@@ -114,6 +115,11 @@ namespace IBMiCmd
         internal static void About()
         {
             MessageBox.Show($"IBMiCmd, created by Works Of Barry. { Environment.NewLine} github.com/WorksOfBarry/IBMiCmd");
+        }
+
+        internal static void OpenLogFile()
+        {
+            NppFunctions.OpenFile(IBMiUtilities.GetLogPath(), true);
         }
 
         internal static void ManageCL()

@@ -123,12 +123,16 @@ namespace IBMiCmd.IBMiTools
             File.WriteAllText(_LogFile, DateTime.Now.ToString() + " : Log Created..." + Environment.NewLine);
         }
 
+        internal static string GetLogPath()
+        {
+            return _LogFile;
+        }
+
         internal static void Log(string m)
         {
             File.AppendAllText(_LogFile, DateTime.Now.ToString() + " : " + m + Environment.NewLine);
         }
-
-        [System.Diagnostics.Conditional("DEBUG")]
+        
         internal static void DebugLog(string m)
         {
             File.AppendAllText(_LogFile, DateTime.Now.ToString() + " : " + m + Environment.NewLine);
