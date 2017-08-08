@@ -42,6 +42,7 @@
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList1.Images.SetKeyName(0, "application.png");
             this.imageList1.Images.SetKeyName(1, "package.png");
+            this.imageList1.Images.SetKeyName(2, "wrench.png");
             // 
             // listView1
             // 

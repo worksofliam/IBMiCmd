@@ -13,17 +13,32 @@ namespace IBMiCmd.LanguageTools
 {
     class Intellisense
     {
-        private readonly static Dictionary<string, string[]> Values = new Dictionary<string, string[]>()
+        private readonly static Dictionary<string, ListViewItem[]> Values = new Dictionary<string, ListViewItem[]>()
         {
-            { "RPG", Resources.RPG.Split('\n') },
-            { "CL", Resources.CL.Split('\n') }
+            { "RPG", GetPieces(Resources.RPG) },
+            { "CL", GetPieces(Resources.CL) }
         };
-        
-        public static string[] ParseLine()
+
+        private static ListViewItem[] GetPieces(string Resource)
         {
-            string[] Keysout = null;
+            List<ListViewItem> Items = new List<ListViewItem>();
+            string[] Pieces;
+            
+            foreach (String Item in Resource.Split('\n'))
+            {
+                Pieces = Item.Split('|');
+                Items.Add(new ListViewItem(Pieces[0], Convert.ToInt32(Pieces[1])));
+            }
+
+            return Items.ToArray();
+        }
+        
+        public static ListViewItem[] ParseLine()
+        {
+            ListViewItem[] Keysout = null;
             string currentFile = NppFunctions.GetCurrentFileName().ToUpper();
             string currentPiece = NppFunctions.GetLine(NppFunctions.GetLineNumber()).Trim();
+            string[] pieces;
 
             if (currentFile.Contains("RPG"))
             {
@@ -33,27 +48,30 @@ namespace IBMiCmd.LanguageTools
                 }
                 else if (currentPiece.Length >= 1)
                 {
-                    string[] pieces = currentPiece.Split(' ');
+                    pieces = currentPiece.Split(' ');
                     currentPiece = pieces[pieces.Length - 1];
                     currentPiece = currentPiece.ToUpper();
-                    Keysout = Array.FindAll(Values["RPG"], c => c.StartsWith(currentPiece));
+                    Keysout = Array.FindAll(Values["RPG"], c => c.Text.StartsWith(currentPiece));
                 }
             }
             else if (currentFile.Contains("CL"))
             {
                 if (currentPiece.Length >= 4)
                 {
-                    string[] pieces = currentPiece.Split(' ');
+                    pieces = currentPiece.Split(' ');
                     if (pieces.Length == 1)
                     {
                         currentPiece = pieces[pieces.Length - 1];
                         currentPiece = currentPiece.ToUpper();
-                        Keysout = Array.FindAll(Values["CL"], c => c.StartsWith(currentPiece));
+                        Keysout = Array.FindAll(Values["CL"], c => c.Text.StartsWith(currentPiece));
                     }
                 }
             }
 
-            return Keysout;
+            if (Keysout == null)
+                return null;
+            else
+                return Keysout.ToArray();
         }
     }
 }

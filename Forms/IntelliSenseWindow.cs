@@ -19,29 +19,19 @@ namespace IBMiCmd.Forms
             this.Visible = false;
         }
 
-        public void LoadList(String[] List)
+        public void LoadList(ListViewItem[] List)
         {
-            List<ListViewItem> Items = null;
             this.Invoke(new MethodInvoker(delegate ()
             {
                 bool Show = (List != null);
 
                 if (Show)
                     Show = List.Length != 0;
-                
-                if (Show)
-                {
-                    Items = new List<ListViewItem>();
-                    foreach (string Item in List)
-                    {
-                        Items.Add(new ListViewItem(Item, (Item.StartsWith("%") ? 1 : 0)));
-                    }
-                }
 
                 if (Show)
                 {
                     listView1.Items.Clear();
-                    listView1.Items.AddRange(Items.ToArray());
+                    listView1.Items.AddRange(List);
                 }
 
                 if (Show && this.Opacity == 0)

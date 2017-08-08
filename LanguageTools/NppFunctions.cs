@@ -148,11 +148,6 @@ namespace IBMiCmd.LanguageTools
             OpenMember member;
             switch (Notification.nmhdr.code)
             {
-                case (uint)SciMsg.SCN_SCROLLED:
-                case (uint)SciMsg.SCN_UPDATEUI:
-                    Main.IntelliSenseWindow.HideWindow();
-                    break;
-
                 case (uint)SciMsg.SCN_MODIFIED:
                     gothread = new Thread((ThreadStart)delegate
                     {
