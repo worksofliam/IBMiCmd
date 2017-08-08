@@ -24,6 +24,7 @@ namespace IBMiCmd
         public static libraryList LiblWindow { get; set; }
         public static cmdBindings BindsWindow { get; set; }
         public static selectMember MemberListWindow { get; set; }
+        public static IntelliSenseWindow IntelliSenseWindow { get; set; }
 
         public static string ConfigDirectory { get; set; }
         public static string SystemsDirectory { get; set; }
@@ -99,6 +100,9 @@ namespace IBMiCmd
             if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Refresh Extname Definitions", BuildSourceContext);
             if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Extname Content Assist", AutoComplete, new ShortcutKey(false, true, false, Keys.Space));
             if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Prompt CL Command", PromptCommand, new ShortcutKey(true, false, false, Keys.F4));
+
+            IntelliSenseWindow = new IntelliSenseWindow();
+            IntelliSenseWindow.Show();
         }
 
         internal static void SetToolBarIcon()
@@ -107,7 +111,6 @@ namespace IBMiCmd
         }
         internal static void PluginCleanUp()
         {
-
         }
         #endregion
 

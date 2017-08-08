@@ -7,6 +7,8 @@ using System.IO;
 using System.Threading;
 using NppPluginNET;
 using IBMiCmd.IBMiTools;
+using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace IBMiCmd.LanguageTools
 {
@@ -113,20 +115,50 @@ namespace IBMiCmd.LanguageTools
             Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_MAKECURRENTBUFFERDIRTY, 0, 0);
         }
 
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+
+        static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
+        public static Point GetCaretPos()
+        {
+            RECT mainWindowPosition;
+            GetWindowRect(PluginBase.GetCurrentScintilla(), out mainWindowPosition);
+            int currentPos = (int)Win32.SendMessage(PluginBase.GetCurrentScintilla(), SciMsg.SCI_GETCURRENTPOS, 0, 0);
+            int caretOffsetX = (int)Win32.SendMessage(PluginBase.GetCurrentScintilla(), SciMsg.SCI_POINTXFROMPOSITION, 0, currentPos);
+            int caretOffsetY = (int)Win32.SendMessage(PluginBase.GetCurrentScintilla(), SciMsg.SCI_POINTYFROMPOSITION, 0, currentPos);
+            // Get the height of each line in pixels, so the autocomplete pop-up can be offset to fall underneath the current line 
+            int lineHeight = (int)Win32.SendMessage(PluginBase.GetCurrentScintilla(), SciMsg.SCI_TEXTHEIGHT, 0, 0);
+
+            // Determine coordinates for placing the autocomplete popup, by adding aLl the offsets to the NPP window coordinates
+            int positionX = mainWindowPosition.Left + caretOffsetX;
+            int positionY = mainWindowPosition.Top + caretOffsetY + lineHeight;
+
+            return new Point(positionX, positionY);
+        }
+
         public static void HandleTrigger(SCNotification Notification)
         {
+            Thread gothread;
             string path = GetCurrentFileName();
             OpenMember member;
             switch (Notification.nmhdr.code)
             {
-                case (uint)NppMsg.NPPN_SHUTDOWN:
+                case (uint)SciMsg.SCN_MODIFIED:
+                    gothread = new Thread((ThreadStart)delegate
+                    {
+                        Main.IntelliSenseWindow.LoadList(Intellisense.ParseLine());
+                        Win32.SendMessage(PluginBase.nppData._nppHandle, SciMsg.SCI_SETFOCUS, 0, 0);
 
+                    });
+                    gothread.Start();
                     break;
+
                 case (uint)NppMsg.NPPN_FILESAVED:
                     member = OpenMembers.GetMember(path);
                     if (member != null)
                     {
-                        Thread gothread = new Thread((ThreadStart)delegate {  
+                        gothread = new Thread((ThreadStart)delegate {  
                             if (member.GetSystemName() == IBMi.GetConfig("system"))
                             {
                                 bool UploadResult = IBMiUtilities.UploadMember(member.GetLocalFile(), member.GetLibrary(), member.GetObject(), member.GetMember());

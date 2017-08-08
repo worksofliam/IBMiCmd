@@ -100,6 +100,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DllExport\DllExportAttribute.cs" />
+    <Compile Include="Forms\IntelliSenseWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\IntelliSenseWindow.Designer.cs">
+      <DependentUpon>IntelliSenseWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\newConfig.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -199,6 +205,7 @@
     <Compile Include="IBMiTools\IBMiCommandInstaller.cs" />
     <Compile Include="IBMiTools\IBMiUtilities.cs" />
     <Compile Include="LanguageTools\Include.cs" />
+    <Compile Include="LanguageTools\Intellisense.cs" />
     <Compile Include="LanguageTools\ListError.cs" />
     <Compile Include="LanguageTools\NppFunctions.cs" />
     <Compile Include="LanguageTools\OpenMember.cs" />
@@ -225,6 +232,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\errorListing.resx">
       <DependentUpon>errorListing.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\IntelliSenseWindow.resx">
+      <DependentUpon>IntelliSenseWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\newConfig.resx">
       <DependentUpon>newConfig.cs</DependentUpon>
@@ -289,6 +299,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\CTLOPTCPY.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\RPG.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\CL.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildProjectDirectory)\DllExport\NppPlugin.DllExport.targets" />

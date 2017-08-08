@@ -61,17 +61,33 @@ namespace IBMiCmd.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ctl-opt main(main) datfmt(*iso) 
-        ///		datedit(*ymd-) 
-        ///		timfmt(*iso) 
-        ///		decedit(&apos;0,&apos;) 
-        ///        alwnull(*usrctl) 
-        ///		bnddir(&apos;QC2LE&apos;)                           
-        ///        option(*srcstmt : *nodebugio :*noshowcpy : *nounref : *noexpdds)              
-        ///        debug(*yes) 
-        ///		langid(*jobrun) 
-        ///        ccsid(*ucs2 : 13488)                                   
-        ///		DftActGrp(*No) ActGrp(NPP);                               .
+        ///   Looks up a localized string similar to ADDACC (Add Access Code) command
+        ///ADDAJE (Add Autostart Job Entry) command
+        ///ADDALRACNE (Add Alert Action Entry) command
+        ///ADDALRD (Add Alert Description) command
+        ///ADDALRSLTE (Add Alert Selection Entry) command
+        ///ADDASPCPYD (Add ASP Copy Description) command
+        ///ADDAUTLE (Add Authorization List Entry) command
+        ///ADDBKP (Add Breakpoint) command
+        ///ADDBNDDIRE (Add Binding Directory Entry) command
+        ///ADDCADMRE (Add Cluster Administrative Domain Managed Resource Entry) command
+        ///ADDCADNODE (Add Cluster Administrative Domain [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string CL {
+            get {
+                return ResourceManager.GetString("CL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to **FREE                                                                 
+        ///ctl-opt main(main) datfmt(*iso)                                        
+        ///        datedit(*ymd-)                                         
+        ///        timfmt(*iso)                                           
+        ///        decedit(&apos;0,&apos;)                                          
+        ///        alwnull(*usrctl)                                               
+        ///        bnddir(&apos;QC2LE&apos;)                                        
+        ///        option(*srcstmt : *nodebu [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string CTLOPTCPY {
             get {
@@ -109,8 +125,33 @@ namespace IBMiCmd.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to %ABS (Absolute Value of Expression)
+        ///%ADDR (Get Address of Variable)
+        ///%ALLOC (Allocate Storage)
+        ///%BITAND (Bitwise AND Operation)
+        ///%BITNOT (Invert Bits)
+        ///%BITOR (Bitwise OR Operation)
+        ///%BITXOR (Bitwise Exclusive-OR Operation)
+        ///%CHAR (Convert to Character Data)
+        ///%CHECK (Check Characters)
+        ///%CHECKR (Check Reverse)
+        ///%DATE (Convert to Date)
+        ///%DAYS (Number of Days)
+        ///%DEC (Convert to Packed Decimal Format)
+        ///%DECH (Convert to Packed Decimal Format with Half Adjust)
+        ///%DECPOS (Get Number of Decimal Positions)
+        ///%DIFF ( [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string RPG {
+            get {
+                return ResourceManager.GetString("RPG", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to             CMD        ALLOW(*ALL)
-        ///CMD:        PARM       KWD(CMD) TYPE(*CHAR) LEN(20).
+        ///			PARM       KWD(CMD) TYPE(*CHAR) LEN(10) 
+        ///			PARM       KWD(LIB) TYPE(*CHAR) LEN(10) DFT(QSYS).
         /// </summary>
         internal static string RTVCMDCMD {
             get {
@@ -120,7 +161,8 @@ namespace IBMiCmd.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to **FREE
-        ////include QRPGLESRC.NPPCTLOPT
+        ////include QTEMP/IICRPGSRC,IICCTLOPT
+        ///
         ///// Part of the IBMiCmd server features
         /////
         ///// Put command definition in the users IFS Folder in a file named as command.cdml
@@ -129,18 +171,17 @@ namespace IBMiCmd.Properties {
         /////
         ///
         ///dcl-ds myPSDS psds;
-        ///    
-        ///end-ds
+        ///   currentUser char(10) pos(358); 
+        ///end-ds;
         ///
         ///dcl-proc main;
-        ///    dcl-pi *N;      
-        ///        command char(20);
+        ///    dcl-pi *N;  
+        ///        command char(10);    
+        ///        library char(10);        
         ///    end-pi;
         ///    
-        ///    dcl-ds RetreiveCDML_DestinationFormat qualified;
-        ///        BytesReturned  int(10);
-        ///        BytesAvailable int(10);
-        ///  [rest of string was truncated]&quot;;.
+        ///    dcl-ds Data qualified;
+        ///        BytesReturn [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string RTVCMDRPG {
             get {
