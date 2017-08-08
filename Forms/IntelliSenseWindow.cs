@@ -50,5 +50,10 @@ namespace IBMiCmd.Forms
                 this.Opacity = (Show ? 100 : 0);
             }));
         }
+
+        public void HideWindow()
+        {
+            this.Opacity = 0;
+        }
     }
 }

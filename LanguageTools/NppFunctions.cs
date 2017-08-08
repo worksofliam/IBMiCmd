@@ -16,6 +16,7 @@ namespace IBMiCmd.LanguageTools
     {
         public static void OpenFile(string Path, Boolean ReadOnly)
         {
+            Main.IntelliSenseWindow.HideWindow();
             Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DOOPEN, 0, Path);
             if (ReadOnly) Win32.SendMessage(PluginBase.GetCurrentScintilla(), SciMsg.SCI_SETREADONLY, 1, 0);
         }
@@ -44,6 +45,7 @@ namespace IBMiCmd.LanguageTools
 
         public static string GetLineWithSelection(int line)
         {
+            Main.IntelliSenseWindow.HideWindow();
             IntPtr curScintilla = PluginBase.GetCurrentScintilla();
             int lineLength = (int)Win32.SendMessage(curScintilla, SciMsg.SCI_LINELENGTH, line, 0);
             StringBuilder sb = new StringBuilder(lineLength);
@@ -87,6 +89,7 @@ namespace IBMiCmd.LanguageTools
         
         public static void SwitchToFile(string name, int line, int col)
         {
+            Main.IntelliSenseWindow.HideWindow();
             int pos = 0;
             IntPtr curScintilla = PluginBase.nppData._nppHandle;
             Win32.SendMessage(curScintilla, NppMsg.NPPM_SWITCHTOFILE, 0, name);
@@ -111,6 +114,7 @@ namespace IBMiCmd.LanguageTools
 
         public static void RefreshWindow(string path)
         {
+            Main.IntelliSenseWindow.HideWindow();
             Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_RELOADFILE, 0, path);
             Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_MAKECURRENTBUFFERDIRTY, 0, 0);
         }
@@ -144,6 +148,11 @@ namespace IBMiCmd.LanguageTools
             OpenMember member;
             switch (Notification.nmhdr.code)
             {
+                case (uint)SciMsg.SCN_SCROLLED:
+                case (uint)SciMsg.SCN_UPDATEUI:
+                    Main.IntelliSenseWindow.HideWindow();
+                    break;
+
                 case (uint)SciMsg.SCN_MODIFIED:
                     gothread = new Thread((ThreadStart)delegate
                     {
