@@ -177,3 +177,18 @@ XML-INTO (Parse an XML Document into a Variable)|0
 XML-SAX (Parse an XML Document)|0
 Z-ADD (Zero and Add)|0
 Z-SUB (Zero and Subtract)|0
+CHAR (Character)|3
+VARCHAR (Varying length character)|3
+BINDEC (Binary-Decimal)|3
+FLOAT (Float)|3
+INT (Integer)|3
+PACKED (Packaged-Decimal)|3
+UNS (Unsigned Integer)|3
+ZONED (Zoned-Decimal)|3
+GRAPH (Graphic)|3
+UCS2 (UCS-2)|3
+DATE (Date)|3
+TIME (Time)|3
+TIMESTAMP (Timestamp)|3
+OBJECT (Java Object)|3
+POINTER (Pointer)|3

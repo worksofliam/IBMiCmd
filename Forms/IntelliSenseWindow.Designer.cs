@@ -43,6 +43,7 @@
             this.imageList1.Images.SetKeyName(0, "application.png");
             this.imageList1.Images.SetKeyName(1, "package.png");
             this.imageList1.Images.SetKeyName(2, "wrench.png");
+            this.imageList1.Images.SetKeyName(3, "type.png");
             // 
             // listView1
             // 

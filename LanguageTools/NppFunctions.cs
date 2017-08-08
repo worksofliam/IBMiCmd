@@ -135,8 +135,8 @@ namespace IBMiCmd.LanguageTools
             int lineHeight = (int)Win32.SendMessage(PluginBase.GetCurrentScintilla(), SciMsg.SCI_TEXTHEIGHT, 0, 0);
 
             // Determine coordinates for placing the autocomplete popup, by adding aLl the offsets to the NPP window coordinates
-            int positionX = mainWindowPosition.Left + caretOffsetX;
-            int positionY = mainWindowPosition.Top + caretOffsetY + lineHeight;
+            int positionX = (mainWindowPosition.Left + caretOffsetX) - 10;
+            int positionY = mainWindowPosition.Top + caretOffsetY + lineHeight + 2;
 
             return new Point(positionX, positionY);
         }
