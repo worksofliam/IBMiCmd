@@ -22,7 +22,7 @@ namespace IBMiCmd.LanguageTools
         public static string[] ParseLine()
         {
             string[] Keysout = null;
-            string currentFile = NppFunctions.GetCurrentFileName().ToLower();
+            string currentFile = NppFunctions.GetCurrentFileName().ToUpper();
             string currentPiece = NppFunctions.GetLine(NppFunctions.GetLineNumber()).Trim();
 
             if (currentFile.Contains("RPG"))
