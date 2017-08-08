@@ -8,10 +8,17 @@ namespace IBMiCmd.IBMiTools
 {
     class IBMi
     {
+        readonly static Dictionary<string, string> FTPCodeMessages = new Dictionary<string, string>()
+        {
+            { "426", "Connection closed; transfer aborted." },
+            { "530", "Configuration username and password incorrect." },
+            { "550", "File being access may not exist." }
+        };
+
         public static string _ConfigFile { get; set; }
 
         private static Boolean _NotConnected = false;
-        private static Boolean _Failed = false;
+        private static string _Failed = "";
         private static Dictionary<string, string> _config = new Dictionary<string, string>();
         private static List<string> _output = new List<string>();
 
@@ -202,7 +209,7 @@ namespace IBMiCmd.IBMiTools
 
             _list.Clear();
             _NotConnected = false;
-            _Failed = false;
+            _Failed = "";
 
             Process process = new Process();
             process.StartInfo.FileName = "cmd.exe";
@@ -221,7 +228,17 @@ namespace IBMiCmd.IBMiTools
             process.WaitForExit();
 
             IBMiUtilities.DebugLog("FTP of command file " + FileLoc + " completed");
-            return _Failed || _NotConnected;
+
+            if (_NotConnected)
+            {
+                MessageBox.Show("Not able to connect to " + GetConfig("system"), "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            else if (_Failed != "")
+            {
+                MessageBox.Show(FTPCodeMessages[_Failed], "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+
+            return _Failed != "" || _NotConnected;
         }
 
         private static void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
@@ -250,7 +267,7 @@ namespace IBMiCmd.IBMiTools
                             case "426":
                             case "530":
                             case "550":
-                                _Failed = true;
+                                _Failed = outLine.Data.Substring(0, 3);
                                 _output.Add("> " + outLine.Data.Substring(4));
                                 break;
                             default:

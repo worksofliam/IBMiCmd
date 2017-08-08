@@ -130,9 +130,13 @@ namespace IBMiCmd.IBMiTools
 
         internal static void Log(string m)
         {
-            File.AppendAllText(_LogFile, DateTime.Now.ToString() + " : " + m + Environment.NewLine);
+            try
+            {
+                File.AppendAllText(_LogFile, DateTime.Now.ToString() + " : " + m + Environment.NewLine);
+            } catch (Exception e) { }
         }
-        
+
+        [System.Diagnostics.Conditional("DEBUG")]
         internal static void DebugLog(string m)
         {
             File.AppendAllText(_LogFile, DateTime.Now.ToString() + " : " + m + Environment.NewLine);
