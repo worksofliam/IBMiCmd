@@ -69,6 +69,7 @@
             // 
             // toolStripTextBox1
             // 
+            this.toolStripTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.toolStripTextBox1.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.toolStripTextBox1.MaxLength = 10;
             this.toolStripTextBox1.Name = "toolStripTextBox1";
@@ -78,6 +79,7 @@
             // 
             // toolStripTextBox2
             // 
+            this.toolStripTextBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.toolStripTextBox2.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.toolStripTextBox2.MaxLength = 10;
             this.toolStripTextBox2.Name = "toolStripTextBox2";
