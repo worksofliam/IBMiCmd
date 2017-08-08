@@ -106,12 +106,6 @@
     <Compile Include="Forms\newConfig.Designer.cs">
       <DependentUpon>newConfig.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\newRcdFmt.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\newRcdFmt.Designer.cs">
-      <DependentUpon>newRcdFmt.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\openMember.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -234,9 +228,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\newConfig.resx">
       <DependentUpon>newConfig.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\newRcdFmt.resx">
-      <DependentUpon>newRcdFmt.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\openMember.resx">
       <DependentUpon>openMember.cs</DependentUpon>
