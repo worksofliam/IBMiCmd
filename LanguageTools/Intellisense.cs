@@ -66,7 +66,7 @@ namespace IBMiCmd.LanguageTools
                 {
                     return null;
                 }
-                else if (currentPiece.Length >= 1)
+                else if (currentPiece.Length >= 2)
                 {
                     Keysout.AddRange(Array.FindAll(Values["RPG"], c => c.Text.StartsWith(currentPiece)));
 

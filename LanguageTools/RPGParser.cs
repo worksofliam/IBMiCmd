@@ -123,6 +123,9 @@ namespace IBMiCmd
 
                                 if (Pieces[Pieces.Length - 1].ToUpper() != "END-PI")
                                     Subf = Pieces[1];
+
+                                if (Subf == lastProcName)
+                                    Subf = "Parameter";
                                 break;
                             case "DCL-SUBF":
                             case "DCL-PARM":
