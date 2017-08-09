@@ -192,4 +192,11 @@ TIME (Time)|3
 TIMESTAMP (Timestamp)|3
 OBJECT (Java Object)|3
 POINTER (Pointer)|3
-Indicator (Indicator / Boolean)|3
+IND (Indicator / Boolean)|3
+DCL-S (Declare Standalone)|3
+DCL-C (Declare Constant)|3
+DCL-DS (Declare Datastructure)|3
+DCL-F (Declare File)|3
+DCL-PI (Declare Procedure Interface)|0
+DCL-PR (Declare Prototype)|0
+CTL-OPT (Control Options)|3

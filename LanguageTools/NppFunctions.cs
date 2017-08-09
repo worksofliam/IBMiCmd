@@ -145,7 +145,7 @@ namespace IBMiCmd.LanguageTools
         {
             Win32.SendMessage(PluginBase.GetCurrentScintilla(), SciMsg.SCI_AUTOCCANCEL, 0, 0);
         }
-
+        
         public static void HandleTrigger(SCNotification Notification)
         {
             Thread gothread;
@@ -154,13 +154,16 @@ namespace IBMiCmd.LanguageTools
             switch (Notification.nmhdr.code)
             {
                 case (uint)SciMsg.SCN_MODIFIED:
-                    gothread = new Thread((ThreadStart)delegate
+                    if (IBMi.GetConfig("intellisense") == "true")
                     {
-                        Main.IntelliSenseWindow.LoadList(Intellisense.ParseLine());
-                        Win32.SendMessage(PluginBase.nppData._nppHandle, SciMsg.SCI_SETFOCUS, 0, 0);
+                        gothread = new Thread((ThreadStart)delegate
+                        {
+                            Main.IntelliSenseWindow.LoadList(Intellisense.ParseLine());
+                            Win32.SendMessage(PluginBase.nppData._nppHandle, SciMsg.SCI_SETFOCUS, 0, 0);
 
-                    });
-                    gothread.Start();
+                        });
+                        gothread.Start();
+                    }
                     break;
 
                 case (uint)NppMsg.NPPN_FILESAVED:

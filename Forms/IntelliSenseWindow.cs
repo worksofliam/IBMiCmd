@@ -42,7 +42,7 @@ namespace IBMiCmd.Forms
                 }
 
                 Point newLoc = NppFunctions.GetCaretPos();
-                if (Show && (this.Opacity == 0 || newLoc.Y > this.Location.Y))
+                if (Show && this.Opacity == 0)
                     this.Location = newLoc;
 
                 if (Show)

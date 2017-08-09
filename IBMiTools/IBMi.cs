@@ -45,6 +45,7 @@ namespace IBMiCmd.IBMiTools
                 CheckExist("curlib", "SYSTOOLS");
                 CheckExist("clrcdlen", "80");
                 CheckExist("installlib", "QGPL");
+                CheckExist("intellisense", "false");
                 CheckExist("experimental", "false");
 
                 CheckExist("localDefintionsInstalled", "false");
@@ -85,6 +86,7 @@ namespace IBMiCmd.IBMiTools
                 CheckExist("curlib", "SYSTOOLS");
                 CheckExist("clrcdlen", "80");
                 CheckExist("installlib", "QGPL");
+                CheckExist("intellisense", "false");
                 CheckExist("experimental", "false");
                 PrintConfig();
             }
@@ -171,7 +173,6 @@ namespace IBMiCmd.IBMiTools
 
                 lines.Add("user " + _config["username"]);
                 lines.Add(_config["password"]);
-                lines.Add("bin");
 
                 lines.Add($"QUOTE RCMD CHGLIBL LIBL({ IBMi.GetConfig("datalibl").Replace(',', ' ')})  CURLIB({ IBMi.GetConfig("curlib") })");
                 foreach (string cmd in list)

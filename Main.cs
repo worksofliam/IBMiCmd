@@ -98,7 +98,6 @@ namespace IBMiCmd
             PluginBase.SetCommand(ItemOrder++, "-SEPARATOR-", null);
             PluginBase.SetCommand(ItemOrder++, "Open Log File", OpenLogFile);
             if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Refresh Extname Definitions", BuildSourceContext);
-            if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Extname Content Assist", AutoComplete, new ShortcutKey(false, true, false, Keys.Space));
             if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Prompt CL Command", PromptCommand, new ShortcutKey(true, false, false, Keys.F4));
 
             IntelliSenseWindow = new IntelliSenseWindow();
@@ -242,11 +241,6 @@ namespace IBMiCmd
         internal static void BuildSourceContext()
         {
             RPGParser.LaunchFFDCollection();
-        }
-
-        internal static void AutoComplete()
-        {
-            RPGAutoCompleter.ProvideSuggestions(RPGParser.dataStructures);
         }
 
         internal static void PromptCommand()

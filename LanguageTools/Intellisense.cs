@@ -35,7 +35,7 @@ namespace IBMiCmd.LanguageTools
         
         public static ListViewItem[] ParseLine()
         {
-            ListViewItem[] Keysout = null;
+            List<ListViewItem> Keysout = new List<ListViewItem>(); ;
             string currentFile = NppFunctions.GetCurrentFileName().ToUpper();
             string currentPiece = NppFunctions.GetLine(NppFunctions.GetLineNumber()).Trim();
             string[] pieces;
@@ -51,7 +51,8 @@ namespace IBMiCmd.LanguageTools
                     pieces = currentPiece.Split(' ');
                     currentPiece = pieces[pieces.Length - 1];
                     currentPiece = currentPiece.ToUpper();
-                    Keysout = Array.FindAll(Values["RPG"], c => c.Text.StartsWith(currentPiece));
+                    Keysout.AddRange(Array.FindAll(Values["RPG"], c => c.Text.StartsWith(currentPiece)));
+                    //Keysout.AddRange(RPGAutoCompleter.ProvideSuggestions(currentPiece));
                 }
             }
             else if (currentFile.Contains("CL"))
@@ -63,7 +64,7 @@ namespace IBMiCmd.LanguageTools
                     {
                         currentPiece = pieces[pieces.Length - 1];
                         currentPiece = currentPiece.ToUpper();
-                        Keysout = Array.FindAll(Values["CL"], c => c.Text.StartsWith(currentPiece));
+                        Keysout.AddRange(Array.FindAll(Values["CL"], c => c.Text.StartsWith(currentPiece)));
                     }
                 }
             }
