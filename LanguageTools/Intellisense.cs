@@ -13,6 +13,19 @@ namespace IBMiCmd.LanguageTools
 {
     class Intellisense
     {
+        public static ListViewItem[] FileItems = null;
+        public static void ScanFile()
+        {
+            string currentFile = NppFunctions.GetCurrentFileName().ToUpper();
+
+            if (currentFile.Contains("RPG"))
+                FileItems = RPGParser.ScanFile(currentFile).ToArray();
+            else
+                FileItems = null;
+            
+            if (Main.CommandWindow != null) Main.CommandWindow.loadNewOutput();
+        }
+
         private readonly static Dictionary<string, ListViewItem[]> Values = new Dictionary<string, ListViewItem[]>()
         {
             { "RPG", GetPieces(Resources.RPG) },
@@ -38,7 +51,14 @@ namespace IBMiCmd.LanguageTools
             List<ListViewItem> Keysout = new List<ListViewItem>(); ;
             string currentFile = NppFunctions.GetCurrentFileName().ToUpper();
             string currentPiece = NppFunctions.GetLine(NppFunctions.GetLineNumber()).Trim();
+            int currentLine = NppFunctions.GetLineNumber();
             string[] pieces;
+
+            pieces = currentPiece.Split(new char[] { ' ', ':', '(', '.' });
+            if (pieces.Length == 0) return null;
+
+            currentPiece = pieces[pieces.Length - 1];
+            currentPiece = currentPiece.ToUpper();
 
             if (currentFile.Contains("RPG"))
             {
@@ -48,22 +68,18 @@ namespace IBMiCmd.LanguageTools
                 }
                 else if (currentPiece.Length >= 1)
                 {
-                    pieces = currentPiece.Split(' ');
-                    currentPiece = pieces[pieces.Length - 1];
-                    currentPiece = currentPiece.ToUpper();
                     Keysout.AddRange(Array.FindAll(Values["RPG"], c => c.Text.StartsWith(currentPiece)));
-                    //Keysout.AddRange(RPGAutoCompleter.ProvideSuggestions(currentPiece));
+
+                    if (FileItems != null)
+                        Keysout.AddRange(Array.FindAll(FileItems, c => c.Text.ToUpper().StartsWith(currentPiece)));
                 }
             }
             else if (currentFile.Contains("CL"))
             {
                 if (currentPiece.Length >= 4)
                 {
-                    pieces = currentPiece.Split(' ');
                     if (pieces.Length == 1)
                     {
-                        currentPiece = pieces[pieces.Length - 1];
-                        currentPiece = currentPiece.ToUpper();
                         Keysout.AddRange(Array.FindAll(Values["CL"], c => c.Text.StartsWith(currentPiece)));
                     }
                 }

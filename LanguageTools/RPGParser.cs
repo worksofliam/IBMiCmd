@@ -5,9 +5,12 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Linq;
 using System.Xml.Serialization;
 using IBMiCmd.IBMiTools;
+using IBMiCmd.LanguageTools;
 using NppPluginNET;
+using System.Windows.Forms;
 
 namespace IBMiCmd
 {
@@ -62,6 +65,94 @@ namespace IBMiCmd
 
     public class RPGParser
     {
+        public static List<ListViewItem> ScanFile(string Path)
+        {
+            List<ListViewItem> Items = new List<ListViewItem>();
+            ListViewItem Item = null;
+            string Free = "", Keywords = "", Subf = "", lastProcName = "GLOBAL";
+            string[] Pieces;
+            int line = 0;
+            foreach(string Line in File.ReadAllLines(Path))
+            {
+                line++;
+                Free = LanguageTools.RPGFree.getFree(Line);
+                Free = Free.Trim();
+                if (Free == "")
+                    Free = Line.Trim();
+                IBMi.AddOutput(Free);
+
+                Item = null;
+                if (Free != "")
+                {
+                    Free = Free.TrimEnd(';');
+                    Pieces = Free.Split(' ');
+                    Pieces = Pieces.Where(x => !string.IsNullOrEmpty(x)).ToArray();
+
+                    if (Pieces.Length >= 2)
+                    {
+                        Keywords = String.Join(" ", Pieces.Skip(2).ToArray());
+                        switch (Pieces[0].ToUpper())
+                        {
+                            case "DCL-S":
+                                Subf = "";
+                                Item = new ListViewItem(Pieces[1] + " " + Pieces[2] + " (" + lastProcName + ")", 4);
+                                break;
+                            case "DCL-C":
+                                Subf = "";
+                                Item = new ListViewItem(Pieces[1] + " " + Pieces[2] + " (" + lastProcName + ")", 5);
+                                break;
+                            case "DCL-DS":
+                                if (Pieces[1].ToUpper() != "*N")
+                                    Item = new ListViewItem(Pieces[1] + " " + Keywords + " (" + lastProcName + ")", 4);
+
+                                if (Pieces[Pieces.Length - 1].ToUpper() != "END-DS")
+                                    Subf = Pieces[1];
+                                //if (!Keywords.ToUpper().Contains("TEMPLATE"))
+                                break;
+                            case "DCL-PROC":
+                                Item = new ListViewItem(Pieces[1] + " " + Keywords, 6);
+                                lastProcName = Pieces[1];
+                                break;
+                            case "DCL-PR":
+                                Item = new ListViewItem(Pieces[1] + " " + Keywords + " (" + lastProcName + ")", 6);
+                                Subf = "";
+                                break;
+                            case "DCL-PI":
+                                if (Pieces[1].ToUpper() == "*N")
+                                    Pieces[1] = lastProcName;
+
+                                if (Pieces[Pieces.Length - 1].ToUpper() != "END-PI")
+                                    Subf = Pieces[1];
+                                break;
+                            case "DCL-SUBF":
+                            case "DCL-PARM":
+                                Item = new ListViewItem(Pieces[1] + " " + Keywords + " (" + lastProcName + "->" + Subf + ")", 7);
+                                break;
+                            default:
+                                if (Subf != "")
+                                {
+                                    Keywords = String.Join(" ", Pieces.Skip(1).ToArray());
+                                    Item = new ListViewItem(Pieces[0] + " " + Keywords + " (" + lastProcName + "->" + Subf + ")", 7);
+                                }
+                                break;
+                        }
+                    }
+                    
+                    if (Free.ToUpper().StartsWith("END"))
+                    {
+                        Subf = "";
+                    }
+
+                    if (Item != null)
+                        if (Items.Where(c => c.Text == Item.Text).Count() == 0)
+                            Items.Add(Item);
+
+                }
+            }
+
+            return Items;
+        }
+
         // In memory cache of data structures referenced by source code
         public static List<DataStructure> dataStructures { get; set; }
 

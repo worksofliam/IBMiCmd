@@ -166,6 +166,13 @@ namespace IBMiCmd.LanguageTools
                     }
                     break;
 
+                case (uint)NppMsg.NPPN_FILEOPENED:
+                    gothread = new Thread((ThreadStart)delegate
+                    {
+                        Intellisense.ScanFile();
+                    });
+                    gothread.Start();
+                    break;
                 case (uint)NppMsg.NPPN_FILESAVED:
                     member = OpenMembers.GetMember(path);
                     if (member != null)
@@ -187,6 +194,10 @@ namespace IBMiCmd.LanguageTools
                         });
                         gothread.Start();
                     }
+                    new Thread((ThreadStart)delegate
+                    {
+                        Intellisense.ScanFile();
+                    }).Start();
                     break;
 
                 case (uint)NppMsg.NPPN_FILEBEFORECLOSE:
