@@ -129,7 +129,8 @@ namespace IBMiCmd
                                 break;
                             case "DCL-SUBF":
                             case "DCL-PARM":
-                                Item = new ListViewItem(Pieces[1] + " " + Keywords + " (" + lastProcName + "->" + Subf + ")", 7);
+                                if (Subf != "")
+                                    Item = new ListViewItem(Pieces[1] + " " + Keywords + " (" + lastProcName + "->" + Subf + ")", 7);
                                 break;
                             default:
                                 if (Subf != "")
