@@ -71,6 +71,7 @@ namespace IBMiCmd
             ListViewItem Item = null;
             string Free = "", Keywords = "", Subf = "", lastProcName = "GLOBAL";
             string[] Pieces;
+            Boolean isDs = false;
             int line = 0;
             foreach(string Line in File.ReadAllLines(Path))
             {
@@ -84,6 +85,9 @@ namespace IBMiCmd
                 Item = null;
                 if (Free != "")
                 {
+                    if (Free.Contains("//"))
+                        Free.Substring(0, Free.IndexOf("//"));
+
                     Free = Free.TrimEnd(';');
                     Pieces = Free.Split(' ');
                     Pieces = Pieces.Where(x => !string.IsNullOrEmpty(x)).ToArray();
@@ -108,6 +112,7 @@ namespace IBMiCmd
                                 if (Pieces[Pieces.Length - 1].ToUpper() != "END-DS")
                                     Subf = Pieces[1];
                                 //if (!Keywords.ToUpper().Contains("TEMPLATE"))
+                                isDs = true;
                                 break;
                             case "DCL-PROC":
                                 Item = new ListViewItem(Pieces[1] + " " + Keywords, 6);
@@ -116,6 +121,7 @@ namespace IBMiCmd
                             case "DCL-PR":
                                 Item = new ListViewItem(Pieces[1] + " " + Keywords + " (" + lastProcName + ")", 6);
                                 Subf = "";
+                                isDs = false;
                                 break;
                             case "DCL-PI":
                                 if (Pieces[1].ToUpper() == "*N")
@@ -126,17 +132,24 @@ namespace IBMiCmd
 
                                 if (Subf == lastProcName)
                                     Subf = "Parameter";
+
+                                isDs = false;
                                 break;
                             case "DCL-SUBF":
                             case "DCL-PARM":
                                 if (Subf != "")
+                                {
                                     Item = new ListViewItem(Pieces[1] + " " + Keywords + " (" + lastProcName + "->" + Subf + ")", 7);
+                                    if (isDs) Item.Tag = Subf.ToUpper();
+                                }
+                                
                                 break;
                             default:
                                 if (Subf != "")
                                 {
                                     Keywords = String.Join(" ", Pieces.Skip(1).ToArray());
                                     Item = new ListViewItem(Pieces[0] + " " + Keywords + " (" + lastProcName + "->" + Subf + ")", 7);
+                                    if (isDs) Item.Tag = Subf.ToUpper();
                                 }
                                 break;
                         }
@@ -145,11 +158,16 @@ namespace IBMiCmd
                     if (Free.ToUpper().StartsWith("END"))
                     {
                         Subf = "";
+                        isDs = false;
                     }
 
                     if (Item != null)
+                    {
+                        if (Item.Tag == null)
+                            Item.Tag = "";
                         if (Items.Where(c => c.Text == Item.Text).Count() == 0)
                             Items.Add(Item);
+                    }
 
                 }
             }

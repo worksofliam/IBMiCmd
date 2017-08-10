@@ -52,9 +52,11 @@ namespace IBMiCmd.LanguageTools
             string currentFile = NppFunctions.GetCurrentFileName().ToUpper();
             string currentPiece = NppFunctions.GetLine(NppFunctions.GetLineNumber()).Trim();
             int currentLine = NppFunctions.GetLineNumber();
+            string DataStructureName = "";
+            int number;
             string[] pieces;
 
-            pieces = currentPiece.Split(new char[] { ' ', ':', '(', '.' });
+            pieces = currentPiece.Split(new char[] { ' ', ':', '(', ')', '.' });
             if (pieces.Length == 0) return null;
 
             currentPiece = pieces[pieces.Length - 1];
@@ -72,6 +74,25 @@ namespace IBMiCmd.LanguageTools
 
                     if (FileItems != null)
                         Keysout.AddRange(Array.FindAll(FileItems, c => c.Text.ToUpper().StartsWith(currentPiece)));
+                }
+                else if (pieces.Length >= 2)
+                {
+                    if (FileItems != null)
+                    {
+                        if (pieces.Length >= 3)
+                        {
+                            if (int.TryParse(pieces[pieces.Length - 3], out number))
+                                DataStructureName = pieces[pieces.Length - 4];
+                            else
+                                DataStructureName = pieces[pieces.Length - 2];
+                        }
+                        else
+                            DataStructureName = pieces[pieces.Length - 2];
+
+                        DataStructureName = DataStructureName.ToUpper();
+                        if (DataStructureName != "")
+                            Keysout.AddRange(Array.FindAll(FileItems, c => c.Tag.ToString() == DataStructureName));
+                    }
                 }
             }
             else if (currentFile.Contains("CL"))
