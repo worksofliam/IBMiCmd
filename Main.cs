@@ -100,6 +100,8 @@ namespace IBMiCmd
             if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Refresh Extname Definitions", BuildSourceContext);
             if (ExperimentalFeatures) PluginBase.SetCommand(ItemOrder++, "Prompt CL Command", PromptCommand, new ShortcutKey(true, false, false, Keys.F4));
 
+            idMyDlg = 1;
+
             IntelliSenseWindow = new IntelliSenseWindow();
             IntelliSenseWindow.Show();
         }

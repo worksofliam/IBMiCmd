@@ -35,6 +35,9 @@ namespace IBMiCmd.LanguageTools
                 StringBuilder sb = new StringBuilder(lineLength);
                 Win32.SendMessage(curScintilla, SciMsg.SCI_GETLINE, line, sb);
 
+                if (sb.Length < lineLength)
+                    lineLength = sb.Length;
+
                 return sb.ToString().Substring(0, lineLength);
             }
             else
@@ -145,7 +148,9 @@ namespace IBMiCmd.LanguageTools
         {
             Win32.SendMessage(PluginBase.GetCurrentScintilla(), SciMsg.SCI_AUTOCCANCEL, 0, 0);
         }
-        
+
+        private static Boolean IntellisenseReady = false;
+
         public static void HandleTrigger(SCNotification Notification)
         {
             Thread gothread;
@@ -153,23 +158,31 @@ namespace IBMiCmd.LanguageTools
             OpenMember member;
             switch (Notification.nmhdr.code)
             {
+                case (uint)NppMsg.NPPN_READY:
+                    IntellisenseReady = true;
+                    break;
                 case (uint)SciMsg.SCN_MODIFIED:
                     if (IBMi.GetConfig("intellisense") == "true")
                     {
-                        gothread = new Thread((ThreadStart)delegate
+                        if (IntellisenseReady)
                         {
-                            Main.IntelliSenseWindow.LoadList(Intellisense.ParseLine());
-                            Win32.SendMessage(PluginBase.nppData._nppHandle, SciMsg.SCI_SETFOCUS, 0, 0);
-
-                        });
-                        gothread.Start();
+                            gothread = new Thread((ThreadStart)delegate
+                            {
+                                Main.IntelliSenseWindow.LoadList(Intellisense.ParseLine());
+                            });
+                            gothread.Start();
+                        }
                     }
                     break;
 
+                case (uint)NppMsg.NPPN_FILEBEFOREOPEN:
+                    IntellisenseReady = false;
+                    break;
                 case (uint)NppMsg.NPPN_FILEOPENED:
                     gothread = new Thread((ThreadStart)delegate
                     {
                         Intellisense.ScanFile();
+                        IntellisenseReady = true;
                     });
                     gothread.Start();
                     break;

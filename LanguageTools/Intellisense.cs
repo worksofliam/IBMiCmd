@@ -106,7 +106,8 @@ namespace IBMiCmd.LanguageTools
                 }
             }
 
-            Main.IntelliSenseWindow.SetKey(currentPiece);
+            if (Keysout.Count >= 1)
+                Main.IntelliSenseWindow.SetKey(currentPiece);
 
             if (Keysout == null)
                 return null;
