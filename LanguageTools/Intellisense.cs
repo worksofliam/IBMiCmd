@@ -56,7 +56,7 @@ namespace IBMiCmd.LanguageTools
             int number;
             string[] pieces;
 
-            pieces = currentPiece.Split(new char[] { ' ', ':', '(', ')', '.' });
+            pieces = currentPiece.Split(new char[] { ' ', ':', '(', ')', '.', '=' });
             if (pieces.Length == 0) return null;
 
             currentPiece = pieces[pieces.Length - 1];
