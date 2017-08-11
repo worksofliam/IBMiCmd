@@ -11,8 +11,7 @@ namespace IBMiCmd.IBMiTools
         readonly static Dictionary<string, string> FTPCodeMessages = new Dictionary<string, string>()
         {
             { "426", "Connection closed; transfer aborted." },
-            { "530", "Configuration username and password incorrect." },
-            { "550", "File being accessed may not exist." }
+            { "530", "Configuration username and password incorrect." }
         };
 
         public static string _ConfigFile { get; set; }
@@ -236,7 +235,8 @@ namespace IBMiCmd.IBMiTools
             }
             else if (_Failed != "")
             {
-                MessageBox.Show(FTPCodeMessages[_Failed], "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                if (FTPCodeMessages.ContainsKey(_Failed))
+                    MessageBox.Show(FTPCodeMessages[_Failed], "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 
             return _Failed != "" || _NotConnected;
