@@ -265,6 +265,9 @@ namespace IBMiCmd.IBMiTools
                                 _getList = false;
                                 _output.Add("> " + outLine.Data.Substring(4));
                                 break;
+                            case "150":
+                                _output.Add("> " + outLine.Data.Substring(4));
+                                break;
                             case "426":
                             case "530":
                             case "550":

@@ -69,7 +69,7 @@ namespace IBMiCmd.LanguageTools
                 if (lib == "*CURLIB") lib = IBMi.GetConfig("curlib");
 
                 if (IBMiUtilities.IsValidQSYSObjectName(lib) && IBMiUtilities.IsValidQSYSObjectName(obj) && IBMiUtilities.IsValidQSYSObjectName(mbr)) {
-                    return new OpenMember("", "", lib, obj, mbr);
+                    return new OpenMember("", "", lib, obj, mbr, false);
                 }
                 else
                 {

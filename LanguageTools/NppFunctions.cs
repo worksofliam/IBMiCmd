@@ -190,20 +190,23 @@ namespace IBMiCmd.LanguageTools
                     member = OpenMembers.GetMember(path);
                     if (member != null)
                     {
-                        gothread = new Thread((ThreadStart)delegate {  
-                            if (member.GetSystemName() == IBMi.GetConfig("system"))
+                        gothread = new Thread((ThreadStart)delegate {
+                            if (member.IsEditable())
                             {
-                                bool UploadResult = IBMiUtilities.UploadMember(member.GetLocalFile(), member.GetLibrary(), member.GetObject(), member.GetMember());
-                                if (UploadResult == false)
+                                if (member.GetSystemName() == IBMi.GetConfig("system"))
                                 {
-                                    System.Windows.Forms.MessageBox.Show("Failed to upload to " + member.GetMember() + " on " + member.GetSystemName() + ".");
+                                    bool UploadResult = IBMiUtilities.UploadMember(member.GetLocalFile(), member.GetLibrary(), member.GetObject(), member.GetMember());
+                                    if (UploadResult == false)
+                                    {
+                                        System.Windows.Forms.MessageBox.Show("Failed to upload to " + member.GetMember() + " on " + member.GetSystemName() + ".");
+                                    }
                                 }
+                                else
+                                {
+                                    System.Windows.Forms.MessageBox.Show("Unable to upload to " + member.GetMember() + ". You must be connected to " + member.GetSystemName() + " in order to save this file.");
+                                }
+                                if (Main.CommandWindow != null) Main.CommandWindow.loadNewOutput();
                             }
-                            else
-                            {
-                                System.Windows.Forms.MessageBox.Show("Unable to upload to " + member.GetMember() + ". You must be connected to " + member.GetSystemName() + " in order to save this file.");
-                            }
-                            if (Main.CommandWindow != null) Main.CommandWindow.loadNewOutput();
                         });
                         gothread.Start();
                     }

@@ -78,8 +78,7 @@ namespace IBMiCmd.Forms
                 if (resultFile != "")
                 {
                     NppFunctions.OpenFile(resultFile, !Editing);
-                    if (Editing)
-                        OpenMembers.AddMember(IBMi.GetConfig("system"), resultFile, Lib, Obj, Mbr);
+                    OpenMembers.AddMember(IBMi.GetConfig("system"), resultFile, Lib, Obj, Mbr, Editing);
                 }
                 else
                 {

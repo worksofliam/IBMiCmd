@@ -55,8 +55,7 @@ namespace IBMiCmd.Forms
             {
                 //Open File
                 NppFunctions.OpenFile(resultFile, this.isReadonly);
-                if (!this.isReadonly)
-                    OpenMembers.AddMember(textBox4.Text, resultFile, textBox1.Text, textBox2.Text, textBox3.Text);
+                OpenMembers.AddMember(textBox4.Text, resultFile, textBox1.Text, textBox2.Text, textBox3.Text, !this.isReadonly);
 
                 this.Close();
             }

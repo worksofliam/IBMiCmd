@@ -80,7 +80,6 @@ namespace IBMiCmd
                 Free = Free.Trim();
                 if (Free == "")
                     Free = Line.Trim();
-                IBMi.AddOutput(Free);
 
                 Item = null;
                 if (Free != "")
