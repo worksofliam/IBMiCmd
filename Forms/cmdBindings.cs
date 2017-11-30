@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using IBMiCmd.LanguageTools;
 using IBMiCmd.IBMiTools;
 using System;
+using System.IO;
 
 namespace IBMiCmd.Forms
 {
@@ -97,7 +98,7 @@ namespace IBMiCmd.Forms
         private static string replaceVars(string cmd)
         {
             OpenMember currentMember = null;
-            string path = NppFunctions.GetCurrentFileName();
+            string path = Path.GetFileName(NppFunctions.GetCurrentFileName());
             string[] name;
 
             if (path.Contains("."))

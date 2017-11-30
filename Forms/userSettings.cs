@@ -17,7 +17,6 @@ namespace IBMiCmd.Forms
             textBox2.Text = IBMi.GetConfig("username");
             textBox3.Text = IBMi.GetConfig("password");
             numericUpDown1.Value = Convert.ToInt32(IBMi.GetConfig("clrcdlen"));
-            checkBox1.Checked = (IBMi.GetConfig("intellisense") == "true");
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -47,7 +46,6 @@ namespace IBMiCmd.Forms
             IBMi.SetConfig("username", textBox2.Text);
             IBMi.SetConfig("password", textBox3.Text);
             IBMi.SetConfig("clrcdlen", numericUpDown1.Value.ToString());
-            IBMi.SetConfig("intellisense", (checkBox1.Checked ? "true" : "false"));
 
             this.Close();
         }

@@ -16,7 +16,6 @@ namespace IBMiCmd.LanguageTools
     {
         public static void OpenFile(string Path, Boolean ReadOnly)
         {
-            Main.IntelliSenseWindow.HideWindow();
             Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_DOOPEN, 0, Path);
             if (ReadOnly) Win32.SendMessage(PluginBase.GetCurrentScintilla(), SciMsg.SCI_SETREADONLY, 1, 0);
         }
@@ -48,7 +47,6 @@ namespace IBMiCmd.LanguageTools
 
         public static string GetLineWithSelection(int line)
         {
-            Main.IntelliSenseWindow.HideWindow();
             IntPtr curScintilla = PluginBase.GetCurrentScintilla();
             int lineLength = (int)Win32.SendMessage(curScintilla, SciMsg.SCI_LINELENGTH, line, 0);
             StringBuilder sb = new StringBuilder(lineLength);
@@ -92,7 +90,6 @@ namespace IBMiCmd.LanguageTools
         
         public static void SwitchToFile(string name, int line, int col)
         {
-            Main.IntelliSenseWindow.HideWindow();
             int pos = 0;
             IntPtr curScintilla = PluginBase.nppData._nppHandle;
             Win32.SendMessage(curScintilla, NppMsg.NPPM_SWITCHTOFILE, 0, name);
@@ -117,7 +114,6 @@ namespace IBMiCmd.LanguageTools
 
         public static void RefreshWindow(string path)
         {
-            Main.IntelliSenseWindow.HideWindow();
             Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_RELOADFILE, 0, path);
             Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_MAKECURRENTBUFFERDIRTY, 0, 0);
         }
@@ -149,8 +145,6 @@ namespace IBMiCmd.LanguageTools
             Win32.SendMessage(PluginBase.GetCurrentScintilla(), SciMsg.SCI_AUTOCCANCEL, 0, 0);
         }
 
-        private static Boolean IntellisenseReady = false;
-
         public static void HandleTrigger(SCNotification Notification)
         {
             Thread gothread;
@@ -159,32 +153,13 @@ namespace IBMiCmd.LanguageTools
             switch (Notification.nmhdr.code)
             {
                 case (uint)NppMsg.NPPN_READY:
-                    IntellisenseReady = true;
                     break;
                 case (uint)SciMsg.SCN_MODIFIED:
-                    if (IBMi.GetConfig("intellisense") == "true")
-                    {
-                        if (IntellisenseReady)
-                        {
-                            gothread = new Thread((ThreadStart)delegate
-                            {
-                                Main.IntelliSenseWindow.LoadList(Intellisense.ParseLine());
-                            });
-                            gothread.Start();
-                        }
-                    }
                     break;
 
                 case (uint)NppMsg.NPPN_FILEBEFOREOPEN:
-                    IntellisenseReady = false;
                     break;
                 case (uint)NppMsg.NPPN_FILEOPENED:
-                    gothread = new Thread((ThreadStart)delegate
-                    {
-                        Intellisense.ScanFile();
-                        IntellisenseReady = true;
-                    });
-                    gothread.Start();
                     break;
                 case (uint)NppMsg.NPPN_FILESAVED:
                     member = OpenMembers.GetMember(path);
@@ -210,10 +185,6 @@ namespace IBMiCmd.LanguageTools
                         });
                         gothread.Start();
                     }
-                    new Thread((ThreadStart)delegate
-                    {
-                        Intellisense.ScanFile();
-                    }).Start();
                     break;
 
                 case (uint)NppMsg.NPPN_FILEBEFORECLOSE:
